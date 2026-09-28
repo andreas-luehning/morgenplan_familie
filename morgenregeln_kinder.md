@@ -9,7 +9,7 @@ Morgens müssen wir alle rechtzeitig los. Mama, Papa oder andere Erwachsene helf
 - 🌤️ **Aufstehen:** Wir stehen auf, wenn es Zeit ist. Wenn du noch müde bist, helfen wir dir.
 - 👕 **Anziehen:** Du darfst zum Beispiel zwischen zwei vorbereiteten Sachen wählen.
 - 🥣 **Frühstücken:** Du suchst dir etwas aus unserem Frühstücksangebot aus.
-- 🪥 **Zähne putzen:** Jetzt werden die Zähne sauber!
+- 🪥 **Zähne putzen:** Wir nehmen uns Zeit fürs Putzen. Wenn du selbst putzt, putzt Mama oder Papa danach nach.
 - 🎒 **Tasche schnappen:** Alles dabei? Wir schauen gemeinsam nach.
 - 👟 **Schuhe und Jacke an:** Jetzt machen wir uns startklar.
 

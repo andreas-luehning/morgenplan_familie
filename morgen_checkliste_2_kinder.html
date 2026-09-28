@@ -48,7 +48,7 @@
   </section>
   <div class="cards" id="cards">
     <section class="card a" aria-label="Checkliste Kind 1">
-      <div class="kid-title"><h2 id="heading0">🦊 Kind 1</h2><span class="count" id="count0" aria-live="polite">0 von 6</span></div>
+      <div class="kid-title"><h2 id="heading0">🐇 Kind 1</h2><span class="count" id="count0" aria-live="polite">0 von 6</span></div>
       <div class="bar" role="progressbar" aria-label="Fortschritt Kind 1" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="progress0"><div class="fill" id="fill0"></div></div>
       <div class="tasks" id="tasks0"></div><div class="ready" id="ready0" role="status">Schritt für Schritt – du schaffst das!</div>
     </section>
@@ -89,7 +89,7 @@ function render(){
   const now=new Date();$('date').textContent=new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);
   for(let i=0;i<2;i++){
     const name=state.names[i].trim()||`Kind ${i+1}`;
-    $('heading'+i).textContent=(i===0?'🦊 ':'🐻 ')+name;
+    $('heading'+i).textContent=(i===0?'🐇 ':'🐻 ')+name;
     const checked=state.checked[i].filter(Boolean).length;
     $('count'+i).textContent=checked+' von '+steps.length;
     $('fill'+i).style.width=(checked/steps.length*100)+'%';
