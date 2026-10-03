@@ -48,7 +48,7 @@
 
 **Ziel:** Kinder können Regeln nicht versehentlich löschen oder anlegen.
 
-- „🗑️ Löschen“ und „➕ Hinzufügen“ reagieren nur auf langes Drücken (umgesetzt: 1,5 Sekunden), mit sichtbarem Fortschritt im Knopf, z. B. einem Füllbalken.
+- „🗑️ Löschen“ und „➕ Hinzufügen“ reagieren nur auf langes Drücken (umgesetzt: Löschen 1,5 s, Hinzufügen 0,6 s), mit sichtbarem Fortschritt im Knopf, z. B. einem Füllbalken.
 - Kurzes Tippen zeigt nur den Hinweis „Zum Löschen lange drücken“.
 - Auch per Tastatur bedienbar lassen, z. B. Enter gedrückt halten oder eine zusätzliche Rückfrage.
 - Alternative: Schon das Aufklappen von „📅 Besondere Tage einstellen“ braucht langes Drücken.
@@ -132,6 +132,7 @@ Neueste Version oben. Die Version steht in `sw.js` und unten in der App.
 
 | Version | Branch | Änderung |
 |---|---|---|
+| v14 | `feature/6-heute-noch` | Hinzufügen braucht nur noch 0,6 s langes Drücken, Löschen bleibt bei 1,5 s. |
 | v13 | `feature/6-heute-noch` | Pillen-Menü oben entfernt (wirkte überladen). Stattdessen kleine Seitenpunkte unten am Bildschirmrand, Wischen bleibt. Überschrift und Untertitel wechseln: „🌞 Unser Morgen“ und „📋 Heute noch“. Auswahl „Seite“ heißt jetzt „Unser Morgen“ statt „Morgen“ (klang nach dem nächsten Tag). |
 | v12 | `feature/6-heute-noch` | Backlog 10: Zweite Seite „📋 Heute noch“ mit Pillen-Menü und Wischen. To-do-Punkte sind besondere Tage mit „Seite: Heute noch“; voreingestellt Hausaufgaben, Leseübung, Mathe üben (Mo–Fr) und Hörspiel (täglich). Schnell-Hinzufügen ab 17 Uhr wieder mit „morgen“ vorgewählt. |
 | v11 | `feature/5-zusatzpunkte` | Vorlagen gekürzt auf Schwimmsachen, Bastelsachen, Geschenk, Regensachen (statt Regenjacke). Knopf heißt „➕ Zusätzlicher Punkt“, „heute“ ist immer vorgewählt. |

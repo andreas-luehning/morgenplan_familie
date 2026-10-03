@@ -266,7 +266,7 @@
     .rule-form .pf-btn{min-height:48px}
     .hold{position:relative;overflow:hidden;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
     .hold::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.2);transform:scaleX(0);transform-origin:left;pointer-events:none}
-    .hold.holding::after{transform:scaleX(1);transition:transform 1.5s linear}
+    .hold.holding::after{transform:scaleX(1);transition:transform var(--hold,1.5s) linear}
     .templates{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
     .chip{font:inherit;font-size:.9rem;font-weight:700;border:2px solid var(--pf-hair);background:var(--pf-card);color:var(--pf-ink);border-radius:var(--pf-radius-pill);padding:6px 12px;min-height:40px;cursor:pointer}
     .chip:active{transform:translateY(2px)}
@@ -530,11 +530,13 @@ function itemsFor(i,list=page){
 }
 // Ändern bei „Besondere Tage“ nur per langem Drücken, damit Kinder nichts aus Versehen löschen.
 // Per Tastatur (Klick ohne Zeiger) gibt es stattdessen eine Rückfrage.
-const HOLD_MS=1500;
-function onHold(btn,hint,question,action,info='ruleInfo'){
+// Löschen braucht länger als Hinzufügen, weil es sich nicht rückgängig machen lässt.
+const HOLD_DELETE_MS=1500,HOLD_ADD_MS=600;
+function onHold(btn,hint,question,action,info='ruleInfo',ms=HOLD_DELETE_MS){
+  btn.style.setProperty('--hold',ms+'ms');
   let timer=null;
   const stop=()=>{clearTimeout(timer);timer=null;btn.classList.remove('holding');};
-  btn.addEventListener('pointerdown',e=>{if(e.button!==0)return;btn.classList.add('holding');timer=setTimeout(()=>{stop();action();},HOLD_MS);});
+  btn.addEventListener('pointerdown',e=>{if(e.button!==0)return;btn.classList.add('holding');timer=setTimeout(()=>{stop();action();},ms);});
   ['pointerup','pointerleave','pointercancel'].forEach(type=>btn.addEventListener(type,()=>{if(timer){stop();$(info).textContent='👆 '+hint;}}));
   btn.addEventListener('click',e=>{if(e.detail===0&&confirm(question))action();});
   btn.addEventListener('contextmenu',e=>e.preventDefault());
@@ -624,7 +626,7 @@ renderTemplates('ruleTemplates','ruleEmoji','ruleText');renderTemplates('quickTe
 // Schnell-Hinzufügen: lange drücken öffnet das Fenster; ab 17 Uhr ist „morgen“ vorgewählt (für den Vorabend), sonst „heute“.
 const newId=()=>'r'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 onHold($('quickOpen'),'Zum Hinzufügen lange drücken.','Zusätzlichen Punkt hinzufügen?',()=>{
-  $('quickDay').value=new Date().getHours()>=17?'1':'0';$('quickList').value=page;$('quickText').value='';$('quickEmoji').value='⭐';$('quickDialog').showModal();$('quickText').focus();},'quickInfo');
+  $('quickDay').value=new Date().getHours()>=17?'1':'0';$('quickList').value=page;$('quickText').value='';$('quickEmoji').value='⭐';$('quickDialog').showModal();$('quickText').focus();},'quickInfo',HOLD_ADD_MS);
 $('quickCancel').addEventListener('click',()=>$('quickDialog').close());
 $('quickForm').addEventListener('submit',e=>{e.preventDefault();$('quickAdd').click();});
 $('quickAdd').addEventListener('click',()=>{const text=$('quickText').value.trim();if(!text){$('quickText').focus();return;}
@@ -664,7 +666,7 @@ $('cards').addEventListener('touchend',e=>{if(!swipeStart)return;const t=e.chang
 $('ruleForm').addEventListener('submit',e=>e.preventDefault());
 onHold($('ruleAdd'),'Zum Hinzufügen lange drücken.','Diesen Punkt hinzufügen?',()=>{if(!$('ruleText').value.trim()){$('ruleText').focus();return;}const timing=ruleTiming();if(!timing)return;
   state.rules.push({id:newId(),emoji:$('ruleEmoji').value.trim()||'⭐',text:$('ruleText').value.trim(),kid:Number($('ruleKid').value),...timing,...($('ruleList').value==='heute'?{list:'heute'}:{})});
-  $('ruleText').value='';$('ruleCron').value='';$('ruleDate').value='';$('ruleInfo').textContent='✅ Hinzugefügt.';save();render();});
+  $('ruleText').value='';$('ruleCron').value='';$('ruleDate').value='';$('ruleInfo').textContent='✅ Hinzugefügt.';save();render();},'ruleInfo',HOLD_ADD_MS);
 render();save();document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncDay();checkDeparture();});setInterval(syncDay,60*1000);
 
 // Abfahrt: Display bis kurz nach der Abfahrt anlassen, zur Abfahrt Wecker und Hinweis.
