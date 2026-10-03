@@ -358,14 +358,14 @@
       <div class="tasks" id="tasks1"></div><div class="ready" id="ready1" role="status">Schritt für Schritt – du schaffst das!</div>
     </section>
   </div>
-  <div class="quick"><p class="hint" id="quickInfo" aria-live="polite"></p><button class="pf-btn pf-btn--secondary hold" type="button" id="quickOpen" aria-label="Punkt für heute oder morgen hinzufügen (lange drücken)">➕ Punkt für morgen</button></div>
+  <div class="quick"><p class="hint" id="quickInfo" aria-live="polite"></p><button class="pf-btn pf-btn--secondary hold" type="button" id="quickOpen" aria-label="Punkt für heute oder morgen hinzufügen (lange drücken)">➕ Zusätzlicher Punkt</button></div>
   <dialog class="quick-dialog" id="quickDialog" aria-labelledby="quickTitle">
     <h2 id="quickTitle">➕ Zusätzlicher Punkt</h2>
     <p class="hint">Gilt nur für einen Tag und verschwindet danach von selbst.</p>
     <div class="templates" id="quickTemplates" aria-label="Vorlagen"></div>
     <form class="rule-form" id="quickForm" method="dialog">
       <div class="field small"><label for="quickEmoji">Bild</label><input id="quickEmoji" maxlength="8" value="⭐" autocomplete="off"></div>
-      <div class="field"><label for="quickText">Was?</label><input id="quickText" maxlength="40" placeholder="z. B. Brotdose" autocomplete="off"></div>
+      <div class="field"><label for="quickText">Was?</label><input id="quickText" maxlength="40" placeholder="z. B. Schwimmsachen" autocomplete="off"></div>
       <div class="field"><label for="quickKid">Für</label><select id="quickKid"><option value="0">Kind 1</option><option value="1">Kind 2</option><option value="2">beide</option></select></div>
       <div class="field"><label for="quickDay">Wann?</label><select id="quickDay"><option value="0">heute</option><option value="1">morgen</option></select></div>
     </form>
@@ -475,7 +475,7 @@ const dayFromToday=n=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDa
 // Einmalige Punkte von vergangenen Tagen aufräumen.
 const pruneRules=rules=>rules.filter(r=>!r.date||r.date>=localDate());
 // Vorlagen für häufige Zusatzpunkte.
-const TEMPLATES=[['🍎','Brotdose'],['💧','Trinkflasche'],['📚','Hausaufgaben'],['📝','Zettel unterschrieben'],['🏊','Schwimmsachen'],['⚽','Sportbeutel'],['🧸','Spielzeug mitnehmen'],['🖍️','Bastelsachen'],['🎁','Geschenk'],['☂️','Regenjacke']];
+const TEMPLATES=[['🏊','Schwimmsachen'],['🖍️','Bastelsachen'],['🎁','Geschenk'],['☂️','Regensachen']];
 function localDate(d=new Date()){return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
 const defaults=()=>({date:localDate(),names:['',''],departure:'07:45',weekendTime:'10:00',transport:'🚶 zu Fuß',alarmFor:'',rules:defaultRules(),checked:[Array(steps.length).fill(false),Array(steps.length).fill(false)],extraChecked:[{},{}]});
 function load(){let saved;try{saved=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}const fresh=defaults();if(!saved||typeof saved!=='object')return fresh;
@@ -595,10 +595,10 @@ function renderTemplates(id,emojiField,textField){
     b.addEventListener('click',()=>{$(emojiField).value=emoji;$(textField).value=text;});return b;}));
 }
 renderTemplates('ruleTemplates','ruleEmoji','ruleText');renderTemplates('quickTemplates','quickEmoji','quickText');
-// Schnell-Hinzufügen: lange drücken öffnet das Fenster; vormittags ist „heute“ vorgewählt, sonst „morgen“.
+// Schnell-Hinzufügen: lange drücken öffnet das Fenster; „heute“ ist vorgewählt.
 const newId=()=>'r'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 onHold($('quickOpen'),'Zum Hinzufügen lange drücken.','Zusätzlichen Punkt hinzufügen?',()=>{
-  $('quickDay').value=new Date().getHours()<12?'0':'1';$('quickText').value='';$('quickEmoji').value='⭐';$('quickDialog').showModal();$('quickText').focus();},'quickInfo');
+  $('quickDay').value='0';$('quickText').value='';$('quickEmoji').value='⭐';$('quickDialog').showModal();$('quickText').focus();},'quickInfo');
 $('quickCancel').addEventListener('click',()=>$('quickDialog').close());
 $('quickForm').addEventListener('submit',e=>{e.preventDefault();$('quickAdd').click();});
 $('quickAdd').addEventListener('click',()=>{const text=$('quickText').value.trim();if(!text){$('quickText').focus();return;}

@@ -70,8 +70,8 @@
 **Ziel:** Einmalige Punkte, z. B. Ausflug, Fotograf oder Laternenfest, schnell eintragen, ohne dass sie jedes Jahr wiederkommen.
 
 - **Wann? mit drei Möglichkeiten** bei „Besondere Tage“: Regelmäßig (cron), An einem Datum, Nur morgen. Einmalige Punkte haben ein Datum statt einer cron-Regel und werden nach dem Tag automatisch gelöscht. In der Liste stehen sie mit „Mi., 14.10. · einmalig“.
-- **Schnell-Hinzufügen:** Knopf „➕ Punkt für morgen“ unter den Karten. Er öffnet per langem Drücken ein Fenster mit Bild, Text, Kind und heute/morgen. Vor 12 Uhr ist „heute“ vorgewählt, sonst „morgen“.
-- **Vorlagen** zum Antippen, in beiden Formularen: 🍎 Brotdose, 💧 Trinkflasche, 📚 Hausaufgaben, 📝 Zettel unterschrieben, 🏊 Schwimmsachen, ⚽ Sportbeutel, 🧸 Spielzeug, 🖍️ Bastelsachen, 🎁 Geschenk, ☂️ Regenjacke.
+- **Schnell-Hinzufügen:** Knopf „➕ Zusätzlicher Punkt“ unter den Karten. Er öffnet per langem Drücken ein Fenster mit Bild, Text, Kind und heute/morgen; „heute“ ist vorgewählt.
+- **Vorlagen** zum Antippen, in beiden Formularen: 🏊 Schwimmsachen, 🖍️ Bastelsachen, 🎁 Geschenk, ☂️ Regensachen. Brotdose und Trinkflasche sind selbstverständlich, Sportbeutel und Spielzeug laufen über regelmäßige Regeln.
 - Kontrolle über „Liste testen für Tag“.
 
 ## Wenn Zeit und Lust ist
@@ -121,6 +121,7 @@ Neueste Version oben. Die Version steht in `sw.js` und unten in der App.
 
 | Version | Branch | Änderung |
 |---|---|---|
+| v11 | `feature/5-zusatzpunkte` | Vorlagen gekürzt auf Schwimmsachen, Bastelsachen, Geschenk, Regensachen (statt Regenjacke). Knopf heißt „➕ Zusätzlicher Punkt“, „heute“ ist immer vorgewählt. |
 | v10 | `feature/5-zusatzpunkte` | Backlog 9: Einmalige Punkte (nur morgen oder an einem Datum), die danach automatisch verschwinden. Schnell-Hinzufügen „➕ Punkt für morgen“ unter den Karten (langes Drücken, Fenster mit heute/morgen). Vorlagen zum Antippen. Außerdem behoben: Ausgeblendete Felder wurden teils trotzdem angezeigt, z. B. „Heute geht's …“ am Wochenende. |
 | v9 | `feature/4-wochenende` | Am Wochenende kein Wecker und kein Dauer-Display. Stattdessen eine Erinnerung zu einer eigenen Uhrzeit (Standard 10:00) mit kurzem Ton und Liste der offenen Punkte, nur wenn noch etwas offen ist. „Heute geht's …“ ist am Wochenende ausgeblendet. |
 | v8 | `feature/4-wochenende` | Backlog 6 und 7: „Hinzufügen“ und „Löschen“ bei den besonderen Tagen nur per langem Drücken (1,5 s, Füllbalken im Knopf; per Tastatur mit Rückfrage). Am Wochenende entfallen „Tasche“ und „Schuhe & Jacke“; neuer Schritt „🎀 Haare gebürstet & Frisur gemacht“ jeden Tag. Die heutigen Häkchen werden beim Update einmalig zurückgesetzt. |
