@@ -230,6 +230,7 @@
     .card.b{--kid:var(--kid-lila);--kid-edge:var(--kid-lila-edge);--kid-ink:var(--pf-ink);
       --tag:var(--kid-lila-deep);--tag-edge:var(--kid-lila-deep-edge);--tag-ink:#fff}
     *{box-sizing:border-box}
+    [hidden]{display:none!important}
     body{margin:0;min-height:100vh;font-synthesis:none}
     main{max-width:1100px;margin:auto;padding:28px 20px 42px}
     h1.pf-title{font-size:clamp(2rem,5vw,3.2rem);margin:4px 0 8px}
@@ -259,6 +260,17 @@
     .hold{position:relative;overflow:hidden;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
     .hold::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.2);transform:scaleX(0);transform-origin:left;pointer-events:none}
     .hold.holding::after{transform:scaleX(1);transition:transform 1.5s linear}
+    .templates{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
+    .chip{font:inherit;font-size:.9rem;font-weight:700;border:2px solid var(--pf-hair);background:var(--pf-card);color:var(--pf-ink);border-radius:var(--pf-radius-pill);padding:6px 12px;min-height:40px;cursor:pointer}
+    .chip:active{transform:translateY(2px)}
+    .quick{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:10px 16px;margin-top:22px}
+    .quick .hint{margin:0}
+    .quick-dialog{border:0;border-radius:var(--pf-radius);padding:22px;width:calc(100% - 32px);max-width:560px;background:var(--pf-card);color:var(--pf-ink);box-shadow:var(--pf-shadow-card)}
+    .quick-dialog::backdrop{background:rgba(40,30,15,.45)}
+    .quick-dialog h2{margin:0 0 6px;font-size:1.4rem}
+    .quick-dialog .rule-form{margin-top:4px}
+    .dialog-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:12px;margin-top:18px}
+    .dialog-actions .pf-btn{min-height:48px}
     .plan code{font-family:ui-monospace,monospace;background:rgba(0,0,0,.06);padding:1px 5px;border-radius:6px;white-space:nowrap}
     .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
     .card{padding:20px;min-width:0;background:var(--kid);box-shadow:0 8px 0 var(--kid-edge),var(--pf-shadow-card),inset 0 2px 2px rgba(255,255,255,.4);color:var(--kid-ink)}
@@ -312,7 +324,7 @@
       .bar{margin:10px 0}.tasks{grid-template-columns:1fr;gap:7px}.task{flex-direction:row;justify-content:flex-start;text-align:left;min-height:48px;padding:7px;gap:7px}
       .task input{width:21px;height:21px;min-height:21px}.emoji{font-size:19pt;width:29px}.task-text{font-size:11pt}
       .ready{font-size:10pt;padding:8px;margin-top:10px}.tip{margin-top:14px;padding:12px;break-inside:avoid}
-      .hint,.footer,.leave,.version,.plan,.preview-bar{display:none}.status{margin-top:14px;padding:12px}
+      .hint,.footer,.leave,.version,.plan,.preview-bar,.quick,.quick-dialog{display:none}.status{margin-top:14px;padding:12px}
     }
   </style>
 </head>
@@ -346,6 +358,19 @@
       <div class="tasks" id="tasks1"></div><div class="ready" id="ready1" role="status">Schritt für Schritt – du schaffst das!</div>
     </section>
   </div>
+  <div class="quick"><p class="hint" id="quickInfo" aria-live="polite"></p><button class="pf-btn pf-btn--secondary hold" type="button" id="quickOpen" aria-label="Punkt für heute oder morgen hinzufügen (lange drücken)">➕ Punkt für morgen</button></div>
+  <dialog class="quick-dialog" id="quickDialog" aria-labelledby="quickTitle">
+    <h2 id="quickTitle">➕ Zusätzlicher Punkt</h2>
+    <p class="hint">Gilt nur für einen Tag und verschwindet danach von selbst.</p>
+    <div class="templates" id="quickTemplates" aria-label="Vorlagen"></div>
+    <form class="rule-form" id="quickForm" method="dialog">
+      <div class="field small"><label for="quickEmoji">Bild</label><input id="quickEmoji" maxlength="8" value="⭐" autocomplete="off"></div>
+      <div class="field"><label for="quickText">Was?</label><input id="quickText" maxlength="40" placeholder="z. B. Brotdose" autocomplete="off"></div>
+      <div class="field"><label for="quickKid">Für</label><select id="quickKid"><option value="0">Kind 1</option><option value="1">Kind 2</option><option value="2">beide</option></select></div>
+      <div class="field"><label for="quickDay">Wann?</label><select id="quickDay"><option value="0">heute</option><option value="1">morgen</option></select></div>
+    </form>
+    <div class="dialog-actions"><button class="pf-btn pf-btn--secondary" type="button" id="quickCancel">Abbrechen</button><button class="pf-btn pf-btn--primary" type="button" id="quickAdd">➕ Hinzufügen</button></div>
+  </dialog>
   <div class="status" id="allReady" role="status">🎉 Beide sind startklar! Jetzt können wir gemeinsam los.</div>
   <section class="tip pf-card">
     <h2>🧸 Und wann spielen wir?</h2>
@@ -359,15 +384,18 @@
     <summary>📅 Besondere Tage einstellen</summary>
     <p class="hint">Diese Punkte kommen nur an bestimmten Tagen zur Liste dazu, z. B. der Sportbeutel. Zum Hinzufügen und Löschen den Knopf lange drücken.</p>
     <ul class="rules" id="rules"></ul>
+    <div class="templates" id="ruleTemplates" aria-label="Vorlagen"></div>
     <form class="rule-form" id="ruleForm">
       <div class="field small"><label for="ruleEmoji">Bild</label><input id="ruleEmoji" maxlength="8" value="⭐" required autocomplete="off"></div>
       <div class="field"><label for="ruleText">Was?</label><input id="ruleText" maxlength="40" placeholder="z. B. Sportbeutel" required autocomplete="off"></div>
       <div class="field"><label for="ruleKid">Für</label><select id="ruleKid"><option value="0">Kind 1</option><option value="1">Kind 2</option><option value="2">beide</option></select></div>
-      <div class="field"><label for="ruleCron">Wann?</label><input id="ruleCron" placeholder="* * 2" required autocomplete="off" spellcheck="false"></div>
+      <div class="field"><label for="ruleWhen">Wann?</label><select id="ruleWhen"><option value="cron">Regelmäßig</option><option value="date">An einem Datum</option><option value="tomorrow">Nur morgen</option></select></div>
+      <div class="field" id="ruleCronField"><label for="ruleCron">Regel</label><input id="ruleCron" placeholder="* * 2" autocomplete="off" spellcheck="false"></div>
+      <div class="field" id="ruleDateField" hidden><label for="ruleDate">Datum</label><input type="date" id="ruleDate"></div>
       <button class="pf-btn pf-btn--primary hold" type="button" id="ruleAdd" aria-label="Hinzufügen (lange drücken)">➕ Hinzufügen</button>
     </form>
     <p class="hint" id="ruleInfo" aria-live="polite"></p>
-    <p class="hint">„Wann?“ wie bei cron: <code>Tag Monat Wochentag</code>. Wochentag 1 = Mo … 6 = Sa, 0 oder 7 = So, oder <code>mo</code> … <code>so</code>.
+    <p class="hint" id="cronHelp">„Regel“ wie bei cron: <code>Tag Monat Wochentag</code>. Wochentag 1 = Mo … 6 = Sa, 0 oder 7 = So, oder <code>mo</code> … <code>so</code>.
       Beispiele: <code>* * 2</code> jeden Dienstag · <code>* * 1,4</code> Mo und Do · <code>* * 1#1</code> jeden 1. Montag im Monat · <code>* * 4L</code> jeden letzten Donnerstag · <code>15 * *</code> jeden 15. · <code>L * *</code> am Monatsletzten · <code>14 11 *</code> am 14. November.</p>
     <div class="preview">
       <div class="field"><label for="previewDate">Liste testen für Tag</label><input type="date" id="previewDate"></div>
@@ -437,8 +465,18 @@ function cronMatches(expr,date){if(!cronCache.has(expr))cronCache.set(expr,parse
 function nextDates(expr,count){const out=[],d=new Date();d.setHours(12,0,0,0);
   for(let n=0;n<800&&out.length<count;n++,d.setDate(d.getDate()+1))if(cronMatches(expr,d))out.push(new Date(d));return out;}
 const shortDate=d=>new Intl.DateTimeFormat('de-DE',{weekday:'short',day:'numeric',month:'numeric'}).format(d);
-const validRule=r=>r&&typeof r==='object'&&typeof r.id==='string'&&typeof r.emoji==='string'&&typeof r.text==='string'&&[0,1,2].includes(r.kid)&&typeof r.cron==='string'&&!!parseCron(r.cron);
-function localDate(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
+// Eine Regel hat entweder cron (wiederkehrend) oder date (einmalig, YYYY-MM-DD).
+const DATE_RE=/^\d{4}-\d{2}-\d{2}$/;
+const validRule=r=>r&&typeof r==='object'&&typeof r.id==='string'&&typeof r.emoji==='string'&&typeof r.text==='string'&&[0,1,2].includes(r.kid)
+  &&(typeof r.date==='string'?DATE_RE.test(r.date):typeof r.cron==='string'&&!!parseCron(r.cron));
+const ruleMatches=(r,day)=>r.date?r.date===localDate(day):cronMatches(r.cron,day);
+const parseDay=key=>{const [y,m,d]=key.split('-').map(Number);return new Date(y,m-1,d,12);};
+const dayFromToday=n=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return d;};
+// Einmalige Punkte von vergangenen Tagen aufräumen.
+const pruneRules=rules=>rules.filter(r=>!r.date||r.date>=localDate());
+// Vorlagen für häufige Zusatzpunkte.
+const TEMPLATES=[['🍎','Brotdose'],['💧','Trinkflasche'],['📚','Hausaufgaben'],['📝','Zettel unterschrieben'],['🏊','Schwimmsachen'],['⚽','Sportbeutel'],['🧸','Spielzeug mitnehmen'],['🖍️','Bastelsachen'],['🎁','Geschenk'],['☂️','Regenjacke']];
+function localDate(d=new Date()){return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
 const defaults=()=>({date:localDate(),names:['',''],departure:'07:45',weekendTime:'10:00',transport:'🚶 zu Fuß',alarmFor:'',rules:defaultRules(),checked:[Array(steps.length).fill(false),Array(steps.length).fill(false)],extraChecked:[{},{}]});
 function load(){let saved;try{saved=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}const fresh=defaults();if(!saved||typeof saved!=='object')return fresh;
   if(Array.isArray(saved.names))fresh.names=saved.names.slice(0,2).map(x=>typeof x==='string'?x:'');
@@ -446,7 +484,7 @@ function load(){let saved;try{saved=JSON.parse(localStorage.getItem(KEY)||'null'
   if(typeof saved.weekendTime==='string'&&/^\d{2}:\d{2}$/.test(saved.weekendTime))fresh.weekendTime=saved.weekendTime;
   if(typeof saved.alarmFor==='string')fresh.alarmFor=saved.alarmFor;
   if([...$('transport').options].some(o=>o.value===saved.transport))fresh.transport=saved.transport;
-  if(Array.isArray(saved.rules))fresh.rules=saved.rules.filter(validRule);
+  if(Array.isArray(saved.rules))fresh.rules=pruneRules(saved.rules.filter(validRule));
   if(saved.date===fresh.date&&Array.isArray(saved.extraChecked))fresh.extraChecked=[0,1].map(i=>{const c=saved.extraChecked[i];return c&&typeof c==='object'&&!Array.isArray(c)?c:{};});
   if(saved.date===fresh.date&&Array.isArray(saved.checked))fresh.checked=[0,1].map(i=>Array.isArray(saved.checked[i])&&saved.checked[i].length===steps.length?steps.map((_,j)=>saved.checked[i][j]===true):Array(steps.length).fill(false));
   return fresh;
@@ -454,7 +492,7 @@ function load(){let saved;try{saved=JSON.parse(localStorage.getItem(KEY)||'null'
 let state=load();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){/* private mode: usable without saving */}}
 function clearChecks(){state.checked=[Array(steps.length).fill(false),Array(steps.length).fill(false)];state.extraChecked=[{},{}];}
-function syncDay(){if(state.date!==localDate()){state.date=localDate();clearChecks();save();render();}}
+function syncDay(){if(state.date!==localDate()){state.date=localDate();clearChecks();state.rules=pruneRules(state.rules);save();render();}}
 // Heutige Liste eines Kindes: die heute gültigen festen Schritte, die Punkte besonderer Tage vor dem letzten Schritt.
 // In der Vorschau (preview gesetzt) gilt ein anderer Tag, und Häkchen landen nur in previewChecked.
 let preview=null,previewChecked=[{},{}];
@@ -462,29 +500,30 @@ function itemsFor(i){
   const day=preview||new Date();
   const own=(key,saved)=>preview?{get:()=>previewChecked[i][key]===true,set:v=>{previewChecked[i][key]=v;}}:saved;
   const items=steps.map(([emoji,text,cron],j)=>cron&&!cronMatches(cron,day)?null:{emoji,text,...own('s'+j,{get:()=>state.checked[i][j],set:v=>{state.checked[i][j]=v;}})}).filter(Boolean);
-  const extras=state.rules.filter(r=>(r.kid===i||r.kid===2)&&cronMatches(r.cron,day))
+  const extras=state.rules.filter(r=>(r.kid===i||r.kid===2)&&ruleMatches(r,day))
     .map(r=>({emoji:r.emoji,text:r.text,...own(r.id,{get:()=>state.extraChecked[i][r.id]===true,set:v=>{state.extraChecked[i][r.id]=v;}})}));
   items.splice(items.length-1,0,...extras);return items;
 }
 // Ändern bei „Besondere Tage“ nur per langem Drücken, damit Kinder nichts aus Versehen löschen.
 // Per Tastatur (Klick ohne Zeiger) gibt es stattdessen eine Rückfrage.
 const HOLD_MS=1500;
-function onHold(btn,hint,question,action){
+function onHold(btn,hint,question,action,info='ruleInfo'){
   let timer=null;
   const stop=()=>{clearTimeout(timer);timer=null;btn.classList.remove('holding');};
   btn.addEventListener('pointerdown',e=>{if(e.button!==0)return;btn.classList.add('holding');timer=setTimeout(()=>{stop();action();},HOLD_MS);});
-  ['pointerup','pointerleave','pointercancel'].forEach(type=>btn.addEventListener(type,()=>{if(timer){stop();$('ruleInfo').textContent='👆 '+hint;}}));
+  ['pointerup','pointerleave','pointercancel'].forEach(type=>btn.addEventListener(type,()=>{if(timer){stop();$(info).textContent='👆 '+hint;}}));
   btn.addEventListener('click',e=>{if(e.detail===0&&confirm(question))action();});
   btn.addEventListener('contextmenu',e=>e.preventDefault());
 }
 const kidName=i=>state.names[i].trim()||`Kind ${i+1}`;
 function renderRules(){
-  [0,1].forEach(i=>{$('ruleKid').options[i].textContent=kidName(i);});
+  [0,1].forEach(i=>{$('ruleKid').options[i].textContent=kidName(i);$('quickKid').options[i].textContent=kidName(i);});
   $('rules').replaceChildren(...state.rules.map(r=>{
     const li=document.createElement('li');
     const what=document.createElement('span');what.className='what';what.textContent=r.emoji+' '+r.text+' · '+(r.kid===2?'beide':kidName(r.kid));
-    const when=document.createElement('span');when.className='when';const next=nextDates(r.cron,1)[0];
-    const code=document.createElement('code');code.textContent=r.cron;when.append(code,next?' · nächstes Mal '+shortDate(next):' · kein Termin in Sicht');
+    const when=document.createElement('span');when.className='when';
+    if(r.date)when.textContent=shortDate(parseDay(r.date))+' · einmalig';
+    else{const next=nextDates(r.cron,1)[0];const code=document.createElement('code');code.textContent=r.cron;when.append(code,next?' · nächstes Mal '+shortDate(next):' · kein Termin in Sicht');}
     const del=document.createElement('button');del.type='button';del.className='pf-btn pf-btn--secondary hold';del.textContent='🗑️ Löschen';del.setAttribute('aria-label',r.text+' löschen (lange drücken)');
     onHold(del,'Zum Löschen lange drücken.','„'+r.text+'“ löschen?',()=>{state.rules=state.rules.filter(x=>x!==r);save();render();$('ruleInfo').textContent='🗑️ „'+r.text+'“ gelöscht.';});
     li.append(what,when,del);return li;
@@ -537,6 +576,36 @@ function showCronPreview(){const expr=$('ruleCron').value.trim();
   if(!parseCron(expr)){$('ruleInfo').textContent='⚠️ „'+expr+'“ verstehe ich nicht. Beispiele stehen unten.';return false;}
   const next=nextDates(expr,3);$('ruleInfo').textContent=next.length?'Nächste Termine: '+next.map(shortDate).join(', '):'⚠️ Dieser Termin kommt in den nächsten zwei Jahren nicht vor.';return next.length>0;}
 $('ruleCron').addEventListener('input',showCronPreview);
+function showWhen(){const when=$('ruleWhen').value;
+  $('ruleCronField').hidden=$('cronHelp').hidden=when!=='cron';$('ruleDateField').hidden=when!=='date';
+  $('ruleInfo').textContent=when==='tomorrow'?'Gilt nur für morgen, '+shortDate(dayFromToday(1))+'.':'';
+  if(when==='cron')showCronPreview();
+}
+$('ruleWhen').addEventListener('change',showWhen);
+// Liefert die Zeitangabe der neuen Regel ({cron} oder {date}) oder null mit Hinweis.
+function ruleTiming(){const when=$('ruleWhen').value;
+  if(when==='tomorrow')return {date:localDate(dayFromToday(1))};
+  if(when==='date'){const v=$('ruleDate').value;
+    if(!DATE_RE.test(v)||v<localDate()){$('ruleInfo').textContent='⚠️ Bitte ein Datum ab heute wählen.';$('ruleDate').focus();return null;}
+    return {date:v};}
+  return showCronPreview()?{cron:$('ruleCron').value.trim()}:null;
+}
+function renderTemplates(id,emojiField,textField){
+  $(id).replaceChildren(...TEMPLATES.map(([emoji,text])=>{const b=document.createElement('button');b.type='button';b.className='chip';b.textContent=emoji+' '+text;
+    b.addEventListener('click',()=>{$(emojiField).value=emoji;$(textField).value=text;});return b;}));
+}
+renderTemplates('ruleTemplates','ruleEmoji','ruleText');renderTemplates('quickTemplates','quickEmoji','quickText');
+// Schnell-Hinzufügen: lange drücken öffnet das Fenster; vormittags ist „heute“ vorgewählt, sonst „morgen“.
+const newId=()=>'r'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+onHold($('quickOpen'),'Zum Hinzufügen lange drücken.','Zusätzlichen Punkt hinzufügen?',()=>{
+  $('quickDay').value=new Date().getHours()<12?'0':'1';$('quickText').value='';$('quickEmoji').value='⭐';$('quickDialog').showModal();$('quickText').focus();},'quickInfo');
+$('quickCancel').addEventListener('click',()=>$('quickDialog').close());
+$('quickForm').addEventListener('submit',e=>{e.preventDefault();$('quickAdd').click();});
+$('quickAdd').addEventListener('click',()=>{const text=$('quickText').value.trim();if(!text){$('quickText').focus();return;}
+  const day=dayFromToday(Number($('quickDay').value));
+  state.rules.push({id:newId(),emoji:$('quickEmoji').value.trim()||'⭐',text,kid:Number($('quickKid').value),date:localDate(day)});
+  save();render();$('quickDialog').close();
+  $('quickInfo').textContent='✅ „'+text+'“ für '+($('quickDay').value==='0'?'heute':'morgen, '+shortDate(day))+' eingetragen.';});
 function setPreview(value){
   const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(value||'');
   preview=m&&value!==localDate()?new Date(Number(m[1]),Number(m[2])-1,Number(m[3]),12):null;previewChecked=[{},{}];
@@ -548,9 +617,9 @@ function setPreview(value){
 $('previewDate').addEventListener('change',e=>{setPreview(e.target.value);if(preview)$('previewBar').scrollIntoView({behavior:'smooth',block:'start'});});
 $('previewEnd').addEventListener('click',()=>setPreview(''));
 $('ruleForm').addEventListener('submit',e=>e.preventDefault());
-onHold($('ruleAdd'),'Zum Hinzufügen lange drücken.','Diesen Punkt hinzufügen?',()=>{if(!$('ruleText').value.trim()){$('ruleText').focus();return;}if(!showCronPreview())return;
-  state.rules.push({id:'r'+Date.now().toString(36),emoji:$('ruleEmoji').value.trim()||'⭐',text:$('ruleText').value.trim(),kid:Number($('ruleKid').value),cron:$('ruleCron').value.trim()});
-  $('ruleText').value='';$('ruleCron').value='';$('ruleInfo').textContent='✅ Hinzugefügt.';save();render();});
+onHold($('ruleAdd'),'Zum Hinzufügen lange drücken.','Diesen Punkt hinzufügen?',()=>{if(!$('ruleText').value.trim()){$('ruleText').focus();return;}const timing=ruleTiming();if(!timing)return;
+  state.rules.push({id:newId(),emoji:$('ruleEmoji').value.trim()||'⭐',text:$('ruleText').value.trim(),kid:Number($('ruleKid').value),...timing});
+  $('ruleText').value='';$('ruleCron').value='';$('ruleDate').value='';$('ruleInfo').textContent='✅ Hinzugefügt.';save();render();});
 render();save();document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncDay();checkDeparture();});setInterval(syncDay,60*1000);
 
 // Abfahrt: Display bis kurz nach der Abfahrt anlassen, zur Abfahrt Wecker und Hinweis.
