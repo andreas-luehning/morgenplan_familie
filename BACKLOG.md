@@ -71,6 +71,7 @@
 - **Zwischenzeiten:** z. B. „Anziehen bis 7:20“, „Frühstück bis 7:35“, mit leiser Erinnerung, wenn etwas noch offen ist.
 - **Belohnung:** Animation oder Stern, wenn ein Kind vor der Abfahrt fertig ist, dazu eine Wochenübersicht.
 - **Vorlesen der Punkte:** Eher unwichtig, weil die Kinder die Punkte an den Icons erkennen.
+- **Kartenhöhe bei unterschiedlich langen Listen:** Im Alltag beobachten. Bisher sind beide Karten gleich hoch, die kürzere hat unten Leerraum. Idee: das Statusfeld („… ist startklar!“) in beiden Karten an den unteren Rand setzen. Alternative: Karten passen sich der Liste an. Betrifft nur die Ansicht nebeneinander, nicht das Handy.
 - **Sync zwischen Geräten:** Nice to have. Aktuell wird nur ein Gerät genutzt.
 
 ---
