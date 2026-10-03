@@ -44,6 +44,25 @@
 - Hilfreich wäre eine Vorschau: „Was steht morgen an?“. Das passt gut zum Abend-Modus (Punkt 5).
 - Da die editierbare Liste (Punkt 4) später kommt, stehen die Regeln zunächst fest im Code. Das Datenformat so wählen, dass Punkt 4 es später bearbeiten kann.
 
+### 6. ✅ Besondere Tage nur per langem Tippen ändern
+
+**Ziel:** Kinder können Regeln nicht versehentlich löschen oder anlegen.
+
+- „🗑️ Löschen“ und „➕ Hinzufügen“ reagieren nur auf langes Drücken (umgesetzt: 1,5 Sekunden), mit sichtbarem Fortschritt im Knopf, z. B. einem Füllbalken.
+- Kurzes Tippen zeigt nur den Hinweis „Zum Löschen lange drücken“.
+- Auch per Tastatur bedienbar lassen, z. B. Enter gedrückt halten oder eine zusätzliche Rückfrage.
+- Alternative: Schon das Aufklappen von „📅 Besondere Tage einstellen“ braucht langes Drücken.
+- Passt zur Eltern-Sperre aus Punkt 4; dieselbe Lösung später für die editierbare Liste nutzen.
+
+### 7. ✅ Wochenend-Profil und Frisur
+
+**Ziel:** Am Wochenende passt die Liste zum freien Tag, und jeden Tag gibt es einen Punkt für die Haare.
+
+- „🎒 Tasche ist bereit“ und „👟 Schuhe & Jacke an“ gelten nur Mo–Fr. Technisch bekommen feste Schritte optional eine cron-Regel (`* * 1-5`), wie die besonderen Tage.
+- Neuer fester Schritt jeden Tag: „🎀 Haare gebürstet & Frisur gemacht“ (z. B. Zopf).
+- Mit „Liste testen für Tag“ lässt sich das Wochenende vorab ansehen.
+- Offen: Soll der Wecker zur Abfahrtszeit am Wochenende auch klingeln? Aktuell klingelt er jeden Tag.
+
 ## Wenn Zeit und Lust ist
 
 ### 4. Liste editierbar machen
@@ -62,16 +81,6 @@
 - Umschalten zwischen Morgen und Abend, entweder per Schalter oder automatisch nach Uhrzeit.
 - Eigene Punkte und eigener Abhak-Status, unabhängig vom Morgen.
 - Er kann die Punkte von morgen aus Punkt 3 anzeigen, z. B. „Morgen ist Sport, Sportbeutel packen“.
-
-### 6. Besondere Tage nur per langem Tippen ändern
-
-**Ziel:** Kinder können Regeln nicht versehentlich löschen oder anlegen.
-
-- „🗑️ Löschen“ und „➕ Hinzufügen“ reagieren nur auf langes Drücken (ca. 1–2 Sekunden), mit sichtbarem Fortschritt im Knopf, z. B. einem Füllbalken.
-- Kurzes Tippen zeigt nur den Hinweis „Zum Löschen lange drücken“.
-- Auch per Tastatur bedienbar lassen, z. B. Enter gedrückt halten oder eine zusätzliche Rückfrage.
-- Alternative: Schon das Aufklappen von „📅 Besondere Tage einstellen“ braucht langes Drücken.
-- Passt zur Eltern-Sperre aus Punkt 4; dieselbe Lösung später für die editierbare Liste nutzen.
 
 ---
 
@@ -92,6 +101,7 @@ Neueste Version oben. Die Version steht in `sw.js` und unten in der App.
 
 | Version | Branch | Änderung |
 |---|---|---|
+| v8 | `feature/4-wochenende` | Backlog 6 und 7: „Hinzufügen“ und „Löschen“ bei den besonderen Tagen nur per langem Drücken (1,5 s, Füllbalken im Knopf; per Tastatur mit Rückfrage). Am Wochenende entfallen „Tasche“ und „Schuhe & Jacke“; neuer Schritt „🎀 Haare gebürstet & Frisur gemacht“ jeden Tag. Die heutigen Häkchen werden beim Update einmalig zurückgesetzt. |
 | v7 | `feature/3-tagesplan` | „Besondere Tage“ als Karte mit Hintergrund, damit sie lesbar ist. Neu: „Liste testen für Tag“ zeigt die Checkliste für ein beliebiges Datum als Vorschau, ohne Häkchen zu speichern. Darüber steht eine Hinweisleiste mit „Zurück zu heute“. |
 | v6 | `feature/3-tagesplan` | Einstellung umbenannt in „📅 Besondere Tage einstellen“ (statt „Extra-Punkte“) und zugeklappt ans Seitenende verschoben, weil sie selten gebraucht wird. |
 | v5 | `feature/3-tagesplan` | Spielzeugtag (🧸 „Spielzeug mitnehmen“) am 1. Montag im Monat für Kind 2 voreingestellt. Greift nur auf Geräten ohne gespeicherte Regeln. |

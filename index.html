@@ -256,6 +256,9 @@
     .rule-form{display:flex;flex-wrap:wrap;align-items:end;gap:12px}
     .rule-form .field.small{flex:0 0 76px;min-width:76px}
     .rule-form .pf-btn{min-height:48px}
+    .hold{position:relative;overflow:hidden;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
+    .hold::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.2);transform:scaleX(0);transform-origin:left;pointer-events:none}
+    .hold.holding::after{transform:scaleX(1);transition:transform 1.5s linear}
     .plan code{font-family:ui-monospace,monospace;background:rgba(0,0,0,.06);padding:1px 5px;border-radius:6px;white-space:nowrap}
     .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
     .card{padding:20px;min-width:0;background:var(--kid);box-shadow:0 8px 0 var(--kid-edge),var(--pf-shadow-card),inset 0 2px 2px rgba(255,255,255,.4);color:var(--kid-ink)}
@@ -333,12 +336,12 @@
   <div class="preview-bar" id="previewBar" role="status" hidden><span id="previewText"></span><button class="pf-btn pf-btn--secondary" type="button" id="previewEnd">↩ Zurück zu heute</button></div>
   <div class="cards" id="cards">
     <section class="card a pf-board" aria-label="Checkliste Kind 1">
-      <div class="kid-title"><h2 id="heading0">🐇 Kind 1</h2><span class="count" id="count0" aria-live="polite">0 von 6</span></div>
+      <div class="kid-title"><h2 id="heading0">🐇 Kind 1</h2><span class="count" id="count0" aria-live="polite"></span></div>
       <div class="bar" role="progressbar" aria-label="Fortschritt Kind 1" aria-valuemin="0" aria-valuenow="0" id="progress0"><div class="fill" id="fill0"></div></div>
       <div class="tasks" id="tasks0"></div><div class="ready" id="ready0" role="status">Schritt für Schritt – du schaffst das!</div>
     </section>
     <section class="card b pf-board" aria-label="Checkliste Kind 2">
-      <div class="kid-title"><h2 id="heading1">🐻 Kind 2</h2><span class="count" id="count1" aria-live="polite">0 von 6</span></div>
+      <div class="kid-title"><h2 id="heading1">🐻 Kind 2</h2><span class="count" id="count1" aria-live="polite"></span></div>
       <div class="bar" role="progressbar" aria-label="Fortschritt Kind 2" aria-valuemin="0" aria-valuenow="0" id="progress1"><div class="fill" id="fill1"></div></div>
       <div class="tasks" id="tasks1"></div><div class="ready" id="ready1" role="status">Schritt für Schritt – du schaffst das!</div>
     </section>
@@ -354,14 +357,14 @@
   </div>
   <details class="plan pf-card">
     <summary>📅 Besondere Tage einstellen</summary>
-    <p class="hint">Diese Punkte kommen nur an bestimmten Tagen zur Liste dazu, z. B. der Sportbeutel.</p>
+    <p class="hint">Diese Punkte kommen nur an bestimmten Tagen zur Liste dazu, z. B. der Sportbeutel. Zum Hinzufügen und Löschen den Knopf lange drücken.</p>
     <ul class="rules" id="rules"></ul>
     <form class="rule-form" id="ruleForm">
       <div class="field small"><label for="ruleEmoji">Bild</label><input id="ruleEmoji" maxlength="8" value="⭐" required autocomplete="off"></div>
       <div class="field"><label for="ruleText">Was?</label><input id="ruleText" maxlength="40" placeholder="z. B. Sportbeutel" required autocomplete="off"></div>
       <div class="field"><label for="ruleKid">Für</label><select id="ruleKid"><option value="0">Kind 1</option><option value="1">Kind 2</option><option value="2">beide</option></select></div>
       <div class="field"><label for="ruleCron">Wann?</label><input id="ruleCron" placeholder="* * 2" required autocomplete="off" spellcheck="false"></div>
-      <button class="pf-btn pf-btn--primary" type="submit">➕ Hinzufügen</button>
+      <button class="pf-btn pf-btn--primary hold" type="button" id="ruleAdd" aria-label="Hinzufügen (lange drücken)">➕ Hinzufügen</button>
     </form>
     <p class="hint" id="ruleInfo" aria-live="polite"></p>
     <p class="hint">„Wann?“ wie bei cron: <code>Tag Monat Wochentag</code>. Wochentag 1 = Mo … 6 = Sa, 0 oder 7 = So, oder <code>mo</code> … <code>so</code>.
@@ -379,7 +382,10 @@
 <script>
 'use strict';
 const KEY='morgenplan-zwei-kinder-v1';
-const steps=[['🌤️','Aufgestanden'],['👕','Angezogen'],['🥣','Gefrühstückt'],['🪥','Zähne geputzt'],['🎒','Tasche ist bereit'],['👟','Schuhe & Jacke an']];
+// Feste Schritte. Der dritte Eintrag ist optional eine cron-Regel (siehe parseCron), an welchen Tagen der Schritt gilt.
+const SCHOOL_DAYS='* * 1-5';
+const steps=[['🌤️','Aufgestanden'],['👕','Angezogen'],['🥣','Gefrühstückt'],['🪥','Zähne geputzt'],['🎀','Haare gebürstet & Frisur gemacht'],
+  ['🎒','Tasche ist bereit',SCHOOL_DAYS],['👟','Schuhe & Jacke an',SCHOOL_DAYS]];
 const $=id=>document.getElementById(id);
 // Besondere Tage: Punkte, die nur an bestimmten Tagen dazukommen. „cron“ hat drei Felder: Tag Monat Wochentag
 // (bei fünf Feldern werden Minute und Stunde ignoriert). kid: 0 = Kind 1, 1 = Kind 2, 2 = beide.
@@ -441,23 +447,34 @@ function load(){let saved;try{saved=JSON.parse(localStorage.getItem(KEY)||'null'
   if([...$('transport').options].some(o=>o.value===saved.transport))fresh.transport=saved.transport;
   if(Array.isArray(saved.rules))fresh.rules=saved.rules.filter(validRule);
   if(saved.date===fresh.date&&Array.isArray(saved.extraChecked))fresh.extraChecked=[0,1].map(i=>{const c=saved.extraChecked[i];return c&&typeof c==='object'&&!Array.isArray(c)?c:{};});
-  if(saved.date===fresh.date&&Array.isArray(saved.checked))fresh.checked=[0,1].map(i=>Array.isArray(saved.checked[i])?steps.map((_,j)=>saved.checked[i][j]===true):Array(steps.length).fill(false));
+  if(saved.date===fresh.date&&Array.isArray(saved.checked))fresh.checked=[0,1].map(i=>Array.isArray(saved.checked[i])&&saved.checked[i].length===steps.length?steps.map((_,j)=>saved.checked[i][j]===true):Array(steps.length).fill(false));
   return fresh;
 }
 let state=load();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){/* private mode: usable without saving */}}
 function clearChecks(){state.checked=[Array(steps.length).fill(false),Array(steps.length).fill(false)];state.extraChecked=[{},{}];}
 function syncDay(){if(state.date!==localDate()){state.date=localDate();clearChecks();save();render();}}
-// Heutige Liste eines Kindes: feste Schritte, die Punkte besonderer Tage vor dem letzten Schritt.
+// Heutige Liste eines Kindes: die heute gültigen festen Schritte, die Punkte besonderer Tage vor dem letzten Schritt.
 // In der Vorschau (preview gesetzt) gilt ein anderer Tag, und Häkchen landen nur in previewChecked.
 let preview=null,previewChecked=[{},{}];
 function itemsFor(i){
   const day=preview||new Date();
   const own=(key,saved)=>preview?{get:()=>previewChecked[i][key]===true,set:v=>{previewChecked[i][key]=v;}}:saved;
-  const items=steps.map(([emoji,text],j)=>({emoji,text,...own('s'+j,{get:()=>state.checked[i][j],set:v=>{state.checked[i][j]=v;}})}));
+  const items=steps.map(([emoji,text,cron],j)=>cron&&!cronMatches(cron,day)?null:{emoji,text,...own('s'+j,{get:()=>state.checked[i][j],set:v=>{state.checked[i][j]=v;}})}).filter(Boolean);
   const extras=state.rules.filter(r=>(r.kid===i||r.kid===2)&&cronMatches(r.cron,day))
     .map(r=>({emoji:r.emoji,text:r.text,...own(r.id,{get:()=>state.extraChecked[i][r.id]===true,set:v=>{state.extraChecked[i][r.id]=v;}})}));
   items.splice(items.length-1,0,...extras);return items;
+}
+// Ändern bei „Besondere Tage“ nur per langem Drücken, damit Kinder nichts aus Versehen löschen.
+// Per Tastatur (Klick ohne Zeiger) gibt es stattdessen eine Rückfrage.
+const HOLD_MS=1500;
+function onHold(btn,hint,question,action){
+  let timer=null;
+  const stop=()=>{clearTimeout(timer);timer=null;btn.classList.remove('holding');};
+  btn.addEventListener('pointerdown',e=>{if(e.button!==0)return;btn.classList.add('holding');timer=setTimeout(()=>{stop();action();},HOLD_MS);});
+  ['pointerup','pointerleave','pointercancel'].forEach(type=>btn.addEventListener(type,()=>{if(timer){stop();$('ruleInfo').textContent='👆 '+hint;}}));
+  btn.addEventListener('click',e=>{if(e.detail===0&&confirm(question))action();});
+  btn.addEventListener('contextmenu',e=>e.preventDefault());
 }
 const kidName=i=>state.names[i].trim()||`Kind ${i+1}`;
 function renderRules(){
@@ -467,8 +484,8 @@ function renderRules(){
     const what=document.createElement('span');what.className='what';what.textContent=r.emoji+' '+r.text+' · '+(r.kid===2?'beide':kidName(r.kid));
     const when=document.createElement('span');when.className='when';const next=nextDates(r.cron,1)[0];
     const code=document.createElement('code');code.textContent=r.cron;when.append(code,next?' · nächstes Mal '+shortDate(next):' · kein Termin in Sicht');
-    const del=document.createElement('button');del.type='button';del.className='pf-btn pf-btn--secondary';del.textContent='🗑️ Löschen';del.setAttribute('aria-label',r.text+' löschen');
-    del.addEventListener('click',()=>{if(confirm('„'+r.text+'“ löschen?')){state.rules=state.rules.filter(x=>x!==r);save();render();}});
+    const del=document.createElement('button');del.type='button';del.className='pf-btn pf-btn--secondary hold';del.textContent='🗑️ Löschen';del.setAttribute('aria-label',r.text+' löschen (lange drücken)');
+    onHold(del,'Zum Löschen lange drücken.','„'+r.text+'“ löschen?',()=>{state.rules=state.rules.filter(x=>x!==r);save();render();$('ruleInfo').textContent='🗑️ „'+r.text+'“ gelöscht.';});
     li.append(what,when,del);return li;
   }));
 }
@@ -518,7 +535,8 @@ function setPreview(value){
 }
 $('previewDate').addEventListener('change',e=>{setPreview(e.target.value);if(preview)$('previewBar').scrollIntoView({behavior:'smooth',block:'start'});});
 $('previewEnd').addEventListener('click',()=>setPreview(''));
-$('ruleForm').addEventListener('submit',e=>{e.preventDefault();if(!$('ruleText').value.trim()){$('ruleText').focus();return;}if(!showCronPreview())return;
+$('ruleForm').addEventListener('submit',e=>e.preventDefault());
+onHold($('ruleAdd'),'Zum Hinzufügen lange drücken.','Diesen Punkt hinzufügen?',()=>{if(!$('ruleText').value.trim()){$('ruleText').focus();return;}if(!showCronPreview())return;
   state.rules.push({id:'r'+Date.now().toString(36),emoji:$('ruleEmoji').value.trim()||'⭐',text:$('ruleText').value.trim(),kid:Number($('ruleKid').value),cron:$('ruleCron').value.trim()});
   $('ruleText').value='';$('ruleCron').value='';$('ruleInfo').textContent='✅ Hinzugefügt.';save();render();});
 render();save();document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncDay();checkDeparture();});setInterval(syncDay,60*1000);
