@@ -236,9 +236,11 @@
     h1.pf-title{font-size:clamp(2rem,5vw,3.2rem);margin:4px 0 8px}
     .sub{max-width:70ch;line-height:1.6;margin:8px 0 24px}
     .top{padding:22px;margin-bottom:28px}
-    .pages{max-width:420px;margin:0 auto 24px}
-    .pages .pf-pill-ind{width:calc((100% - 10px)/2)}
-    .pages .pf-seg{font-size:1rem;min-height:48px}
+    body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+    .pager{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:5;display:flex;gap:2px;padding:4px 8px;border-radius:var(--pf-radius-pill);background:color-mix(in srgb,var(--pf-card) 88%,transparent);box-shadow:var(--pf-shadow-card)}
+    .dot{width:40px;height:32px;border:0;padding:0;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .dot::after{content:"";width:12px;height:12px;border-radius:var(--pf-radius-pill);background:var(--pf-hair);transition:width .2s,background .2s}
+    .dot.is-active::after{width:28px;background:var(--pf-accent)}
     body.page-heute .top,body.page-heute .tip{display:none}
     .empty{padding:14px;border-radius:var(--pf-radius-sm);background:rgba(255,255,255,.7);color:var(--pf-ink);font-weight:700}
     .settings{display:flex;flex-wrap:wrap;align-items:end;gap:14px}
@@ -314,10 +316,10 @@
     .leave .pf-btn{font-size:1.2rem;min-height:56px}
     @keyframes leave-wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-10deg) scale(1.08)}75%{transform:rotate(10deg) scale(1.08)}}
     @media(max-width:660px){main{padding:18px 12px 30px}.cards{grid-template-columns:1fr}.card,.top{padding:16px}.field{min-width:140px}}
-    @media(prefers-reduced-motion:reduce){.leave-emoji{animation:none}.fill,.task{transition:none}.task:hover,.task:active{transform:none}}
+    @media(prefers-reduced-motion:reduce){.dot::after{transition:none}.leave-emoji{animation:none}.fill,.task{transition:none}.task:hover,.task:active{transform:none}}
     @page{size:A4 portrait;margin:10mm}
     @media print{
-      body.pf-app{background:var(--pf-card);font-size:10pt}
+      body.pf-app{background:var(--pf-card);font-size:10pt;padding-bottom:0}
       main{max-width:none;padding:0}h1.pf-title{font-size:23pt}
       .pf-title .a,.pf-title .b{color:var(--pf-ink)}
       .sub{margin-bottom:12px}.top{padding:12px;margin-bottom:14px}
@@ -329,7 +331,7 @@
       .bar{margin:10px 0}.tasks{grid-template-columns:1fr;gap:7px}.task{flex-direction:row;justify-content:flex-start;text-align:left;min-height:48px;padding:7px;gap:7px}
       .task input{width:21px;height:21px;min-height:21px}.emoji{font-size:19pt;width:29px}.task-text{font-size:11pt}
       .ready{font-size:10pt;padding:8px;margin-top:10px}.tip{margin-top:14px;padding:12px;break-inside:avoid}
-      .hint,.footer,.leave,.version,.plan,.preview-bar,.quick,.quick-dialog,.pages{display:none}.status{margin-top:14px;padding:12px}
+      .hint,.footer,.leave,.version,.plan,.preview-bar,.quick,.quick-dialog,.pager{display:none}.status{margin-top:14px;padding:12px}
     }
   </style>
 </head>
@@ -337,13 +339,9 @@
 <main>
   <header>
     <p class="date pf-eyebrow" id="date"></p>
-    <h1 class="pf-title">🌞 <span class="a">Unser</span> <span class="b">Morgen</span></h1>
-    <p class="sub">Wir werden Schritt für Schritt fertig. Jedes Kind hat seine eigene Liste. <strong>Wir machen kein Wettrennen.</strong> Bei Bedarf helfen die Erwachsenen.</p>
+    <h1 class="pf-title" id="title">🌞 <span class="a">Unser</span> <span class="b">Morgen</span></h1>
+    <p class="sub" id="sub">Wir werden Schritt für Schritt fertig. Jedes Kind hat seine eigene Liste. <strong>Wir machen kein Wettrennen.</strong> Bei Bedarf helfen die Erwachsenen.</p>
   </header>
-  <nav class="pages pf-pill-nav" id="pages" aria-label="Seite wählen"><div class="pf-pill-ind" id="pagesInd"></div>
-    <button class="pf-seg is-active" type="button" data-page="morgen" aria-pressed="true">🌞 Morgen</button>
-    <button class="pf-seg" type="button" data-page="heute" aria-pressed="false">📋 Heute noch</button>
-  </nav>
   <section class="top pf-card" aria-label="Unser Morgenplan">
     <div class="settings">
       <div class="field"><label for="name0">Name Kind 1</label><input id="name0" type="text" maxlength="28" autocomplete="off" placeholder="Kind 1"></div>
@@ -375,7 +373,7 @@
     <form class="rule-form" id="quickForm" method="dialog">
       <div class="field small"><label for="quickEmoji">Bild</label><input id="quickEmoji" maxlength="8" value="⭐" autocomplete="off"></div>
       <div class="field"><label for="quickText">Was?</label><input id="quickText" maxlength="40" placeholder="z. B. Schwimmsachen" autocomplete="off"></div>
-      <div class="field"><label for="quickList">Seite</label><select id="quickList"><option value="morgen">🌞 Morgen</option><option value="heute">📋 Heute noch</option></select></div>
+      <div class="field"><label for="quickList">Seite</label><select id="quickList"><option value="morgen">🌞 Unser Morgen</option><option value="heute">📋 Heute noch</option></select></div>
       <div class="field"><label for="quickKid">Für</label><select id="quickKid"><option value="0">Kind 1</option><option value="1">Kind 2</option><option value="2">beide</option></select></div>
       <div class="field"><label for="quickDay">Wann?</label><select id="quickDay"><option value="0">heute</option><option value="1">morgen</option></select></div>
     </form>
@@ -398,7 +396,7 @@
     <form class="rule-form" id="ruleForm">
       <div class="field small"><label for="ruleEmoji">Bild</label><input id="ruleEmoji" maxlength="8" value="⭐" required autocomplete="off"></div>
       <div class="field"><label for="ruleText">Was?</label><input id="ruleText" maxlength="40" placeholder="z. B. Sportbeutel" required autocomplete="off"></div>
-      <div class="field"><label for="ruleList">Seite</label><select id="ruleList"><option value="morgen">🌞 Morgen</option><option value="heute">📋 Heute noch</option></select></div>
+      <div class="field"><label for="ruleList">Seite</label><select id="ruleList"><option value="morgen">🌞 Unser Morgen</option><option value="heute">📋 Heute noch</option></select></div>
       <div class="field"><label for="ruleKid">Für</label><select id="ruleKid"><option value="0">Kind 1</option><option value="1">Kind 2</option><option value="2">beide</option></select></div>
       <div class="field"><label for="ruleWhen">Wann?</label><select id="ruleWhen"><option value="cron">Regelmäßig</option><option value="date">An einem Datum</option><option value="tomorrow">Nur morgen</option></select></div>
       <div class="field" id="ruleCronField"><label for="ruleCron">Regel</label><input id="ruleCron" placeholder="* * 2" autocomplete="off" spellcheck="false"></div>
@@ -415,6 +413,10 @@
   </details>
   <p class="version" id="version"></p>
 </main>
+<nav class="pager" id="pages" aria-label="Seite wählen">
+  <button class="dot is-active" type="button" data-page="morgen" aria-label="Unser Morgen" aria-pressed="true"></button>
+  <button class="dot" type="button" data-page="heute" aria-label="Heute noch" aria-pressed="false"></button>
+</nav>
 <div class="leave" id="leave" role="alertdialog" aria-modal="true" aria-labelledby="leaveTitle" aria-describedby="leaveText" hidden>
   <div class="leave-box pf-card"><div class="leave-emoji" id="leaveEmoji" aria-hidden="true">🚪</div><h2 id="leaveTitle">Jetzt geht's los!</h2><p id="leaveText"></p><button class="pf-btn pf-btn--primary" type="button" id="leaveOk">👍 Okay, wir gehen!</button></div>
 </div>
@@ -640,16 +642,20 @@ function setPreview(value){
 }
 $('previewDate').addEventListener('change',e=>{setPreview(e.target.value);if(preview)$('previewBar').scrollIntoView({behavior:'smooth',block:'start'});});
 $('previewEnd').addEventListener('click',()=>setPreview(''));
-// Zwei Seiten: Pillen-Menü aus dem Styleguide, zusätzlich waagerecht über die Karten wischen.
+// Zwei Seiten: waagerecht über die Karten wischen oder unten auf die Punkte tippen.
 const PAGES=['morgen','heute'];
+const PAGE_TITLES={morgen:['🌞 ','Unser','Morgen','Wir werden Schritt für Schritt fertig. Jedes Kind hat seine eigene Liste. <strong>Wir machen kein Wettrennen.</strong> Bei Bedarf helfen die Erwachsenen.'],
+  heute:['📋 ','Heute','noch','Was wir heute noch erledigen. Danach ist Freizeit. <strong>Du darfst um Hilfe bitten!</strong>']};
 function setPage(next){
-  page=next;const idx=PAGES.indexOf(page);
+  page=next;
   document.body.classList.toggle('page-heute',page==='heute');
-  $('pagesInd').style.transform=`translateX(${idx*100}%)`;
-  $('pages').querySelectorAll('.pf-seg').forEach(b=>{const on=b.dataset.page===page;b.classList.toggle('is-active',on);b.setAttribute('aria-pressed',String(on));});
+  const [icon,a,b,sub]=PAGE_TITLES[page],spanA=document.createElement('span'),spanB=document.createElement('span');
+  spanA.className='a';spanA.textContent=a;spanB.className='b';spanB.textContent=b;
+  $('title').replaceChildren(icon,spanA,' ',spanB);$('sub').innerHTML=sub;
+  $('pages').querySelectorAll('.dot').forEach(d=>{const on=d.dataset.page===page;d.classList.toggle('is-active',on);d.setAttribute('aria-pressed',String(on));});
   render();
 }
-$('pages').querySelectorAll('.pf-seg').forEach(b=>b.addEventListener('click',()=>setPage(b.dataset.page)));
+$('pages').querySelectorAll('.dot').forEach(b=>b.addEventListener('click',()=>setPage(b.dataset.page)));
 let swipeStart=null;
 $('cards').addEventListener('touchstart',e=>{const t=e.touches[0];swipeStart=e.touches.length===1?{x:t.clientX,y:t.clientY}:null;},{passive:true});
 $('cards').addEventListener('touchend',e=>{if(!swipeStart)return;const t=e.changedTouches[0],dx=t.clientX-swipeStart.x,dy=t.clientY-swipeStart.y;swipeStart=null;
