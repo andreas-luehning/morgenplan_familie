@@ -267,8 +267,16 @@
     .actions .pf-btn{font-size:.95rem;min-height:48px}
     .status{padding:18px 20px;background:var(--pf-btn1);color:var(--pf-btn1-ink);box-shadow:0 5px 0 var(--pf-btn1-edge);border-radius:var(--pf-radius);font-weight:800;font-size:1.1rem;margin-top:30px;display:none;line-height:1.5}
     .status.visible{display:block}
+    .leave{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:20px;background:color-mix(in srgb,var(--pf-accent) 88%,transparent)}
+    .leave[hidden]{display:none}
+    .leave-box{max-width:560px;width:100%;padding:32px 24px;text-align:center}
+    .leave-emoji{font-size:5.5rem;line-height:1;animation:leave-wiggle 1s ease-in-out infinite}
+    .leave h2{font-size:clamp(2.2rem,8vw,3.6rem);margin:14px 0 10px}
+    .leave p{font-size:1.35rem;font-weight:700;line-height:1.5;margin:0 0 24px}
+    .leave .pf-btn{font-size:1.2rem;min-height:56px}
+    @keyframes leave-wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-10deg) scale(1.08)}75%{transform:rotate(10deg) scale(1.08)}}
     @media(max-width:660px){main{padding:18px 12px 30px}.cards{grid-template-columns:1fr}.card,.top{padding:16px}.field{min-width:140px}}
-    @media(prefers-reduced-motion:reduce){.fill,.task{transition:none}.task:hover,.task:active{transform:none}}
+    @media(prefers-reduced-motion:reduce){.leave-emoji{animation:none}.fill,.task{transition:none}.task:hover,.task:active{transform:none}}
     @page{size:A4 portrait;margin:10mm}
     @media print{
       body.pf-app{background:var(--pf-card);font-size:10pt}
@@ -283,7 +291,7 @@
       .bar{margin:10px 0}.tasks{grid-template-columns:1fr;gap:7px}.task{flex-direction:row;justify-content:flex-start;text-align:left;min-height:48px;padding:7px;gap:7px}
       .task input{width:21px;height:21px;min-height:21px}.emoji{font-size:19pt;width:29px}.task-text{font-size:11pt}
       .ready{font-size:10pt;padding:8px;margin-top:10px}.tip{margin-top:14px;padding:12px;break-inside:avoid}
-      .hint,.footer{display:none}.status{margin-top:14px;padding:12px}
+      .hint,.footer,.leave{display:none}.status{margin-top:14px;padding:12px}
     }
   </style>
 </head>
@@ -302,6 +310,7 @@
       <div class="field"><label for="transport">Heute geht's …</label><select id="transport"><option value="🚶 zu Fuß">🚶 zu Fuß</option><option value="🚲 mit dem Fahrrad">🚲 mit dem Fahrrad</option><option value="🛴 mit dem Roller">🛴 mit dem Roller</option><option value="🚗 mit dem Auto">🚗 mit dem Auto</option><option value="🚌 mit Bus oder Bahn">🚌 mit Bus oder Bahn</option></select></div>
     </div>
     <p class="hint">💚 Erwachsene legen Abfahrtszeit und Weg fest – am besten schon am Vorabend.</p>
+    <p class="hint" id="awake" hidden></p>
   </section>
   <div class="cards" id="cards">
     <section class="card a pf-board" aria-label="Checkliste Kind 1">
@@ -321,20 +330,24 @@
     <p>Erst fertig machen. Wenn danach noch Zeit ist, ist Spielen dran. Wenn nicht, wartet das Spiel auf später. <strong>Du darfst um Hilfe bitten!</strong></p>
   </section>
   <div class="footer">
-    <p class="privacy">🔒 Diese Seite funktioniert ohne Internet. Namen und Häkchen bleiben nur in diesem Browser gespeichert. An einem neuen Tag werden die Häkchen automatisch zurückgesetzt.</p>
+    <p class="privacy">🔒 Diese Seite funktioniert ohne Internet. Namen und Häkchen bleiben nur in diesem Browser gespeichert. An einem neuen Tag werden die Häkchen automatisch zurückgesetzt. Solange die Seite offen ist, bleibt das Display bis 5 Minuten nach der Abfahrt an; zur Abfahrt klingelt ein Wecker.</p>
     <div class="actions"><button class="pf-btn pf-btn--primary" type="button" id="print">🖨️ Drucken</button> <button class="pf-btn pf-btn--secondary" type="button" id="reset">↺ Häkchen für heute löschen</button></div>
   </div>
 </main>
+<div class="leave" id="leave" role="alertdialog" aria-modal="true" aria-labelledby="leaveTitle" aria-describedby="leaveText" hidden>
+  <div class="leave-box pf-card"><div class="leave-emoji" aria-hidden="true">🚪</div><h2 id="leaveTitle">Jetzt geht's los!</h2><p id="leaveText"></p><button class="pf-btn pf-btn--primary" type="button" id="leaveOk">👍 Okay, wir gehen!</button></div>
+</div>
 <script>
 'use strict';
 const KEY='morgenplan-zwei-kinder-v1';
 const steps=[['🌤️','Aufgestanden'],['👕','Angezogen'],['🥣','Gefrühstückt'],['🪥','Zähne geputzt'],['🎒','Tasche ist bereit'],['👟','Schuhe & Jacke an']];
 const $=id=>document.getElementById(id);
 function localDate(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
-const defaults=()=>({date:localDate(),names:['',''],departure:'07:45',transport:'🚶 zu Fuß',checked:[Array(steps.length).fill(false),Array(steps.length).fill(false)]});
+const defaults=()=>({date:localDate(),names:['',''],departure:'07:45',transport:'🚶 zu Fuß',alarmFor:'',checked:[Array(steps.length).fill(false),Array(steps.length).fill(false)]});
 function load(){let saved;try{saved=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}const fresh=defaults();if(!saved||typeof saved!=='object')return fresh;
   if(Array.isArray(saved.names))fresh.names=saved.names.slice(0,2).map(x=>typeof x==='string'?x:'');
   if(typeof saved.departure==='string'&&/^\d{2}:\d{2}$/.test(saved.departure))fresh.departure=saved.departure;
+  if(typeof saved.alarmFor==='string')fresh.alarmFor=saved.alarmFor;
   if([...$('transport').options].some(o=>o.value===saved.transport))fresh.transport=saved.transport;
   if(saved.date===fresh.date&&Array.isArray(saved.checked))fresh.checked=[0,1].map(i=>Array.isArray(saved.checked[i])?steps.map((_,j)=>saved.checked[i][j]===true):Array(steps.length).fill(false));
   return fresh;
@@ -371,7 +384,41 @@ $('departure').value=state.departure;$('departure').addEventListener('change',e=
 $('transport').value=state.transport;$('transport').addEventListener('change',e=>{state.transport=e.target.value;save();});
 $('reset').addEventListener('click',()=>{if(confirm('Alle Häkchen für heute löschen? Die Namen und der Plan bleiben erhalten.')){state.checked=[Array(steps.length).fill(false),Array(steps.length).fill(false)];save();render();}});
 $('print').addEventListener('click',()=>window.print());
-render();save();document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncDay();});setInterval(syncDay,60*1000);
+render();save();document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncDay();checkDeparture();});setInterval(syncDay,60*1000);
+
+// Abfahrt: Display bis kurz nach der Abfahrt anlassen, zur Abfahrt Wecker und Hinweis.
+// Funktioniert nur, solange die Seite im Vordergrund ist; Wake Lock braucht https.
+const AWAKE_AFTER_MS=5*60*1000;
+const clock=d=>d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+function departureToday(){const [h,m]=state.departure.split(':').map(Number);const d=new Date();d.setHours(h,m,0,0);return d;}
+let wakeLock=null,wakePending=false;
+function keepAwake(on){
+  if(!on){if(wakeLock){const lock=wakeLock;wakeLock=null;lock.release().catch(()=>{});}return;}
+  if(wakeLock||wakePending||document.hidden||!('wakeLock' in navigator))return;
+  wakePending=true;
+  navigator.wakeLock.request('screen').then(lock=>{wakeLock=lock;lock.addEventListener('release',()=>{if(wakeLock===lock)wakeLock=null;});})
+    .catch(()=>{/* z. B. Energiesparmodus */}).finally(()=>{wakePending=false;});
+}
+// Browser spielen Ton erst nach einer Berührung ab, daher den Audio-Kontext beim ersten Antippen freischalten.
+let audioCtx=null,ringTimer=null;
+function unlockAudio(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});}
+document.addEventListener('pointerdown',unlockAudio);document.addEventListener('keydown',unlockAudio);
+function beep(at,freq){const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type='triangle';osc.frequency.value=freq;
+  gain.gain.setValueAtTime(0.0001,at);gain.gain.exponentialRampToValueAtTime(0.5,at+0.02);gain.gain.exponentialRampToValueAtTime(0.0001,at+0.25);
+  osc.connect(gain).connect(audioCtx.destination);osc.start(at);osc.stop(at+0.3);}
+function ring(){unlockAudio();if(!audioCtx)return;stopRing();const until=Date.now()+60*1000;
+  const play=()=>{if(Date.now()>until)return stopRing();const t=audioCtx.currentTime+0.05;beep(t,880);beep(t+0.3,880);beep(t+0.6,1175);};
+  play();ringTimer=setInterval(play,1500);}
+function stopRing(){clearInterval(ringTimer);ringTimer=null;}
+function showLeave(){$('leaveText').textContent='Es ist '+state.departure+' Uhr – wir gehen '+state.transport+'.';$('leave').hidden=false;$('leaveOk').focus();ring();}
+$('leaveOk').addEventListener('click',()=>{stopRing();$('leave').hidden=true;});
+function checkDeparture(){
+  const dep=departureToday().getTime(),awakeUntil=dep+AWAKE_AFTER_MS,now=Date.now(),key=localDate()+' '+state.departure;
+  keepAwake(now<awakeUntil);
+  $('awake').hidden=!wakeLock;$('awake').textContent='🔆 Das Display bleibt bis '+clock(new Date(awakeUntil))+' Uhr an.';
+  if(now>=dep&&now<awakeUntil&&state.alarmFor!==key){state.alarmFor=key;save();showLeave();}
+}
+checkDeparture();setInterval(checkDeparture,1000);
 // PWA: offline verfügbar machen, sobald die Seite über http(s) ausgeliefert wird. Als lokale Datei geöffnet passiert hier nichts.
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 // Bittet den Browser, Namen und Häkchen nicht bei Speicherknappheit zu löschen.
