@@ -265,6 +265,8 @@
     .privacy{font-size:.85rem;line-height:1.6;max-width:60ch;color:var(--pf-muted)}
     .actions{display:flex;flex-wrap:wrap;gap:14px}
     .actions .pf-btn{font-size:.95rem;min-height:48px}
+    .version{margin:22px 0 0;text-align:center;font-size:.75rem;color:var(--pf-muted)}
+    .version button{font:inherit;font-weight:800;color:var(--pf-ink);background:none;border:0;padding:4px 8px;text-decoration:underline;cursor:pointer}
     .status{padding:18px 20px;background:var(--pf-btn1);color:var(--pf-btn1-ink);box-shadow:0 5px 0 var(--pf-btn1-edge);border-radius:var(--pf-radius);font-weight:800;font-size:1.1rem;margin-top:30px;display:none;line-height:1.5}
     .status.visible{display:block}
     .leave{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:20px;background:color-mix(in srgb,var(--pf-accent) 88%,transparent)}
@@ -291,7 +293,7 @@
       .bar{margin:10px 0}.tasks{grid-template-columns:1fr;gap:7px}.task{flex-direction:row;justify-content:flex-start;text-align:left;min-height:48px;padding:7px;gap:7px}
       .task input{width:21px;height:21px;min-height:21px}.emoji{font-size:19pt;width:29px}.task-text{font-size:11pt}
       .ready{font-size:10pt;padding:8px;margin-top:10px}.tip{margin-top:14px;padding:12px;break-inside:avoid}
-      .hint,.footer,.leave{display:none}.status{margin-top:14px;padding:12px}
+      .hint,.footer,.leave,.version{display:none}.status{margin-top:14px;padding:12px}
     }
   </style>
 </head>
@@ -333,6 +335,7 @@
     <p class="privacy">🔒 Diese Seite funktioniert ohne Internet. Namen und Häkchen bleiben nur in diesem Browser gespeichert. An einem neuen Tag werden die Häkchen automatisch zurückgesetzt. Solange die Seite offen ist, bleibt das Display bis 5 Minuten nach der Abfahrt an; zur Abfahrt klingelt ein Wecker.</p>
     <div class="actions"><button class="pf-btn pf-btn--primary" type="button" id="print">🖨️ Drucken</button> <button class="pf-btn pf-btn--secondary" type="button" id="reset">↺ Häkchen für heute löschen</button></div>
   </div>
+  <p class="version" id="version"></p>
 </main>
 <div class="leave" id="leave" role="alertdialog" aria-modal="true" aria-labelledby="leaveTitle" aria-describedby="leaveText" hidden>
   <div class="leave-box pf-card"><div class="leave-emoji" aria-hidden="true">🚪</div><h2 id="leaveTitle">Jetzt geht's los!</h2><p id="leaveText"></p><button class="pf-btn pf-btn--primary" type="button" id="leaveOk">👍 Okay, wir gehen!</button></div>
@@ -420,7 +423,17 @@ function checkDeparture(){
 }
 checkDeparture();setInterval(checkDeparture,1000);
 // PWA: offline verfügbar machen, sobald die Seite über http(s) ausgeliefert wird. Als lokale Datei geöffnet passiert hier nichts.
-if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+// Die Version steht nur in sw.js; die Seite fragt den aktiven Service Worker danach.
+if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
+  const sw=navigator.serviceWorker,hadController=!!sw.controller;
+  const askVersion=()=>sw.ready.then(reg=>reg.active&&reg.active.postMessage('version'));
+  sw.addEventListener('message',e=>{if(e.data&&e.data.version)$('version').textContent='Version '+e.data.version;});
+  // Neue Version übernommen, während die Seite offen war: zum Neuladen anbieten.
+  sw.addEventListener('controllerchange',()=>{if(!hadController)return askVersion();
+    const btn=document.createElement('button');btn.type='button';btn.textContent='🔄 Neue Version da – tippen zum Neuladen';btn.addEventListener('click',()=>location.reload());
+    $('version').replaceChildren(btn);});
+  sw.register('sw.js').then(askVersion).catch(()=>{$('version').textContent='Version: ohne Offline-Modus';});
+}else $('version').textContent='Version: lokale Datei';
 // Bittet den Browser, Namen und Häkchen nicht bei Speicherknappheit zu löschen.
 if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
 </script>
