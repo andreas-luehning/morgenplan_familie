@@ -63,6 +63,16 @@
 - Eigene Punkte und eigener Abhak-Status, unabhängig vom Morgen.
 - Er kann die Punkte von morgen aus Punkt 3 anzeigen, z. B. „Morgen ist Sport, Sportbeutel packen“.
 
+### 6. Besondere Tage nur per langem Tippen ändern
+
+**Ziel:** Kinder können Regeln nicht versehentlich löschen oder anlegen.
+
+- „🗑️ Löschen“ und „➕ Hinzufügen“ reagieren nur auf langes Drücken (ca. 1–2 Sekunden), mit sichtbarem Fortschritt im Knopf, z. B. einem Füllbalken.
+- Kurzes Tippen zeigt nur den Hinweis „Zum Löschen lange drücken“.
+- Auch per Tastatur bedienbar lassen, z. B. Enter gedrückt halten oder eine zusätzliche Rückfrage.
+- Alternative: Schon das Aufklappen von „📅 Besondere Tage einstellen“ braucht langes Drücken.
+- Passt zur Eltern-Sperre aus Punkt 4; dieselbe Lösung später für die editierbare Liste nutzen.
+
 ---
 
 ## Notiert, ohne Priorität
