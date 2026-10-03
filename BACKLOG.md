@@ -82,6 +82,15 @@
 - Eigene Punkte und eigener Abhak-Status, unabhängig vom Morgen.
 - Er kann die Punkte von morgen aus Punkt 3 anzeigen, z. B. „Morgen ist Sport, Sportbeutel packen“.
 
+### 8. Farb-Makeover
+
+**Ziel:** Alle Knöpfe und Flächen sind gut zu erkennen.
+
+- Orange Knöpfe (`pf-btn--secondary`, z. B. „↺ Häkchen löschen“, „🗑️ Löschen“, „↩ Zurück zu heute“) sind teils schlecht zu sehen. Gemessen: Die Schrift auf Orange ist gut lesbar (Kontrast 5,2 : 1), aber der Knopf hebt sich kaum vom Hintergrund ab (1,9 : 1 auf Creme, 2,1 : 1 auf Weiß; empfohlen sind mindestens 3 : 1).
+- Ideen: kräftigeres Orange oder dunklerer Rand, Umriss-Stil für zweitrangige Knöpfe, und die Farben insgesamt mit den Lieblingsfarben der Kinder (Blau/Rot, Lila) abstimmen.
+- Die Farben kommen aus `styleguide/playful-ui.css` und sind in `index.html` eingebettet. Änderungen am besten im Styleguide machen und neu einbetten.
+- Danach in hellem Licht und auf dem echten Gerät prüfen.
+
 ---
 
 ## Notiert, ohne Priorität
