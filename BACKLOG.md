@@ -28,7 +28,7 @@
 
 ### 3. ✅ Tagesabhängige Punkte mit Wiederholungsmustern
 
-**Umsetzung:** Regeln im cron-Format `Tag Monat Wochentag`, einstellbar in der App unter „📅 Extra-Punkte an bestimmten Tagen“. Erweiterungen: `1#1` = 1. Montag, `4L` = letzter Donnerstag, `L` im Tag = Monatsletzter. Voreingestellt: Sportbeutel dienstags für Kind 1 und freitags für Kind 2. Noch offen: „alle n Wochen“ (in cron nicht ausdrückbar) und Ferien-Ausnahmen.
+**Umsetzung:** Regeln im cron-Format `Tag Monat Wochentag`, einstellbar in der App unter „📅 Extra-Punkte an bestimmten Tagen“. Erweiterungen: `1#1` = 1. Montag, `4L` = letzter Donnerstag, `L` im Tag = Monatsletzter. Voreingestellt: Sportbeutel dienstags für Kind 1 und freitags für Kind 2, Spielzeugtag am 1. Montag im Monat für Kind 2. Noch offen: „alle n Wochen“ (in cron nicht ausdrückbar) und Ferien-Ausnahmen.
 
 **Ziel:** Punkte erscheinen nur an den Tagen in der Checkliste, an denen sie gebraucht werden, z. B. „🧸 Spielzeugtag“ oder „⚽ Sportbeutel“.
 

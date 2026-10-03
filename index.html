@@ -374,7 +374,8 @@ const $=id=>document.getElementById(id);
 // (bei fünf Feldern werden Minute und Stunde ignoriert). kid: 0 = Kind 1, 1 = Kind 2, 2 = beide.
 const defaultRules=()=>[
   {id:'sport-1',emoji:'⚽',text:'Sportbeutel',kid:0,cron:'* * 2'},
-  {id:'sport-2',emoji:'⚽',text:'Sportbeutel',kid:1,cron:'* * 5'}];
+  {id:'sport-2',emoji:'⚽',text:'Sportbeutel',kid:1,cron:'* * 5'},
+  {id:'spielzeug-2',emoji:'🧸',text:'Spielzeug mitnehmen',kid:1,cron:'* * 1#1'}];
 const DOW_NAMES={so:0,mo:1,di:2,mi:3,do:4,fr:5,sa:6,sun:0,mon:1,tue:2,wed:3,thu:4,fri:5,sat:6};
 // Liefert die Zahlen zu einem Eintrag wie 5, 1-5, */2, 1-31/2 oder mo-fr, sonst null.
 function cronNumbers(item,min,max,names){
