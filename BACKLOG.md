@@ -61,7 +61,9 @@
 - „🎒 Tasche ist bereit“ und „👟 Schuhe & Jacke an“ gelten nur Mo–Fr. Technisch bekommen feste Schritte optional eine cron-Regel (`* * 1-5`), wie die besonderen Tage.
 - Neuer fester Schritt jeden Tag: „🎀 Haare gebürstet & Frisur gemacht“ (z. B. Zopf).
 - Mit „Liste testen für Tag“ lässt sich das Wochenende vorab ansehen.
-- Offen: Soll der Wecker zur Abfahrtszeit am Wochenende auch klingeln? Aktuell klingelt er jeden Tag.
+- Am Wochenende kein Wecker und kein Dauer-Display. Das Zeitfeld heißt dann „Am Wochenende erinnern um“ (eigene Zeit, Standard 10:00), die Auswahl „Heute geht's …“ ist ausgeblendet.
+- Ist zur Erinnerungszeit noch etwas offen, kommt einmal ein kurzer, leiser Hinweiston und das Fenster „🌞 Schon alles fertig?“ mit den offenen Punkten je Kind. Ist schon alles erledigt, kommt nichts.
+- Wie der Wecker funktioniert die Erinnerung nur, wenn die App offen und im Vordergrund ist.
 
 ## Wenn Zeit und Lust ist
 
@@ -110,6 +112,7 @@ Neueste Version oben. Die Version steht in `sw.js` und unten in der App.
 
 | Version | Branch | Änderung |
 |---|---|---|
+| v9 | `feature/4-wochenende` | Am Wochenende kein Wecker und kein Dauer-Display. Stattdessen eine Erinnerung zu einer eigenen Uhrzeit (Standard 10:00) mit kurzem Ton und Liste der offenen Punkte, nur wenn noch etwas offen ist. „Heute geht's …“ ist am Wochenende ausgeblendet. |
 | v8 | `feature/4-wochenende` | Backlog 6 und 7: „Hinzufügen“ und „Löschen“ bei den besonderen Tagen nur per langem Drücken (1,5 s, Füllbalken im Knopf; per Tastatur mit Rückfrage). Am Wochenende entfallen „Tasche“ und „Schuhe & Jacke“; neuer Schritt „🎀 Haare gebürstet & Frisur gemacht“ jeden Tag. Die heutigen Häkchen werden beim Update einmalig zurückgesetzt. |
 | v7 | `feature/3-tagesplan` | „Besondere Tage“ als Karte mit Hintergrund, damit sie lesbar ist. Neu: „Liste testen für Tag“ zeigt die Checkliste für ein beliebiges Datum als Vorschau, ohne Häkchen zu speichern. Darüber steht eine Hinweisleiste mit „Zurück zu heute“. |
 | v6 | `feature/3-tagesplan` | Einstellung umbenannt in „📅 Besondere Tage einstellen“ (statt „Extra-Punkte“) und zugeklappt ans Seitenende verschoben, weil sie selten gebraucht wird. |

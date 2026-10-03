@@ -327,10 +327,10 @@
     <div class="settings">
       <div class="field"><label for="name0">Name Kind 1</label><input id="name0" type="text" maxlength="28" autocomplete="off" placeholder="Kind 1"></div>
       <div class="field"><label for="name1">Name Kind 2</label><input id="name1" type="text" maxlength="28" autocomplete="off" placeholder="Kind 2"></div>
-      <div class="field"><label for="departure">Wir gehen los um</label><input type="time" id="departure" value="07:45"></div>
-      <div class="field"><label for="transport">Heute geht's …</label><select id="transport"><option value="🚶 zu Fuß">🚶 zu Fuß</option><option value="🚲 mit dem Fahrrad">🚲 mit dem Fahrrad</option><option value="🛴 mit dem Roller">🛴 mit dem Roller</option><option value="🚗 mit dem Auto">🚗 mit dem Auto</option><option value="🚌 mit Bus oder Bahn">🚌 mit Bus oder Bahn</option></select></div>
+      <div class="field"><label for="departure" id="timeLabel">Wir gehen los um</label><input type="time" id="departure" value="07:45"></div>
+      <div class="field" id="transportField"><label for="transport">Heute geht's …</label><select id="transport"><option value="🚶 zu Fuß">🚶 zu Fuß</option><option value="🚲 mit dem Fahrrad">🚲 mit dem Fahrrad</option><option value="🛴 mit dem Roller">🛴 mit dem Roller</option><option value="🚗 mit dem Auto">🚗 mit dem Auto</option><option value="🚌 mit Bus oder Bahn">🚌 mit Bus oder Bahn</option></select></div>
     </div>
-    <p class="hint">💚 Erwachsene legen Abfahrtszeit und Weg fest – am besten schon am Vorabend.</p>
+    <p class="hint" id="dayHint">💚 Erwachsene legen Abfahrtszeit und Weg fest – am besten schon am Vorabend.</p>
     <p class="hint" id="awake" hidden></p>
   </section>
   <div class="preview-bar" id="previewBar" role="status" hidden><span id="previewText"></span><button class="pf-btn pf-btn--secondary" type="button" id="previewEnd">↩ Zurück zu heute</button></div>
@@ -352,7 +352,7 @@
     <p>Erst fertig machen. Wenn danach noch Zeit ist, ist Spielen dran. Wenn nicht, wartet das Spiel auf später. <strong>Du darfst um Hilfe bitten!</strong></p>
   </section>
   <div class="footer">
-    <p class="privacy">🔒 Diese Seite funktioniert ohne Internet. Namen und Häkchen bleiben nur in diesem Browser gespeichert. An einem neuen Tag werden die Häkchen automatisch zurückgesetzt. Solange die Seite offen ist, bleibt das Display bis 5 Minuten nach der Abfahrt an; zur Abfahrt klingelt ein Wecker.</p>
+    <p class="privacy">🔒 Diese Seite funktioniert ohne Internet. Namen und Häkchen bleiben nur in diesem Browser gespeichert. An einem neuen Tag werden die Häkchen automatisch zurückgesetzt. Solange die Seite offen ist, bleibt das Display unter der Woche bis 5 Minuten nach der Abfahrt an; zur Abfahrt klingelt ein Wecker. Am Wochenende gibt es stattdessen eine Erinnerung.</p>
     <div class="actions"><button class="pf-btn pf-btn--primary" type="button" id="print">🖨️ Drucken</button> <button class="pf-btn pf-btn--secondary" type="button" id="reset">↺ Häkchen für heute löschen</button></div>
   </div>
   <details class="plan pf-card">
@@ -377,7 +377,7 @@
   <p class="version" id="version"></p>
 </main>
 <div class="leave" id="leave" role="alertdialog" aria-modal="true" aria-labelledby="leaveTitle" aria-describedby="leaveText" hidden>
-  <div class="leave-box pf-card"><div class="leave-emoji" aria-hidden="true">🚪</div><h2 id="leaveTitle">Jetzt geht's los!</h2><p id="leaveText"></p><button class="pf-btn pf-btn--primary" type="button" id="leaveOk">👍 Okay, wir gehen!</button></div>
+  <div class="leave-box pf-card"><div class="leave-emoji" id="leaveEmoji" aria-hidden="true">🚪</div><h2 id="leaveTitle">Jetzt geht's los!</h2><p id="leaveText"></p><button class="pf-btn pf-btn--primary" type="button" id="leaveOk">👍 Okay, wir gehen!</button></div>
 </div>
 <script>
 'use strict';
@@ -439,10 +439,11 @@ function nextDates(expr,count){const out=[],d=new Date();d.setHours(12,0,0,0);
 const shortDate=d=>new Intl.DateTimeFormat('de-DE',{weekday:'short',day:'numeric',month:'numeric'}).format(d);
 const validRule=r=>r&&typeof r==='object'&&typeof r.id==='string'&&typeof r.emoji==='string'&&typeof r.text==='string'&&[0,1,2].includes(r.kid)&&typeof r.cron==='string'&&!!parseCron(r.cron);
 function localDate(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
-const defaults=()=>({date:localDate(),names:['',''],departure:'07:45',transport:'🚶 zu Fuß',alarmFor:'',rules:defaultRules(),checked:[Array(steps.length).fill(false),Array(steps.length).fill(false)],extraChecked:[{},{}]});
+const defaults=()=>({date:localDate(),names:['',''],departure:'07:45',weekendTime:'10:00',transport:'🚶 zu Fuß',alarmFor:'',rules:defaultRules(),checked:[Array(steps.length).fill(false),Array(steps.length).fill(false)],extraChecked:[{},{}]});
 function load(){let saved;try{saved=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}const fresh=defaults();if(!saved||typeof saved!=='object')return fresh;
   if(Array.isArray(saved.names))fresh.names=saved.names.slice(0,2).map(x=>typeof x==='string'?x:'');
   if(typeof saved.departure==='string'&&/^\d{2}:\d{2}$/.test(saved.departure))fresh.departure=saved.departure;
+  if(typeof saved.weekendTime==='string'&&/^\d{2}:\d{2}$/.test(saved.weekendTime))fresh.weekendTime=saved.weekendTime;
   if(typeof saved.alarmFor==='string')fresh.alarmFor=saved.alarmFor;
   if([...$('transport').options].some(o=>o.value===saved.transport))fresh.transport=saved.transport;
   if(Array.isArray(saved.rules))fresh.rules=saved.rules.filter(validRule);
@@ -513,10 +514,21 @@ function render(){
     $('ready'+i).classList.toggle('yes',checked===total);
   }
   $('allReady').classList.toggle('visible',[0,1].every(i=>itemsFor(i).every(it=>it.get())));
-  renderRules();
+  renderRules();renderDayMode();
 }
 for(let i=0;i<2;i++){$('name'+i).value=state.names[i];$('name'+i).addEventListener('input',e=>{state.names[i]=e.target.value.slice(0,28);save();render();});}
-$('departure').value=state.departure;$('departure').addEventListener('change',e=>{state.departure=e.target.value;save();});
+// Unter der Woche ist das Zeitfeld die Abfahrt, am Wochenende die Erinnerungszeit.
+const isSchoolDay=()=>cronMatches(SCHOOL_DAYS,new Date());
+const timeKey=()=>isSchoolDay()?'departure':'weekendTime';
+function renderDayMode(){
+  const school=isSchoolDay();
+  $('timeLabel').textContent=school?'Wir gehen los um':'Am Wochenende erinnern um';
+  $('transportField').hidden=!school;
+  $('dayHint').textContent=school?'💚 Erwachsene legen Abfahrtszeit und Weg fest – am besten schon am Vorabend.'
+    :'💚 Am Wochenende gibt es keinen Wecker. Ist zur Erinnerungszeit noch etwas offen, kommt ein freundlicher Hinweis.';
+  if(document.activeElement!==$('departure'))$('departure').value=state[timeKey()];
+}
+$('departure').addEventListener('change',e=>{if(/^\d{2}:\d{2}$/.test(e.target.value)){state[timeKey()]=e.target.value;save();}});
 $('transport').value=state.transport;$('transport').addEventListener('change',e=>{state.transport=e.target.value;save();});
 $('reset').addEventListener('click',()=>{if(confirm('Alle Häkchen für heute löschen? Die Namen und der Plan bleiben erhalten.')){clearChecks();save();render();}});
 $('print').addEventListener('click',()=>window.print());
@@ -545,7 +557,7 @@ render();save();document.addEventListener('visibilitychange',()=>{if(!document.h
 // Funktioniert nur, solange die Seite im Vordergrund ist; Wake Lock braucht https.
 const AWAKE_AFTER_MS=5*60*1000;
 const clock=d=>d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
-function departureToday(){const [h,m]=state.departure.split(':').map(Number);const d=new Date();d.setHours(h,m,0,0);return d;}
+function timeToday(hhmm){const [h,m]=hhmm.split(':').map(Number);const d=new Date();d.setHours(h,m,0,0);return d;}
 let wakeLock=null,wakePending=false;
 function keepAwake(on){
   if(!on){if(wakeLock){const lock=wakeLock;wakeLock=null;lock.release().catch(()=>{});}return;}
@@ -561,17 +573,31 @@ document.addEventListener('pointerdown',unlockAudio);document.addEventListener('
 function beep(at,freq){const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type='triangle';osc.frequency.value=freq;
   gain.gain.setValueAtTime(0.0001,at);gain.gain.exponentialRampToValueAtTime(0.5,at+0.02);gain.gain.exponentialRampToValueAtTime(0.0001,at+0.25);
   osc.connect(gain).connect(audioCtx.destination);osc.start(at);osc.stop(at+0.3);}
+// Leiser Hinweiston fürs Wochenende: einmal kurz statt eine Minute Wecker.
+function chime(){unlockAudio();if(!audioCtx)return;const t=audioCtx.currentTime+0.05;beep(t,660);beep(t+0.35,880);}
 function ring(){unlockAudio();if(!audioCtx)return;stopRing();const until=Date.now()+60*1000;
   const play=()=>{if(Date.now()>until)return stopRing();const t=audioCtx.currentTime+0.05;beep(t,880);beep(t+0.3,880);beep(t+0.6,1175);};
   play();ringTimer=setInterval(play,1500);}
 function stopRing(){clearInterval(ringTimer);ringTimer=null;}
-function showLeave(){$('leaveText').textContent='Es ist '+state.departure+' Uhr – wir gehen '+state.transport+'.';$('leave').hidden=false;$('leaveOk').focus();ring();}
+function showOverlay(emoji,title,text,button){$('leaveEmoji').textContent=emoji;$('leaveTitle').textContent=title;$('leaveText').textContent=text;$('leaveOk').textContent=button;$('leave').hidden=false;$('leaveOk').focus();}
+function showLeave(){showOverlay('🚪',"Jetzt geht's los!",'Es ist '+state.departure+' Uhr – wir gehen '+state.transport+'.','👍 Okay, wir gehen!');ring();}
+function showReminder(open){showOverlay('🌞','Schon alles fertig?','Noch offen – '+open.join(' · '),'👍 Machen wir!');chime();}
 $('leaveOk').addEventListener('click',()=>{stopRing();$('leave').hidden=true;});
 function checkDeparture(){
-  const dep=departureToday().getTime(),awakeUntil=dep+AWAKE_AFTER_MS,now=Date.now(),key=localDate()+' '+state.departure;
+  if(!isSchoolDay())return checkWeekend();
+  const dep=timeToday(state.departure).getTime(),awakeUntil=dep+AWAKE_AFTER_MS,now=Date.now(),key=localDate()+' '+state.departure;
   keepAwake(now<awakeUntil);
   $('awake').hidden=!wakeLock;$('awake').textContent='🔆 Das Display bleibt bis '+clock(new Date(awakeUntil))+' Uhr an.';
   if(now>=dep&&now<awakeUntil&&state.alarmFor!==key){state.alarmFor=key;save();showLeave();}
+}
+// Wochenende: kein Wecker und kein Dauer-Display. Einmal ab der Erinnerungszeit ein Hinweis, falls noch etwas offen ist.
+function checkWeekend(){
+  keepAwake(false);$('awake').hidden=true;
+  const key=localDate()+' '+state.weekendTime;
+  if(preview||state.alarmFor===key||Date.now()<timeToday(state.weekendTime).getTime())return;
+  const open=[0,1].map(i=>{const left=itemsFor(i).filter(it=>!it.get()).map(it=>it.text);return left.length?kidName(i)+': '+left.join(', '):'';}).filter(Boolean);
+  state.alarmFor=key;save();
+  if(open.length)showReminder(open);
 }
 checkDeparture();setInterval(checkDeparture,1000);
 // PWA: offline verfügbar machen, sobald die Seite über http(s) ausgeliefert wird. Als lokale Datei geöffnet passiert hier nichts.
