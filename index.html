@@ -241,6 +241,17 @@
     input,select{width:100%;min-width:0;border:2px solid var(--pf-hair);border-radius:var(--pf-radius-sm);padding:12px 13px;background:var(--pf-bg);color:var(--pf-ink);font:inherit;min-height:48px}
     input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid var(--pf-ink);outline-offset:4px}
     .hint{margin:16px 0 0;font-size:.89rem;line-height:1.5;color:var(--pf-muted)}
+    .plan{margin-top:18px}
+    .plan summary{cursor:pointer;font-weight:800;min-height:44px;display:flex;align-items:center}
+    .rules{list-style:none;padding:0;margin:8px 0 16px;display:grid;gap:8px}
+    .rules li{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:10px 12px;border:2px solid var(--pf-hair);border-radius:var(--pf-radius-sm);background:var(--pf-bg)}
+    .rules .what{flex:1;min-width:0;font-weight:800;overflow-wrap:anywhere}
+    .rules .when{font-size:.85rem;color:var(--pf-muted)}
+    .rules .pf-btn{min-height:40px;font-size:.85rem;padding:6px 12px}
+    .rule-form{display:flex;flex-wrap:wrap;align-items:end;gap:12px}
+    .rule-form .field.small{flex:0 0 76px;min-width:76px}
+    .rule-form .pf-btn{min-height:48px}
+    .plan code{font-family:ui-monospace,monospace;background:rgba(0,0,0,.06);padding:1px 5px;border-radius:6px;white-space:nowrap}
     .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
     .card{padding:20px;min-width:0;background:var(--kid);box-shadow:0 8px 0 var(--kid-edge),var(--pf-shadow-card),inset 0 2px 2px rgba(255,255,255,.4);color:var(--kid-ink)}
     .kid-title{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
@@ -293,7 +304,7 @@
       .bar{margin:10px 0}.tasks{grid-template-columns:1fr;gap:7px}.task{flex-direction:row;justify-content:flex-start;text-align:left;min-height:48px;padding:7px;gap:7px}
       .task input{width:21px;height:21px;min-height:21px}.emoji{font-size:19pt;width:29px}.task-text{font-size:11pt}
       .ready{font-size:10pt;padding:8px;margin-top:10px}.tip{margin-top:14px;padding:12px;break-inside:avoid}
-      .hint,.footer,.leave,.version{display:none}.status{margin-top:14px;padding:12px}
+      .hint,.footer,.leave,.version,.plan{display:none}.status{margin-top:14px;padding:12px}
     }
   </style>
 </head>
@@ -313,16 +324,30 @@
     </div>
     <p class="hint">💚 Erwachsene legen Abfahrtszeit und Weg fest – am besten schon am Vorabend.</p>
     <p class="hint" id="awake" hidden></p>
+    <details class="plan">
+      <summary>📅 Extra-Punkte an bestimmten Tagen</summary>
+      <ul class="rules" id="rules"></ul>
+      <form class="rule-form" id="ruleForm">
+        <div class="field small"><label for="ruleEmoji">Bild</label><input id="ruleEmoji" maxlength="8" value="⭐" required autocomplete="off"></div>
+        <div class="field"><label for="ruleText">Was?</label><input id="ruleText" maxlength="40" placeholder="z. B. Sportbeutel" required autocomplete="off"></div>
+        <div class="field"><label for="ruleKid">Für</label><select id="ruleKid"><option value="0">Kind 1</option><option value="1">Kind 2</option><option value="2">beide</option></select></div>
+        <div class="field"><label for="ruleCron">Wann?</label><input id="ruleCron" placeholder="* * 2" required autocomplete="off" spellcheck="false"></div>
+        <button class="pf-btn pf-btn--primary" type="submit">➕ Hinzufügen</button>
+      </form>
+      <p class="hint" id="ruleInfo" aria-live="polite"></p>
+      <p class="hint">„Wann?“ wie bei cron: <code>Tag Monat Wochentag</code>. Wochentag 1 = Mo … 6 = Sa, 0 oder 7 = So, oder <code>mo</code> … <code>so</code>.
+        Beispiele: <code>* * 2</code> jeden Dienstag · <code>* * 1,4</code> Mo und Do · <code>* * 1#1</code> jeden 1. Montag im Monat · <code>* * 4L</code> jeden letzten Donnerstag · <code>15 * *</code> jeden 15. · <code>L * *</code> am Monatsletzten · <code>14 11 *</code> am 14. November.</p>
+    </details>
   </section>
   <div class="cards" id="cards">
     <section class="card a pf-board" aria-label="Checkliste Kind 1">
       <div class="kid-title"><h2 id="heading0">🐇 Kind 1</h2><span class="count" id="count0" aria-live="polite">0 von 6</span></div>
-      <div class="bar" role="progressbar" aria-label="Fortschritt Kind 1" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="progress0"><div class="fill" id="fill0"></div></div>
+      <div class="bar" role="progressbar" aria-label="Fortschritt Kind 1" aria-valuemin="0" aria-valuenow="0" id="progress0"><div class="fill" id="fill0"></div></div>
       <div class="tasks" id="tasks0"></div><div class="ready" id="ready0" role="status">Schritt für Schritt – du schaffst das!</div>
     </section>
     <section class="card b pf-board" aria-label="Checkliste Kind 2">
       <div class="kid-title"><h2 id="heading1">🐻 Kind 2</h2><span class="count" id="count1" aria-live="polite">0 von 6</span></div>
-      <div class="bar" role="progressbar" aria-label="Fortschritt Kind 2" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="progress1"><div class="fill" id="fill1"></div></div>
+      <div class="bar" role="progressbar" aria-label="Fortschritt Kind 2" aria-valuemin="0" aria-valuenow="0" id="progress1"><div class="fill" id="fill1"></div></div>
       <div class="tasks" id="tasks1"></div><div class="ready" id="ready1" role="status">Schritt für Schritt – du schaffst das!</div>
     </section>
   </div>
@@ -345,48 +370,132 @@
 const KEY='morgenplan-zwei-kinder-v1';
 const steps=[['🌤️','Aufgestanden'],['👕','Angezogen'],['🥣','Gefrühstückt'],['🪥','Zähne geputzt'],['🎒','Tasche ist bereit'],['👟','Schuhe & Jacke an']];
 const $=id=>document.getElementById(id);
+// Extra-Punkte an bestimmten Tagen. „cron“ hat drei Felder: Tag Monat Wochentag
+// (bei fünf Feldern werden Minute und Stunde ignoriert). kid: 0 = Kind 1, 1 = Kind 2, 2 = beide.
+const defaultRules=()=>[
+  {id:'sport-1',emoji:'⚽',text:'Sportbeutel',kid:0,cron:'* * 2'},
+  {id:'sport-2',emoji:'⚽',text:'Sportbeutel',kid:1,cron:'* * 5'}];
+const DOW_NAMES={so:0,mo:1,di:2,mi:3,do:4,fr:5,sa:6,sun:0,mon:1,tue:2,wed:3,thu:4,fri:5,sat:6};
+// Liefert die Zahlen zu einem Eintrag wie 5, 1-5, */2, 1-31/2 oder mo-fr, sonst null.
+function cronNumbers(item,min,max,names){
+  const m=item.match(/^(\*|[a-z0-9]+(?:-[a-z0-9]+)?)(?:\/(\d+))?$/);if(!m)return null;
+  const val=x=>{const n=/^\d+$/.test(x)?Number(x):names&&names[x];return n===undefined||n<min||n>max?null:n;};
+  let lo=min,hi=max;
+  if(m[1]!=='*'){const [a,b]=m[1].split('-');lo=val(a);hi=b!==undefined?val(b):m[2]?max:lo;if(lo===null||hi===null||lo>hi)return null;}
+  const step=m[2]?Number(m[2]):1;if(!step)return null;
+  const out=[];for(let n=lo;n<=hi;n+=step)out.push(max===7?n%7:n);return out;
+}
+// Macht aus einem cron-Ausdruck eine Prüffunktion für ein Datum, oder null, wenn er ungültig ist.
+// Zusätzlich zu den Zahlen: L im Tag = Monatsletzter, 1#2 = 2. Montag im Monat, 4L = letzter Donnerstag.
+function parseCron(expr){
+  const parts=String(expr).trim().toLowerCase().split(/\s+/);
+  if(parts.length===5)parts.splice(0,2);
+  if(parts.length!==3)return null;
+  const lastDay=d=>new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+  const field=(str,min,max,names,value,special)=>{
+    if(str==='*')return {any:true,test:()=>true};
+    const tests=[];
+    for(const item of str.split(',')){
+      let test=special(item);
+      if(test===undefined){const nums=cronNumbers(item,min,max,names);test=nums&&(d=>nums.includes(value(d)));}
+      if(!test)return null;
+      tests.push(test);
+    }
+    return {any:false,test:d=>tests.some(t=>t(d))};
+  };
+  const dom=field(parts[0],1,31,null,d=>d.getDate(),item=>item==='l'?d=>d.getDate()===lastDay(d):undefined);
+  const mon=field(parts[1],1,12,null,d=>d.getMonth()+1,()=>undefined);
+  const dow=field(parts[2],0,7,DOW_NAMES,d=>d.getDay(),item=>{
+    const m=item.match(/^([a-z0-9]+)(?:#([1-5])|l)$/);if(!m)return undefined;
+    const days=cronNumbers(m[1],0,7,DOW_NAMES);if(!days||days.length!==1)return null;
+    return m[2]?d=>d.getDay()===days[0]&&Math.ceil(d.getDate()/7)===Number(m[2]):d=>d.getDay()===days[0]&&d.getDate()+7>lastDay(d);
+  });
+  if(!dom||!mon||!dow)return null;
+  // Wie bei cron: Sind Tag und Wochentag beide eingeschränkt, reicht es, wenn einer passt.
+  return d=>mon.test(d)&&(dom.any||dow.any?dom.test(d)&&dow.test(d):dom.test(d)||dow.test(d));
+}
+const cronCache=new Map();
+function cronMatches(expr,date){if(!cronCache.has(expr))cronCache.set(expr,parseCron(expr));const test=cronCache.get(expr);return !!test&&test(date);}
+function nextDates(expr,count){const out=[],d=new Date();d.setHours(12,0,0,0);
+  for(let n=0;n<800&&out.length<count;n++,d.setDate(d.getDate()+1))if(cronMatches(expr,d))out.push(new Date(d));return out;}
+const shortDate=d=>new Intl.DateTimeFormat('de-DE',{weekday:'short',day:'numeric',month:'numeric'}).format(d);
+const validRule=r=>r&&typeof r==='object'&&typeof r.id==='string'&&typeof r.emoji==='string'&&typeof r.text==='string'&&[0,1,2].includes(r.kid)&&typeof r.cron==='string'&&!!parseCron(r.cron);
 function localDate(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
-const defaults=()=>({date:localDate(),names:['',''],departure:'07:45',transport:'🚶 zu Fuß',alarmFor:'',checked:[Array(steps.length).fill(false),Array(steps.length).fill(false)]});
+const defaults=()=>({date:localDate(),names:['',''],departure:'07:45',transport:'🚶 zu Fuß',alarmFor:'',rules:defaultRules(),checked:[Array(steps.length).fill(false),Array(steps.length).fill(false)],extraChecked:[{},{}]});
 function load(){let saved;try{saved=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}const fresh=defaults();if(!saved||typeof saved!=='object')return fresh;
   if(Array.isArray(saved.names))fresh.names=saved.names.slice(0,2).map(x=>typeof x==='string'?x:'');
   if(typeof saved.departure==='string'&&/^\d{2}:\d{2}$/.test(saved.departure))fresh.departure=saved.departure;
   if(typeof saved.alarmFor==='string')fresh.alarmFor=saved.alarmFor;
   if([...$('transport').options].some(o=>o.value===saved.transport))fresh.transport=saved.transport;
+  if(Array.isArray(saved.rules))fresh.rules=saved.rules.filter(validRule);
+  if(saved.date===fresh.date&&Array.isArray(saved.extraChecked))fresh.extraChecked=[0,1].map(i=>{const c=saved.extraChecked[i];return c&&typeof c==='object'&&!Array.isArray(c)?c:{};});
   if(saved.date===fresh.date&&Array.isArray(saved.checked))fresh.checked=[0,1].map(i=>Array.isArray(saved.checked[i])?steps.map((_,j)=>saved.checked[i][j]===true):Array(steps.length).fill(false));
   return fresh;
 }
 let state=load();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){/* private mode: usable without saving */}}
-function syncDay(){if(state.date!==localDate()){state.date=localDate();state.checked=[Array(steps.length).fill(false),Array(steps.length).fill(false)];save();render();}}
+function clearChecks(){state.checked=[Array(steps.length).fill(false),Array(steps.length).fill(false)];state.extraChecked=[{},{}];}
+function syncDay(){if(state.date!==localDate()){state.date=localDate();clearChecks();save();render();}}
+// Heutige Liste eines Kindes: feste Schritte, die passenden Extra-Punkte vor dem letzten Schritt.
+function itemsFor(i){
+  const today=new Date();
+  const items=steps.map(([emoji,text],j)=>({emoji,text,get:()=>state.checked[i][j],set:v=>{state.checked[i][j]=v;}}));
+  const extras=state.rules.filter(r=>(r.kid===i||r.kid===2)&&cronMatches(r.cron,today))
+    .map(r=>({emoji:r.emoji,text:r.text,get:()=>state.extraChecked[i][r.id]===true,set:v=>{state.extraChecked[i][r.id]=v;}}));
+  items.splice(items.length-1,0,...extras);return items;
+}
+const kidName=i=>state.names[i].trim()||`Kind ${i+1}`;
+function renderRules(){
+  [0,1].forEach(i=>{$('ruleKid').options[i].textContent=kidName(i);});
+  $('rules').replaceChildren(...state.rules.map(r=>{
+    const li=document.createElement('li');
+    const what=document.createElement('span');what.className='what';what.textContent=r.emoji+' '+r.text+' · '+(r.kid===2?'beide':kidName(r.kid));
+    const when=document.createElement('span');when.className='when';const next=nextDates(r.cron,1)[0];
+    const code=document.createElement('code');code.textContent=r.cron;when.append(code,next?' · nächstes Mal '+shortDate(next):' · kein Termin in Sicht');
+    const del=document.createElement('button');del.type='button';del.className='pf-btn pf-btn--secondary';del.textContent='🗑️ Löschen';del.setAttribute('aria-label',r.text+' löschen');
+    del.addEventListener('click',()=>{if(confirm('„'+r.text+'“ löschen?')){state.rules=state.rules.filter(x=>x!==r);save();render();}});
+    li.append(what,when,del);return li;
+  }));
+}
 function render(){
   const now=new Date();$('date').textContent=new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);
   for(let i=0;i<2;i++){
-    const name=state.names[i].trim()||`Kind ${i+1}`;
+    const name=kidName(i),items=itemsFor(i);
     $('heading'+i).textContent=(i===0?'🐇 ':'🐻 ')+name;
-    const checked=state.checked[i].filter(Boolean).length;
-    $('count'+i).textContent=checked+' von '+steps.length;
-    $('fill'+i).style.width=(checked/steps.length*100)+'%';
+    const checked=items.filter(it=>it.get()).length,total=items.length;
+    $('count'+i).textContent=checked+' von '+total;
+    $('fill'+i).style.width=(checked/total*100)+'%';
+    $('progress'+i).setAttribute('aria-valuemax',String(total));
     $('progress'+i).setAttribute('aria-valuenow',String(checked));
     $('progress'+i).setAttribute('aria-label','Fortschritt '+name);
     const container=$('tasks'+i);container.replaceChildren();
-    steps.forEach(([emoji,description],j)=>{
-      const label=document.createElement('label');label.className='task pf-tile'+(state.checked[i][j]?' done':'');
-      const input=document.createElement('input');input.type='checkbox';input.checked=state.checked[i][j];input.setAttribute('aria-label',name+': '+description);
-      input.addEventListener('change',()=>{state.checked[i][j]=input.checked;save();render();$('tasks'+i).querySelectorAll('input')[j].focus({preventScroll:true});});
+    items.forEach(({emoji,text:description,get,set},j)=>{
+      const label=document.createElement('label');label.className='task pf-tile'+(get()?' done':'');
+      const input=document.createElement('input');input.type='checkbox';input.checked=get();input.setAttribute('aria-label',name+': '+description);
+      input.addEventListener('change',()=>{set(input.checked);save();render();$('tasks'+i).querySelectorAll('input')[j].focus({preventScroll:true});});
       const pic=document.createElement('span');pic.className='emoji';pic.textContent=emoji;pic.setAttribute('aria-hidden','true');
       const words=document.createElement('span');words.className='task-text';words.textContent=description;
       label.append(input,pic,words);container.append(label);
     });
-    $('ready'+i).textContent=checked===steps.length?'🌟 '+name+' ist startklar!':'Schritt für Schritt – bei Bedarf helfen wir.';
-    $('ready'+i).classList.toggle('yes',checked===steps.length);
+    $('ready'+i).textContent=checked===total?'🌟 '+name+' ist startklar!':'Schritt für Schritt – bei Bedarf helfen wir.';
+    $('ready'+i).classList.toggle('yes',checked===total);
   }
-  $('allReady').classList.toggle('visible',state.checked.every(items=>items.every(Boolean)));
+  $('allReady').classList.toggle('visible',[0,1].every(i=>itemsFor(i).every(it=>it.get())));
+  renderRules();
 }
 for(let i=0;i<2;i++){$('name'+i).value=state.names[i];$('name'+i).addEventListener('input',e=>{state.names[i]=e.target.value.slice(0,28);save();render();});}
 $('departure').value=state.departure;$('departure').addEventListener('change',e=>{state.departure=e.target.value;save();});
 $('transport').value=state.transport;$('transport').addEventListener('change',e=>{state.transport=e.target.value;save();});
-$('reset').addEventListener('click',()=>{if(confirm('Alle Häkchen für heute löschen? Die Namen und der Plan bleiben erhalten.')){state.checked=[Array(steps.length).fill(false),Array(steps.length).fill(false)];save();render();}});
+$('reset').addEventListener('click',()=>{if(confirm('Alle Häkchen für heute löschen? Die Namen und der Plan bleiben erhalten.')){clearChecks();save();render();}});
 $('print').addEventListener('click',()=>window.print());
+function showCronPreview(){const expr=$('ruleCron').value.trim();
+  if(!expr){$('ruleInfo').textContent='';return true;}
+  if(!parseCron(expr)){$('ruleInfo').textContent='⚠️ „'+expr+'“ verstehe ich nicht. Beispiele stehen unten.';return false;}
+  const next=nextDates(expr,3);$('ruleInfo').textContent=next.length?'Nächste Termine: '+next.map(shortDate).join(', '):'⚠️ Dieser Termin kommt in den nächsten zwei Jahren nicht vor.';return next.length>0;}
+$('ruleCron').addEventListener('input',showCronPreview);
+$('ruleForm').addEventListener('submit',e=>{e.preventDefault();if(!$('ruleText').value.trim()){$('ruleText').focus();return;}if(!showCronPreview())return;
+  state.rules.push({id:'r'+Date.now().toString(36),emoji:$('ruleEmoji').value.trim()||'⭐',text:$('ruleText').value.trim(),kid:Number($('ruleKid').value),cron:$('ruleCron').value.trim()});
+  $('ruleText').value='';$('ruleCron').value='';$('ruleInfo').textContent='✅ Hinzugefügt.';save();render();});
 render();save();document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncDay();checkDeparture();});setInterval(syncDay,60*1000);
 
 // Abfahrt: Display bis kurz nach der Abfahrt anlassen, zur Abfahrt Wecker und Hinweis.

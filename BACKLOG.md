@@ -2,7 +2,7 @@
 
 ## Aktuell wichtig
 
-### 1. Display bis zur Abfahrt anlassen, Wecker zur Abfahrtszeit
+### 1. ✅ Display bis zur Abfahrt anlassen, Wecker zur Abfahrtszeit
 
 **Ziel:** Morgens geht das Display nicht aus und zur Abfahrt hört und sieht man, dass es losgeht.
 
@@ -18,7 +18,7 @@
 - Wenn sich die Abfahrtszeit ändert, die Timer neu setzen.
 - Nach jeder Änderung `VERSION` in `sw.js` hochzählen.
 
-### 2. Versionskennung in der Fußzeile
+### 2. ✅ Versionskennung in der Fußzeile
 
 **Ziel:** Man sieht auf einen Blick, welche Version gerade geladen ist.
 
@@ -26,7 +26,9 @@
 - Die Version soll nur an einer Stelle gepflegt werden. Aktuell steht sie als `VERSION` in `sw.js`. Damit sie dort nicht doppelt gepflegt wird, entweder per `postMessage` vom Service Worker abfragen oder aus dem Cache-Namen (`caches.keys()`) ableiten.
 - Optional: Wenn eine neue Version bereitliegt, einen Hinweis „Update verfügbar – tippen zum Neuladen“ anzeigen.
 
-### 3. Tagesabhängige Punkte mit Wiederholungsmustern
+### 3. ✅ Tagesabhängige Punkte mit Wiederholungsmustern
+
+**Umsetzung:** Regeln im cron-Format `Tag Monat Wochentag`, einstellbar in der App unter „📅 Extra-Punkte an bestimmten Tagen“. Erweiterungen: `1#1` = 1. Montag, `4L` = letzter Donnerstag, `L` im Tag = Monatsletzter. Voreingestellt: Sportbeutel dienstags für Kind 1 und freitags für Kind 2. Noch offen: „alle n Wochen“ (in cron nicht ausdrückbar) und Ferien-Ausnahmen.
 
 **Ziel:** Punkte erscheinen nur an den Tagen in der Checkliste, an denen sie gebraucht werden, z. B. „🧸 Spielzeugtag“ oder „⚽ Sportbeutel“.
 
