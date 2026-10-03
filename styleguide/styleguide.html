@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="standard">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Playful UI — Style Guide</title>
+<link rel="stylesheet" href="playful-ui.css">
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;}
+  body{min-height:100vh;}
+  .pf-app{min-height:100vh;padding:24px 18px 60px;}
+  .wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:30px;}
+  section{background:rgba(255,255,255,.55);border-radius:22px;padding:20px;box-shadow:var(--pf-shadow-card);}
+  h2{margin:0 0 4px;font-size:1.15rem;font-weight:800;}
+  .sub{margin:0 0 16px;color:var(--pf-muted);font-size:.86rem;}
+  h3{margin:18px 0 8px;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--pf-muted);}
+
+  /* Palette */
+  .pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;}
+  .swatch{border-radius:14px;overflow:hidden;background:var(--pf-card);box-shadow:0 3px 8px rgba(90,70,40,.12);}
+  .swatch .col{height:56px;}
+  .swatch .meta{padding:7px 9px;font-size:.68rem;line-height:1.35;}
+  .swatch .meta b{display:block;font-size:.74rem;} .swatch .meta span{color:var(--pf-muted);}
+  .swatch .meta code{font-family:var(--pf-font-mono);}
+
+  /* Theme row */
+  .theme-roles{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+  .role{display:flex;align-items:center;gap:7px;font-size:.72rem;color:var(--pf-muted);}
+  .role i{width:20px;height:20px;border-radius:6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1);}
+
+  /* generic demo rows */
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+  .stack{display:flex;flex-direction:column;gap:12px;}
+  .demo-board{display:grid;grid-template-columns:repeat(4,44px);grid-template-rows:repeat(2,44px);gap:7px;}
+  .type-demo b{font-weight:800;}
+  .shadow-demo{width:120px;height:64px;border-radius:16px;background:var(--pf-card);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--pf-muted);}
+  .radius-demo{width:64px;height:64px;background:var(--pf-btn1);}
+  code.inline{font-family:var(--pf-font-mono);background:rgba(51,41,27,.07);padding:2px 6px;border-radius:6px;font-size:.82rem;}
+  pre{background:#2b2317;color:#f3e9d6;border-radius:14px;padding:14px;overflow:auto;font-family:var(--pf-font-mono);font-size:.78rem;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="pf-app">
+<div class="wrap">
+
+  <header>
+    <p class="pf-eyebrow">Design-System</p>
+    <h1 class="pf-title"><span class="a">Playful</span> <span class="b">UI</span></h1>
+    <p class="sub" style="margin-top:8px">Die gewachsene Design-Sprache aus dem Genius Square Trainer — Farben, Tokens und Komponenten zum Wiederverwenden. Theme umschalten:</p>
+    <div class="pf-pill-nav" id="nav" style="max-width:360px">
+      <div class="pf-pill-ind" id="ind" style="width:calc((100% - 10px)/3)"></div>
+      <button class="pf-seg is-active" data-t="standard">Standard</button>
+      <button class="pf-seg" data-t="koralle">Koralle</button>
+      <button class="pf-seg" data-t="mint">Mint</button>
+    </div>
+  </header>
+
+  <!-- ROHPALETTE -->
+  <section>
+    <h2>Rohpalette (Buch „Playful")</h2>
+    <p class="sub">Die Grundfarben, aus denen die Themen zusammengestellt sind. HEX für Web, RGB wie im Buch.</p>
+    <div class="pal" id="palette"></div>
+  </section>
+
+  <!-- THEMEN -->
+  <section>
+    <h2>Themen</h2>
+    <p class="sub">Jedes Theme belegt dieselben Rollen-Variablen mit anderen Farben. Default = <b>Standard</b>. Ein viertes Profil <b>Original</b> wird aus der Spielanleitung (PDF) ergänzt.</p>
+    <div id="themes" class="stack"></div>
+  </section>
+
+  <!-- TYPOGRAFIE -->
+  <section>
+    <h2>Typografie</h2>
+    <p class="sub">Abgerundete System-Schrift (offline-fest). Zahlen/Daten in Monospace.</p>
+    <div class="type-demo stack">
+      <div><p class="pf-eyebrow" style="margin:0">Eyebrow · 0.72rem · 800 · +0.28em</p></div>
+      <div class="pf-title"><span class="a">Titel</span> <span class="b">Zweifarbig</span> · 1.85rem · 800</div>
+      <div><b>Fließtext / Buttons</b> — <code class="inline">var(--pf-font)</code>, Gewicht 800 für Aktionen, 600–700 sonst.</div>
+      <div class="pf-mono">Daten &amp; Zeit — 00:47.3 · <code class="inline">var(--pf-font-mono)</code></div>
+    </div>
+  </section>
+
+  <!-- RADIEN & SCHATTEN -->
+  <section>
+    <h2>Radien &amp; Schatten</h2>
+    <div class="row" style="align-items:flex-end">
+      <div style="text-align:center"><div class="radius-demo" style="border-radius:20px"></div><h3 style="margin:8px 0 0">20px · Karte</h3></div>
+      <div style="text-align:center"><div class="radius-demo" style="border-radius:15px"></div><h3 style="margin:8px 0 0">15px · Button</h3></div>
+      <div style="text-align:center"><div class="radius-demo" style="border-radius:999px;width:64px"></div><h3 style="margin:8px 0 0">999px · Pille</h3></div>
+    </div>
+    <div class="row" style="margin-top:18px">
+      <div class="shadow-demo" style="box-shadow:var(--pf-shadow-card)">Karte</div>
+      <div class="shadow-demo" style="box-shadow:0 5px 0 var(--pf-btn1-edge)">Button-Kante</div>
+      <div class="shadow-demo" style="box-shadow:0 8px 0 var(--pf-board-edge)">Brett-Kante</div>
+    </div>
+  </section>
+
+  <!-- KOMPONENTEN -->
+  <section>
+    <h2>Komponenten</h2>
+
+    <h3>Buttons</h3>
+    <div class="row">
+      <button class="pf-btn pf-btn--primary">Primär</button>
+      <button class="pf-btn pf-btn--secondary">Sekundär</button>
+      <button class="pf-btn pf-btn--danger">Löschen</button>
+      <button class="pf-btn pf-btn--primary" disabled>Deaktiviert</button>
+    </div>
+
+    <h3>Chips (Auswahl)</h3>
+    <div class="row" id="chipDemo"></div>
+
+    <h3>Toggle</h3>
+    <div class="row">
+      <button class="pf-toggle is-on" id="tg1" aria-label="an/aus"></button>
+      <span class="sub" style="margin:0">Tippen zum Umschalten</span>
+    </div>
+
+    <h3>Zahlen-Readout</h3>
+    <div class="pf-card" style="max-width:260px"><div class="pf-readout is-active"><small>ZEIT</small>00:47.3</div></div>
+
+    <h3>Elfenbein-Kacheln &amp; Holzdübel-Brett</h3>
+    <div class="row" style="align-items:flex-start">
+      <div class="demo-board">
+        <div class="pf-tile" style="font-size:16px">C1</div>
+        <div class="pf-tile" style="font-size:16px">B2</div>
+        <div class="pf-tile" style="font-size:16px">E3</div>
+        <div class="pf-tile" style="font-size:16px">F1</div>
+        <div class="pf-tile" style="font-size:16px">A4</div>
+        <div class="pf-tile" style="font-size:16px">D6</div>
+        <div class="pf-tile" style="font-size:16px">E5</div>
+        <div class="pf-tile" style="font-size:16px">A6</div>
+      </div>
+      <div class="pf-board">
+        <div style="display:grid;grid-template-columns:repeat(4,34px);grid-template-rows:repeat(3,34px);gap:6px" id="miniBoard"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VERWENDUNG -->
+  <section>
+    <h2>Verwendung in anderen Projekten</h2>
+    <p class="sub">Eine Datei einbinden, Theme per Attribut setzen, Komponentenklassen nutzen.</p>
+<pre>&lt;link rel="stylesheet" href="playful-ui.css"&gt;
+&lt;html data-theme="koralle"&gt;   &lt;!-- standard | koralle | mint --&gt;
+
+&lt;button class="pf-btn pf-btn--primary"&gt;Los&lt;/button&gt;
+&lt;div class="pf-card"&gt;…&lt;/div&gt;
+
+/* eigene Farbe an eine Rolle hängen */
+color: var(--pf-accent);
+background: var(--pf-board);</pre>
+    <p class="sub" style="margin-top:14px">Neues Theme = ein Block mit denselben <code class="inline">--pf-*</code>-Variablen unter <code class="inline">[data-theme="name"]</code>. Materialien (Elfenbein, Holz) sind themenunabhängig.</p>
+  </section>
+
+</div>
+</div>
+
+<script>
+/* Rohpalette (HEX + RGB wie im Buch) */
+const PALETTE = [
+  ["Koralle","#eb5b44","235/91/68"],["Rosa","#fad2db","250/210/219"],
+  ["Himmelblau","#64c7f3","100/199/243"],["Limegrün","#f2e73d","242/231/61"],
+  ["Pink","#ec619f","236/97/159"],["Navy","#354093","53/64/147"],
+  ["Hellcyan","#91d3f0","145/211/240"],["Orange","#f5a04e","245/160/78"],
+  ["Petrol","#21a48f","33/164/143"],["Mint","#cce7e3","204/231/227"],
+  ["Hellgrün","#aace7b","170/206/123"],["Zartgelb","#fcf3b9","252/243/185"],
+  ["Pfirsich","#fcdbc3","252/219/195"],["Blau","#396ab1","57/106/177"],
+  ["Türkis","#77c8d0","119/200/208"],["Grün","#b1cc34","177/204/52"],
+  ["Senf","#e0c831","224/200/49"],["Hellblau","#9abae3","154/186/227"],
+  ["Blassmint","#e7f3ea","231/243/234"],["Magenta","#cf388d","207/56/141"],
+  ["Lila","#432d7f","67/45/127"],["Schiefer","#395370","57/83/112"],
+  ["Lavendel","#be95c4","190/149/196"],["Creme","#fbefc6","251/239/198"],
+];
+const pal=document.getElementById("palette");
+PALETTE.forEach(([n,hex,rgb])=>{
+  const d=document.createElement("div");d.className="swatch";
+  d.innerHTML=`<div class="col" style="background:${hex}"></div><div class="meta"><b>${n}</b><span><code>${hex}</code> · ${rgb}</span></div>`;
+  pal.appendChild(d);
+});
+
+/* Themen-Rollen anzeigen */
+const THEMES=[
+  ["Standard","standard",[["Brett","#69c3ef"],["Primär","#8bbe3d"],["Sekundär","#f5a04e"],["Akzent","#eb5b44"],["Hintergrund","#fbf4e4"]]],
+  ["Koralle","koralle",[["Brett","#9abae3"],["Primär","#ec644e"],["Sekundär","#cf388d"],["Akzent","#ec644e"],["Hintergrund","#e7f3ec"]]],
+  ["Mint","mint",[["Brett","#cce7e3"],["Primär","#aace7b"],["Sekundär","#fcf3b9"],["Akzent","#7aa63f"],["Hintergrund","#fcf7dc"]]],
+];
+const th=document.getElementById("themes");
+THEMES.forEach(([name,key,roles])=>{
+  const box=document.createElement("div");box.className="pf-card";
+  box.innerHTML=`<b>${name}</b><div class="theme-roles">`+
+    roles.map(([r,c])=>`<span class="role"><i style="background:${c}"></i>${r}</span>`).join("")+`</div>`;
+  th.appendChild(box);
+});
+
+/* Chip-Demo */
+const chipColors={standard:["#69c3ef","#8bbe3d","#f5a04e","#eb5b44"],koralle:["#9abae3","#e7f3ea","#ec644e","#cf388d"],mint:["#cce7e3","#aace7b","#fcf3b9"]};
+const chipNames={standard:"Standard",koralle:"Koralle",mint:"Mint"};
+const chipDemo=document.getElementById("chipDemo");
+Object.keys(chipNames).forEach((k,i)=>{
+  const b=document.createElement("button");b.className="pf-chip"+(i===0?" is-active":"");b.dataset.t=k;
+  b.innerHTML='<span class="pf-dots">'+chipColors[k].map(c=>`<i style="background:${c}"></i>`).join("")+'</span>'+chipNames[k];
+  b.addEventListener("click",()=>setTheme(k));
+  chipDemo.appendChild(b);
+});
+
+/* Mini-Brett mit Dübeln */
+const mb=document.getElementById("miniBoard");
+const filled=new Set([0,3,5,6,10]);
+for(let i=0;i<12;i++){const c=document.createElement("div");c.className="pf-socket"+(filled.has(i)?" is-filled":"");mb.appendChild(c);}
+
+/* Toggle */
+document.getElementById("tg1").addEventListener("click",e=>e.currentTarget.classList.toggle("is-on"));
+
+/* Theme-Umschalter */
+const segs=[...document.querySelectorAll("#nav .pf-seg")], ind=document.getElementById("ind");
+function setTheme(key){
+  document.documentElement.setAttribute("data-theme",key);
+  const idx=["standard","koralle","mint"].indexOf(key);
+  ind.style.transform=`translateX(${idx*100}%)`;
+  segs.forEach(s=>s.classList.toggle("is-active",s.dataset.t===key));
+  document.querySelectorAll("#chipDemo .pf-chip").forEach(c=>c.classList.toggle("is-active",c.dataset.t===key));
+}
+segs.forEach(s=>s.addEventListener("click",()=>setTheme(s.dataset.t)));
+</script>
+</body>
+</html>

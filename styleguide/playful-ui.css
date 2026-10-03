@@ -1,0 +1,199 @@
+/* =====================================================================
+   PLAYFUL UI — Design-Tokens & Komponenten
+   Herkunft: Genius Square Trainer. Farben aus der „Playful"-Buchpalette.
+   Verwendung: <link rel="stylesheet" href="playful-ui.css">
+   Theme wechseln: <html data-theme="koralle"> (standard | koralle | mint)
+   ===================================================================== */
+
+:root{
+  /* ---- Struktur ---- */
+  --pf-card:#ffffff;
+  --pf-ink:#33291b;          /* Haupttext, warmes Dunkelbraun */
+  --pf-muted:#93866f;        /* Sekundärtext / Labels */
+  --pf-hair:rgba(51,41,27,.10);
+
+  /* ---- Radien ---- */
+  --pf-radius:20px;          /* Karten */
+  --pf-radius-sm:15px;       /* Buttons, kleine Kacheln */
+  --pf-radius-pill:999px;    /* Pillen, Chips, Toggles */
+
+  /* ---- Schrift ---- */
+  --pf-font: "Segoe UI Rounded","SF Pro Rounded",ui-rounded,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --pf-font-mono: ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Roboto Mono",monospace;
+
+  /* ---- Schatten ---- */
+  --pf-shadow-card:0 6px 16px rgba(120,100,60,.14);
+  --pf-shadow-pop:0 8px 22px rgba(40,80,110,.28);
+
+  /* ---- Materialien (themenunabhängig) ---- */
+  --pf-ivory-1:#fdf6df;      /* Elfenbein-Kachel oben */
+  --pf-ivory-2:#f1e5c2;      /* Elfenbein-Kachel unten */
+  --pf-ivory-edge:#e3d3a6;   /* 3D-Kante der Kachel */
+  --pf-wood-1:#ecc78d;       /* Holzdübel: heller Kern */
+  --pf-wood-2:#d8a75c;       /* Holzdübel: Mitte */
+  --pf-wood-3:#b6823f;       /* Holzdübel: Rand */
+
+  /* =========================================================
+     THEME: STANDARD (Default)
+     ========================================================= */
+  --pf-bg:#fbf4e4;
+  --pf-board:#69c3ef;  --pf-board-edge:#3f94c6;  --pf-label:#f0fbff;
+  --pf-btn1:#8bbe3d;   --pf-btn1-ink:#ffffff;    --pf-btn1-edge:#6f9e2c;
+  --pf-btn2:#f5a04e;   --pf-btn2-ink:#5a3410;    --pf-btn2-edge:#dd8127;
+  --pf-accent:#eb5b44; --pf-eyebrow:#f5a04e;
+  --pf-title-a:#eb5b44; --pf-title-b:#4fa6d6;
+}
+
+/* THEME: KORALLE — hellblaues Brett, Koralle/Pink, Mint-Hintergrund */
+[data-theme="koralle"]{
+  --pf-bg:#e7f3ec;
+  --pf-board:#9abae3;  --pf-board-edge:#7699c4;  --pf-label:#33465e;
+  --pf-btn1:#ec644e;   --pf-btn1-ink:#ffffff;    --pf-btn1-edge:#c94a37;
+  --pf-btn2:#cf388d;   --pf-btn2-ink:#ffffff;    --pf-btn2-edge:#a92771;
+  --pf-accent:#ec644e; --pf-eyebrow:#cf388d;
+  --pf-title-a:#ec644e; --pf-title-b:#5f83b8;
+}
+
+/* THEME: MINT — Mint-Brett, Grün/Zartgelb, Cremeton */
+[data-theme="mint"]{
+  --pf-bg:#fcf7dc;
+  --pf-board:#cce7e3;  --pf-board-edge:#a7c9c4;  --pf-label:#3f5b54;
+  --pf-btn1:#aace7b;   --pf-btn1-ink:#233b12;    --pf-btn1-edge:#8bb257;
+  --pf-btn2:#fcf3b9;   --pf-btn2-ink:#5a5a1c;    --pf-btn2-edge:#ddd28f;
+  --pf-accent:#7aa63f; --pf-eyebrow:#7aa63f;
+  --pf-title-a:#6f9e2c; --pf-title-b:#c9a227;
+}
+
+/* THEME: ORIGINAL — Platzhalter.
+   Farben aus der offiziellen Spielanleitung (PDF) ziehen und hier eintragen. */
+/* [data-theme="original"]{ --pf-bg:…; --pf-board:…; … } */
+
+
+/* =====================================================================
+   BASIS
+   ===================================================================== */
+.pf-app{
+  font-family:var(--pf-font);
+  color:var(--pf-ink);
+  background:radial-gradient(130% 60% at 50% -8%, rgba(255,255,255,.35) 0%, var(--pf-bg) 60%), var(--pf-bg);
+  transition:background .25s;
+}
+.pf-mono{font-family:var(--pf-font-mono);}
+
+
+/* =====================================================================
+   TYPOGRAFIE — Titel & Eyebrow
+   ===================================================================== */
+.pf-eyebrow{font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--pf-eyebrow);font-weight:800;margin:0 0 3px;}
+.pf-title{margin:0;font-size:1.85rem;font-weight:800;letter-spacing:.3px;}
+.pf-title .a{color:var(--pf-title-a);}
+.pf-title .b{color:var(--pf-title-b);}
+
+
+/* =====================================================================
+   BUTTONS — dick, mit fester Unterkante (haptisch, „drückbar")
+   ===================================================================== */
+.pf-btn{
+  border:none;border-radius:var(--pf-radius-sm);padding:16px 14px;
+  font-family:inherit;font-size:1.05rem;font-weight:800;letter-spacing:.3px;
+  cursor:pointer;transition:transform .06s, box-shadow .06s, opacity .12s;
+}
+.pf-btn:active{transform:translateY(3px);}
+.pf-btn:disabled{opacity:.4;cursor:default;}
+.pf-btn--primary{color:var(--pf-btn1-ink);background:var(--pf-btn1);box-shadow:0 5px 0 var(--pf-btn1-edge);}
+.pf-btn--primary:active{box-shadow:0 2px 0 var(--pf-btn1-edge);}
+.pf-btn--secondary{color:var(--pf-btn2-ink);background:var(--pf-btn2);box-shadow:0 5px 0 var(--pf-btn2-edge);}
+.pf-btn--secondary:active{box-shadow:0 2px 0 var(--pf-btn2-edge);}
+.pf-btn--danger{color:#c0392b;background:#fff;border:2px solid #e6b3aa;box-shadow:none;}
+.pf-btn--danger:active{background:#fdece9;transform:translateY(1px);}
+
+
+/* =====================================================================
+   KARTEN
+   ===================================================================== */
+.pf-card{background:var(--pf-card);border-radius:var(--pf-radius);padding:14px;box-shadow:var(--pf-shadow-card);}
+
+
+/* =====================================================================
+   PILLEN-MENÜ (Segmented Control mit gleitendem Indikator)
+   Markup:
+   <div class="pf-pill-nav"><div class="pf-pill-ind"></div>
+     <button class="pf-seg is-active">A</button> …</div>
+   Indikator per JS: transform:translateX(index*100%)
+   ===================================================================== */
+.pf-pill-nav{position:relative;display:flex;background:var(--pf-card);border-radius:var(--pf-radius-pill);
+  padding:5px;box-shadow:0 4px 12px rgba(90,70,40,.14), inset 0 0 0 1px var(--pf-hair);}
+.pf-pill-ind{position:absolute;top:5px;bottom:5px;left:5px;border-radius:var(--pf-radius-pill);
+  background:var(--pf-accent);transition:transform .28s cubic-bezier(.4,1.2,.5,1);}
+.pf-seg{flex:1;z-index:1;border:none;background:none;font-family:inherit;font-weight:800;font-size:.86rem;
+  color:var(--pf-muted);padding:10px 6px;cursor:pointer;transition:color .2s;}
+.pf-seg.is-active{color:#fff;}
+
+
+/* =====================================================================
+   CHIPS (z. B. Themenauswahl) — mit Farbpunkten
+   ===================================================================== */
+.pf-chip{display:inline-flex;align-items:center;gap:8px;padding:9px 13px 9px 10px;border-radius:var(--pf-radius-pill);
+  border:2px solid var(--pf-hair);background:var(--pf-card);color:var(--pf-ink);
+  font-family:inherit;font-weight:800;font-size:.82rem;cursor:pointer;transition:border-color .15s, transform .06s;}
+.pf-chip:active{transform:translateY(1px);}
+.pf-chip.is-active{border-color:var(--pf-accent);color:var(--pf-accent);}
+.pf-chip .pf-dots{display:flex;}
+.pf-chip .pf-dots i{width:12px;height:12px;border-radius:50%;margin-left:-3px;box-shadow:0 0 0 1.5px var(--pf-card);}
+.pf-chip .pf-dots i:first-child{margin-left:0;}
+
+
+/* =====================================================================
+   TOGGLE (Schalter)
+   ===================================================================== */
+.pf-toggle{width:52px;height:30px;border-radius:var(--pf-radius-pill);background:#d7ccb6;position:relative;border:none;cursor:pointer;transition:background .2s;flex:0 0 auto;}
+.pf-toggle::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .2s;}
+.pf-toggle.is-on{background:var(--pf-accent);}
+.pf-toggle.is-on::after{transform:translateX(22px);}
+
+
+/* =====================================================================
+   ZAHLEN-READOUT (z. B. Timer / KPI)
+   ===================================================================== */
+.pf-readout{font-family:var(--pf-font-mono);text-align:center;font-size:clamp(34px,12vw,50px);font-weight:800;letter-spacing:2px;color:var(--pf-ink);}
+.pf-readout small{display:block;font-size:.72rem;font-weight:800;letter-spacing:.32em;color:var(--pf-muted);margin-bottom:2px;}
+.pf-readout.is-active{color:var(--pf-accent);}
+
+
+/* =====================================================================
+   SPIEL-MATERIALIEN (optional, projektspezifisch)
+   ===================================================================== */
+/* Elfenbein-Kachel */
+.pf-tile{border-radius:var(--pf-radius-sm);background:linear-gradient(160deg,var(--pf-ivory-1),var(--pf-ivory-2));color:var(--pf-ink);
+  display:flex;align-items:center;justify-content:center;font-weight:800;
+  box-shadow:0 5px 0 var(--pf-ivory-edge),0 8px 12px rgba(120,95,40,.22),inset 0 2px 2px rgba(255,255,255,.8);user-select:none;}
+
+/* Buntes Brett mit fester Unterkante */
+.pf-board{border-radius:calc(var(--pf-radius) + 6px);padding:14px;background:var(--pf-board);
+  box-shadow:0 8px 0 var(--pf-board-edge), var(--pf-shadow-pop), inset 0 2px 2px rgba(255,255,255,.4);transition:background .25s, box-shadow .25s;}
+
+/* Gebohrter Sockel */
+.pf-socket{border-radius:50%;background:rgba(0,0,0,.17);box-shadow:inset 0 4px 6px rgba(0,0,0,.32),inset 0 -1px 0 rgba(255,255,255,.18);position:relative;}
+
+/* Holzdübel (Hirnholz von oben) — auf .pf-socket setzen */
+.pf-socket.is-filled::after{content:"";position:absolute;inset:7%;border-radius:50%;
+  background:
+    radial-gradient(circle at 38% 32%, rgba(255,255,255,.6), rgba(255,255,255,0) 46%),
+    repeating-radial-gradient(circle at 45% 43%, #e0b57e 0 2.5px, #d0a469 2.5px 5px),
+    radial-gradient(circle at 50% 50%, var(--pf-wood-1) 0%, var(--pf-wood-2) 58%, var(--pf-wood-3) 100%);
+  box-shadow:0 3px 5px rgba(90,55,15,.5),inset 0 2px 1px rgba(255,246,224,.6),inset 0 -4px 6px rgba(120,80,35,.55);
+  animation:pf-drop .28s cubic-bezier(.25,1.6,.5,1);}
+
+
+/* =====================================================================
+   MOTION
+   ===================================================================== */
+@keyframes pf-pop{0%{transform:scale(.84) rotate(-3deg);opacity:.5}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes pf-drop{0%{transform:translateY(-24%) scale(.78);opacity:0}55%{opacity:1}100%{transform:translateY(0) scale(1);opacity:1}}
+.pf-animate-pop{animation:pf-pop .24s cubic-bezier(.3,1.5,.5,1);}
+
+@media (prefers-reduced-motion:reduce){
+  .pf-app,.pf-board,.pf-pill-ind{transition:none;}
+  .pf-animate-pop,.pf-socket.is-filled::after{animation:none;}
+  .pf-btn:active{transform:none;}
+}

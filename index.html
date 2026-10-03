@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="de" data-theme="standard">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unser Morgen – Checkliste für zwei Kinder</title>
+  <meta name="theme-color" content="#fbf4e4">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Unser Morgen">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <style>
+    /* Eingebettet aus styleguide/playful-ui.css, damit die Seite als einzelne Datei funktioniert.
+       Bei Styleguide-Änderungen hier neu einfügen. */
+/* =====================================================================
+   PLAYFUL UI — Design-Tokens & Komponenten
+   Herkunft: Genius Square Trainer. Farben aus der „Playful"-Buchpalette.
+   Verwendung: <link rel="stylesheet" href="playful-ui.css">
+   Theme wechseln: <html data-theme="koralle"> (standard | koralle | mint)
+   ===================================================================== */
+
+:root{
+  /* ---- Struktur ---- */
+  --pf-card:#ffffff;
+  --pf-ink:#33291b;          /* Haupttext, warmes Dunkelbraun */
+  --pf-muted:#93866f;        /* Sekundärtext / Labels */
+  --pf-hair:rgba(51,41,27,.10);
+
+  /* ---- Radien ---- */
+  --pf-radius:20px;          /* Karten */
+  --pf-radius-sm:15px;       /* Buttons, kleine Kacheln */
+  --pf-radius-pill:999px;    /* Pillen, Chips, Toggles */
+
+  /* ---- Schrift ---- */
+  --pf-font: "Segoe UI Rounded","SF Pro Rounded",ui-rounded,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --pf-font-mono: ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Roboto Mono",monospace;
+
+  /* ---- Schatten ---- */
+  --pf-shadow-card:0 6px 16px rgba(120,100,60,.14);
+  --pf-shadow-pop:0 8px 22px rgba(40,80,110,.28);
+
+  /* ---- Materialien (themenunabhängig) ---- */
+  --pf-ivory-1:#fdf6df;      /* Elfenbein-Kachel oben */
+  --pf-ivory-2:#f1e5c2;      /* Elfenbein-Kachel unten */
+  --pf-ivory-edge:#e3d3a6;   /* 3D-Kante der Kachel */
+  --pf-wood-1:#ecc78d;       /* Holzdübel: heller Kern */
+  --pf-wood-2:#d8a75c;       /* Holzdübel: Mitte */
+  --pf-wood-3:#b6823f;       /* Holzdübel: Rand */
+
+  /* =========================================================
+     THEME: STANDARD (Default)
+     ========================================================= */
+  --pf-bg:#fbf4e4;
+  --pf-board:#69c3ef;  --pf-board-edge:#3f94c6;  --pf-label:#f0fbff;
+  --pf-btn1:#8bbe3d;   --pf-btn1-ink:#ffffff;    --pf-btn1-edge:#6f9e2c;
+  --pf-btn2:#f5a04e;   --pf-btn2-ink:#5a3410;    --pf-btn2-edge:#dd8127;
+  --pf-accent:#eb5b44; --pf-eyebrow:#f5a04e;
+  --pf-title-a:#eb5b44; --pf-title-b:#4fa6d6;
+}
+
+/* THEME: KORALLE — hellblaues Brett, Koralle/Pink, Mint-Hintergrund */
+[data-theme="koralle"]{
+  --pf-bg:#e7f3ec;
+  --pf-board:#9abae3;  --pf-board-edge:#7699c4;  --pf-label:#33465e;
+  --pf-btn1:#ec644e;   --pf-btn1-ink:#ffffff;    --pf-btn1-edge:#c94a37;
+  --pf-btn2:#cf388d;   --pf-btn2-ink:#ffffff;    --pf-btn2-edge:#a92771;
+  --pf-accent:#ec644e; --pf-eyebrow:#cf388d;
+  --pf-title-a:#ec644e; --pf-title-b:#5f83b8;
+}
+
+/* THEME: MINT — Mint-Brett, Grün/Zartgelb, Cremeton */
+[data-theme="mint"]{
+  --pf-bg:#fcf7dc;
+  --pf-board:#cce7e3;  --pf-board-edge:#a7c9c4;  --pf-label:#3f5b54;
+  --pf-btn1:#aace7b;   --pf-btn1-ink:#233b12;    --pf-btn1-edge:#8bb257;
+  --pf-btn2:#fcf3b9;   --pf-btn2-ink:#5a5a1c;    --pf-btn2-edge:#ddd28f;
+  --pf-accent:#7aa63f; --pf-eyebrow:#7aa63f;
+  --pf-title-a:#6f9e2c; --pf-title-b:#c9a227;
+}
+
+/* THEME: ORIGINAL — Platzhalter.
+   Farben aus der offiziellen Spielanleitung (PDF) ziehen und hier eintragen. */
+/* [data-theme="original"]{ --pf-bg:…; --pf-board:…; … } */
+
+
+/* =====================================================================
+   BASIS
+   ===================================================================== */
+.pf-app{
+  font-family:var(--pf-font);
+  color:var(--pf-ink);
+  background:radial-gradient(130% 60% at 50% -8%, rgba(255,255,255,.35) 0%, var(--pf-bg) 60%), var(--pf-bg);
+  transition:background .25s;
+}
+.pf-mono{font-family:var(--pf-font-mono);}
+
+
+/* =====================================================================
+   TYPOGRAFIE — Titel & Eyebrow
+   ===================================================================== */
+.pf-eyebrow{font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--pf-eyebrow);font-weight:800;margin:0 0 3px;}
+.pf-title{margin:0;font-size:1.85rem;font-weight:800;letter-spacing:.3px;}
+.pf-title .a{color:var(--pf-title-a);}
+.pf-title .b{color:var(--pf-title-b);}
+
+
+/* =====================================================================
+   BUTTONS — dick, mit fester Unterkante (haptisch, „drückbar")
+   ===================================================================== */
+.pf-btn{
+  border:none;border-radius:var(--pf-radius-sm);padding:16px 14px;
+  font-family:inherit;font-size:1.05rem;font-weight:800;letter-spacing:.3px;
+  cursor:pointer;transition:transform .06s, box-shadow .06s, opacity .12s;
+}
+.pf-btn:active{transform:translateY(3px);}
+.pf-btn:disabled{opacity:.4;cursor:default;}
+.pf-btn--primary{color:var(--pf-btn1-ink);background:var(--pf-btn1);box-shadow:0 5px 0 var(--pf-btn1-edge);}
+.pf-btn--primary:active{box-shadow:0 2px 0 var(--pf-btn1-edge);}
+.pf-btn--secondary{color:var(--pf-btn2-ink);background:var(--pf-btn2);box-shadow:0 5px 0 var(--pf-btn2-edge);}
+.pf-btn--secondary:active{box-shadow:0 2px 0 var(--pf-btn2-edge);}
+.pf-btn--danger{color:#c0392b;background:#fff;border:2px solid #e6b3aa;box-shadow:none;}
+.pf-btn--danger:active{background:#fdece9;transform:translateY(1px);}
+
+
+/* =====================================================================
+   KARTEN
+   ===================================================================== */
+.pf-card{background:var(--pf-card);border-radius:var(--pf-radius);padding:14px;box-shadow:var(--pf-shadow-card);}
+
+
+/* =====================================================================
+   PILLEN-MENÜ (Segmented Control mit gleitendem Indikator)
+   Markup:
+   <div class="pf-pill-nav"><div class="pf-pill-ind"></div>
+     <button class="pf-seg is-active">A</button> …</div>
+   Indikator per JS: transform:translateX(index*100%)
+   ===================================================================== */
+.pf-pill-nav{position:relative;display:flex;background:var(--pf-card);border-radius:var(--pf-radius-pill);
+  padding:5px;box-shadow:0 4px 12px rgba(90,70,40,.14), inset 0 0 0 1px var(--pf-hair);}
+.pf-pill-ind{position:absolute;top:5px;bottom:5px;left:5px;border-radius:var(--pf-radius-pill);
+  background:var(--pf-accent);transition:transform .28s cubic-bezier(.4,1.2,.5,1);}
+.pf-seg{flex:1;z-index:1;border:none;background:none;font-family:inherit;font-weight:800;font-size:.86rem;
+  color:var(--pf-muted);padding:10px 6px;cursor:pointer;transition:color .2s;}
+.pf-seg.is-active{color:#fff;}
+
+
+/* =====================================================================
+   CHIPS (z. B. Themenauswahl) — mit Farbpunkten
+   ===================================================================== */
+.pf-chip{display:inline-flex;align-items:center;gap:8px;padding:9px 13px 9px 10px;border-radius:var(--pf-radius-pill);
+  border:2px solid var(--pf-hair);background:var(--pf-card);color:var(--pf-ink);
+  font-family:inherit;font-weight:800;font-size:.82rem;cursor:pointer;transition:border-color .15s, transform .06s;}
+.pf-chip:active{transform:translateY(1px);}
+.pf-chip.is-active{border-color:var(--pf-accent);color:var(--pf-accent);}
+.pf-chip .pf-dots{display:flex;}
+.pf-chip .pf-dots i{width:12px;height:12px;border-radius:50%;margin-left:-3px;box-shadow:0 0 0 1.5px var(--pf-card);}
+.pf-chip .pf-dots i:first-child{margin-left:0;}
+
+
+/* =====================================================================
+   TOGGLE (Schalter)
+   ===================================================================== */
+.pf-toggle{width:52px;height:30px;border-radius:var(--pf-radius-pill);background:#d7ccb6;position:relative;border:none;cursor:pointer;transition:background .2s;flex:0 0 auto;}
+.pf-toggle::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .2s;}
+.pf-toggle.is-on{background:var(--pf-accent);}
+.pf-toggle.is-on::after{transform:translateX(22px);}
+
+
+/* =====================================================================
+   ZAHLEN-READOUT (z. B. Timer / KPI)
+   ===================================================================== */
+.pf-readout{font-family:var(--pf-font-mono);text-align:center;font-size:clamp(34px,12vw,50px);font-weight:800;letter-spacing:2px;color:var(--pf-ink);}
+.pf-readout small{display:block;font-size:.72rem;font-weight:800;letter-spacing:.32em;color:var(--pf-muted);margin-bottom:2px;}
+.pf-readout.is-active{color:var(--pf-accent);}
+
+
+/* =====================================================================
+   SPIEL-MATERIALIEN (optional, projektspezifisch)
+   ===================================================================== */
+/* Elfenbein-Kachel */
+.pf-tile{border-radius:var(--pf-radius-sm);background:linear-gradient(160deg,var(--pf-ivory-1),var(--pf-ivory-2));color:var(--pf-ink);
+  display:flex;align-items:center;justify-content:center;font-weight:800;
+  box-shadow:0 5px 0 var(--pf-ivory-edge),0 8px 12px rgba(120,95,40,.22),inset 0 2px 2px rgba(255,255,255,.8);user-select:none;}
+
+/* Buntes Brett mit fester Unterkante */
+.pf-board{border-radius:calc(var(--pf-radius) + 6px);padding:14px;background:var(--pf-board);
+  box-shadow:0 8px 0 var(--pf-board-edge), var(--pf-shadow-pop), inset 0 2px 2px rgba(255,255,255,.4);transition:background .25s, box-shadow .25s;}
+
+/* Gebohrter Sockel */
+.pf-socket{border-radius:50%;background:rgba(0,0,0,.17);box-shadow:inset 0 4px 6px rgba(0,0,0,.32),inset 0 -1px 0 rgba(255,255,255,.18);position:relative;}
+
+/* Holzdübel (Hirnholz von oben) — auf .pf-socket setzen */
+.pf-socket.is-filled::after{content:"";position:absolute;inset:7%;border-radius:50%;
+  background:
+    radial-gradient(circle at 38% 32%, rgba(255,255,255,.6), rgba(255,255,255,0) 46%),
+    repeating-radial-gradient(circle at 45% 43%, #e0b57e 0 2.5px, #d0a469 2.5px 5px),
+    radial-gradient(circle at 50% 50%, var(--pf-wood-1) 0%, var(--pf-wood-2) 58%, var(--pf-wood-3) 100%);
+  box-shadow:0 3px 5px rgba(90,55,15,.5),inset 0 2px 1px rgba(255,246,224,.6),inset 0 -4px 6px rgba(120,80,35,.55);
+  animation:pf-drop .28s cubic-bezier(.25,1.6,.5,1);}
+
+
+/* =====================================================================
+   MOTION
+   ===================================================================== */
+@keyframes pf-pop{0%{transform:scale(.84) rotate(-3deg);opacity:.5}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes pf-drop{0%{transform:translateY(-24%) scale(.78);opacity:0}55%{opacity:1}100%{transform:translateY(0) scale(1);opacity:1}}
+.pf-animate-pop{animation:pf-pop .24s cubic-bezier(.3,1.5,.5,1);}
+
+@media (prefers-reduced-motion:reduce){
+  .pf-app,.pf-board,.pf-pill-ind{transition:none;}
+  .pf-animate-pop,.pf-socket.is-filled::after{animation:none;}
+  .pf-btn:active{transform:none;}
+}
+  </style>
+  <style>
+    /* Theme "Standard". Lieblingsfarben der Kinder:
+       Kind 1 = blaues Brett mit roten Schildern, Kind 2 = lila Brett.
+       Lila ist (noch) kein Styleguide-Token, daher hier lokal definiert.
+       Grün bleibt für beide = erledigt / Fortschritt. */
+    :root{
+      --kid-red-edge:#c8432e;
+      --kid-lila:#b491e8; --kid-lila-edge:#8f6bc6;
+      --kid-lila-deep:#5e2f96; --kid-lila-deep-edge:#40196d;
+    }
+    .card.a{--kid:var(--pf-board);--kid-edge:var(--pf-board-edge);--kid-ink:var(--pf-ink);
+      --tag:var(--pf-accent);--tag-edge:var(--kid-red-edge);--tag-ink:#fff}
+    .card.b{--kid:var(--kid-lila);--kid-edge:var(--kid-lila-edge);--kid-ink:var(--pf-ink);
+      --tag:var(--kid-lila-deep);--tag-edge:var(--kid-lila-deep-edge);--tag-ink:#fff}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-synthesis:none}
+    main{max-width:1100px;margin:auto;padding:28px 20px 42px}
+    h1.pf-title{font-size:clamp(2rem,5vw,3.2rem);margin:4px 0 8px}
+    .sub{max-width:70ch;line-height:1.6;margin:8px 0 24px}
+    .top{padding:22px;margin-bottom:28px}
+    .settings{display:flex;flex-wrap:wrap;align-items:end;gap:14px}
+    .field{display:grid;gap:7px;flex:1;min-width:160px}
+    label{font-size:.93rem;font-weight:800}
+    input,select{width:100%;min-width:0;border:2px solid var(--pf-hair);border-radius:var(--pf-radius-sm);padding:12px 13px;background:var(--pf-bg);color:var(--pf-ink);font:inherit;min-height:48px}
+    input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid var(--pf-ink);outline-offset:4px}
+    .hint{margin:16px 0 0;font-size:.89rem;line-height:1.5;color:var(--pf-muted)}
+    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
+    .card{padding:20px;min-width:0;background:var(--kid);box-shadow:0 8px 0 var(--kid-edge),var(--pf-shadow-card),inset 0 2px 2px rgba(255,255,255,.4);color:var(--kid-ink)}
+    .kid-title{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+    .kid-title h2{margin:0;font-size:1.5rem;overflow-wrap:anywhere;min-width:0;background:var(--tag);color:var(--tag-ink);padding:6px 18px 7px;border-radius:var(--pf-radius-pill);box-shadow:0 4px 0 var(--tag-edge)}
+    .count{font-variant-numeric:tabular-nums;font-size:.88rem;font-weight:800;background:var(--tag);color:var(--tag-ink);box-shadow:0 3px 0 var(--tag-edge);padding:7px 12px;border-radius:var(--pf-radius-pill)}
+    .bar{height:14px;background:rgba(255,255,255,.55);border-radius:var(--pf-radius-pill);overflow:hidden;margin:15px 0 20px;box-shadow:inset 0 2px 3px rgba(0,0,0,.12)}
+    .fill{height:100%;width:0;transition:width .15s ease;background:var(--pf-btn1);border-radius:inherit}
+    .tasks{display:grid;gap:14px}
+    .task{justify-content:flex-start;gap:12px;padding:13px 12px;min-height:76px;cursor:pointer;transition:transform .1s,box-shadow .1s}
+    .task:active{transform:translateY(3px);box-shadow:0 2px 0 var(--pf-ivory-edge)}
+    .task:focus-within{outline:3px solid var(--pf-ink);outline-offset:3px}
+    .task.done{background:linear-gradient(160deg,color-mix(in srgb,var(--pf-btn1) 22%,var(--pf-card)),color-mix(in srgb,var(--pf-btn1) 38%,var(--pf-card)));box-shadow:0 5px 0 var(--pf-btn1-edge),0 8px 12px rgba(80,110,30,.2)}
+    .task.done:active{box-shadow:0 2px 0 var(--pf-btn1-edge)}
+    .task input{width:28px;height:28px;min-height:28px;flex:none;margin:0;accent-color:var(--pf-btn1-edge);cursor:pointer}
+    .emoji{font-size:1.9rem;width:38px;text-align:center;flex:none}
+    .task-text{font-size:1.12rem;font-weight:800;line-height:1.35;overflow-wrap:anywhere}
+    .ready{padding:13px 14px;margin-top:22px;border-radius:var(--pf-radius-sm);background:rgba(255,255,255,.7);color:var(--pf-ink);font-weight:700;line-height:1.5;overflow-wrap:anywhere}
+    .ready.yes{background:var(--pf-btn1);color:var(--pf-btn1-ink);font-weight:800;box-shadow:0 4px 0 var(--pf-btn1-edge)}
+    .tip{margin-top:32px;padding:20px 22px;border-left:7px solid var(--pf-btn2)}
+    .tip h2{font-size:1.2rem;margin:0 0 8px}.tip p{margin:0;line-height:1.6}
+    .footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-top:24px}
+    .privacy{font-size:.85rem;line-height:1.6;max-width:60ch;color:var(--pf-muted)}
+    .actions{display:flex;flex-wrap:wrap;gap:14px}
+    .actions .pf-btn{font-size:.95rem;min-height:48px}
+    .status{padding:18px 20px;background:var(--pf-btn1);color:var(--pf-btn1-ink);box-shadow:0 5px 0 var(--pf-btn1-edge);border-radius:var(--pf-radius);font-weight:800;font-size:1.1rem;margin-top:30px;display:none;line-height:1.5}
+    .status.visible{display:block}
+    @media(max-width:660px){main{padding:18px 12px 30px}.cards{grid-template-columns:1fr}.card,.top{padding:16px}.field{min-width:140px}}
+    @media(prefers-reduced-motion:reduce){.fill,.task{transition:none}.task:hover,.task:active{transform:none}}
+    @page{size:A4 portrait;margin:10mm}
+    @media print{
+      body.pf-app{background:var(--pf-card);font-size:10pt}
+      main{max-width:none;padding:0}h1.pf-title{font-size:23pt}
+      .pf-title .a,.pf-title .b{color:var(--pf-ink)}
+      .sub{margin-bottom:12px}.top{padding:12px;margin-bottom:14px}
+      .settings{gap:8px}.field{min-width:0}input,select{padding:6px;min-height:34px;font-size:9pt}
+      .cards{grid-template-columns:1fr 1fr;gap:12px}
+      .card{break-inside:avoid;padding:12px}
+      .top,.card,.tip,.task,.task.done,.ready,.status{box-shadow:none;background:var(--pf-card);color:var(--pf-ink);border:1px solid var(--pf-ink)}
+      .kid-title h2{font-size:15pt;padding:0}.kid-title h2,.count{background:none;color:var(--pf-ink);box-shadow:none}.count{padding:3px;font-size:9pt}
+      .bar{margin:10px 0}.tasks{grid-template-columns:1fr;gap:7px}.task{flex-direction:row;justify-content:flex-start;text-align:left;min-height:48px;padding:7px;gap:7px}
+      .task input{width:21px;height:21px;min-height:21px}.emoji{font-size:19pt;width:29px}.task-text{font-size:11pt}
+      .ready{font-size:10pt;padding:8px;margin-top:10px}.tip{margin-top:14px;padding:12px;break-inside:avoid}
+      .hint,.footer{display:none}.status{margin-top:14px;padding:12px}
+    }
+  </style>
+</head>
+<body class="pf-app">
+<main>
+  <header>
+    <p class="date pf-eyebrow" id="date"></p>
+    <h1 class="pf-title">🌞 <span class="a">Unser</span> <span class="b">Morgen</span></h1>
+    <p class="sub">Wir werden Schritt für Schritt fertig. Jedes Kind hat seine eigene Liste. <strong>Wir machen kein Wettrennen.</strong> Bei Bedarf helfen die Erwachsenen.</p>
+  </header>
+  <section class="top pf-card" aria-label="Unser Morgenplan">
+    <div class="settings">
+      <div class="field"><label for="name0">Name Kind 1</label><input id="name0" type="text" maxlength="28" autocomplete="off" placeholder="Kind 1"></div>
+      <div class="field"><label for="name1">Name Kind 2</label><input id="name1" type="text" maxlength="28" autocomplete="off" placeholder="Kind 2"></div>
+      <div class="field"><label for="departure">Wir gehen los um</label><input type="time" id="departure" value="07:45"></div>
+      <div class="field"><label for="transport">Heute geht's …</label><select id="transport"><option value="🚶 zu Fuß">🚶 zu Fuß</option><option value="🚲 mit dem Fahrrad">🚲 mit dem Fahrrad</option><option value="🛴 mit dem Roller">🛴 mit dem Roller</option><option value="🚗 mit dem Auto">🚗 mit dem Auto</option><option value="🚌 mit Bus oder Bahn">🚌 mit Bus oder Bahn</option></select></div>
+    </div>
+    <p class="hint">💚 Erwachsene legen Abfahrtszeit und Weg fest – am besten schon am Vorabend.</p>
+  </section>
+  <div class="cards" id="cards">
+    <section class="card a pf-board" aria-label="Checkliste Kind 1">
+      <div class="kid-title"><h2 id="heading0">🐇 Kind 1</h2><span class="count" id="count0" aria-live="polite">0 von 6</span></div>
+      <div class="bar" role="progressbar" aria-label="Fortschritt Kind 1" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="progress0"><div class="fill" id="fill0"></div></div>
+      <div class="tasks" id="tasks0"></div><div class="ready" id="ready0" role="status">Schritt für Schritt – du schaffst das!</div>
+    </section>
+    <section class="card b pf-board" aria-label="Checkliste Kind 2">
+      <div class="kid-title"><h2 id="heading1">🐻 Kind 2</h2><span class="count" id="count1" aria-live="polite">0 von 6</span></div>
+      <div class="bar" role="progressbar" aria-label="Fortschritt Kind 2" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="progress1"><div class="fill" id="fill1"></div></div>
+      <div class="tasks" id="tasks1"></div><div class="ready" id="ready1" role="status">Schritt für Schritt – du schaffst das!</div>
+    </section>
+  </div>
+  <div class="status" id="allReady" role="status">🎉 Beide sind startklar! Jetzt können wir gemeinsam los.</div>
+  <section class="tip pf-card">
+    <h2>🧸 Und wann spielen wir?</h2>
+    <p>Erst fertig machen. Wenn danach noch Zeit ist, ist Spielen dran. Wenn nicht, wartet das Spiel auf später. <strong>Du darfst um Hilfe bitten!</strong></p>
+  </section>
+  <div class="footer">
+    <p class="privacy">🔒 Diese Seite funktioniert ohne Internet. Namen und Häkchen bleiben nur in diesem Browser gespeichert. An einem neuen Tag werden die Häkchen automatisch zurückgesetzt.</p>
+    <div class="actions"><button class="pf-btn pf-btn--primary" type="button" id="print">🖨️ Drucken</button> <button class="pf-btn pf-btn--secondary" type="button" id="reset">↺ Häkchen für heute löschen</button></div>
+  </div>
+</main>
+<script>
+'use strict';
+const KEY='morgenplan-zwei-kinder-v1';
+const steps=[['🌤️','Aufgestanden'],['👕','Angezogen'],['🥣','Gefrühstückt'],['🪥','Zähne geputzt'],['🎒','Tasche ist bereit'],['👟','Schuhe & Jacke an']];
+const $=id=>document.getElementById(id);
+function localDate(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
+const defaults=()=>({date:localDate(),names:['',''],departure:'07:45',transport:'🚶 zu Fuß',checked:[Array(steps.length).fill(false),Array(steps.length).fill(false)]});
+function load(){let saved;try{saved=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}const fresh=defaults();if(!saved||typeof saved!=='object')return fresh;
+  if(Array.isArray(saved.names))fresh.names=saved.names.slice(0,2).map(x=>typeof x==='string'?x:'');
+  if(typeof saved.departure==='string'&&/^\d{2}:\d{2}$/.test(saved.departure))fresh.departure=saved.departure;
+  if([...$('transport').options].some(o=>o.value===saved.transport))fresh.transport=saved.transport;
+  if(saved.date===fresh.date&&Array.isArray(saved.checked))fresh.checked=[0,1].map(i=>Array.isArray(saved.checked[i])?steps.map((_,j)=>saved.checked[i][j]===true):Array(steps.length).fill(false));
+  return fresh;
+}
+let state=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){/* private mode: usable without saving */}}
+function syncDay(){if(state.date!==localDate()){state.date=localDate();state.checked=[Array(steps.length).fill(false),Array(steps.length).fill(false)];save();render();}}
+function render(){
+  const now=new Date();$('date').textContent=new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);
+  for(let i=0;i<2;i++){
+    const name=state.names[i].trim()||`Kind ${i+1}`;
+    $('heading'+i).textContent=(i===0?'🐇 ':'🐻 ')+name;
+    const checked=state.checked[i].filter(Boolean).length;
+    $('count'+i).textContent=checked+' von '+steps.length;
+    $('fill'+i).style.width=(checked/steps.length*100)+'%';
+    $('progress'+i).setAttribute('aria-valuenow',String(checked));
+    $('progress'+i).setAttribute('aria-label','Fortschritt '+name);
+    const container=$('tasks'+i);container.replaceChildren();
+    steps.forEach(([emoji,description],j)=>{
+      const label=document.createElement('label');label.className='task pf-tile'+(state.checked[i][j]?' done':'');
+      const input=document.createElement('input');input.type='checkbox';input.checked=state.checked[i][j];input.setAttribute('aria-label',name+': '+description);
+      input.addEventListener('change',()=>{state.checked[i][j]=input.checked;save();render();$('tasks'+i).querySelectorAll('input')[j].focus({preventScroll:true});});
+      const pic=document.createElement('span');pic.className='emoji';pic.textContent=emoji;pic.setAttribute('aria-hidden','true');
+      const words=document.createElement('span');words.className='task-text';words.textContent=description;
+      label.append(input,pic,words);container.append(label);
+    });
+    $('ready'+i).textContent=checked===steps.length?'🌟 '+name+' ist startklar!':'Schritt für Schritt – bei Bedarf helfen wir.';
+    $('ready'+i).classList.toggle('yes',checked===steps.length);
+  }
+  $('allReady').classList.toggle('visible',state.checked.every(items=>items.every(Boolean)));
+}
+for(let i=0;i<2;i++){$('name'+i).value=state.names[i];$('name'+i).addEventListener('input',e=>{state.names[i]=e.target.value.slice(0,28);save();render();});}
+$('departure').value=state.departure;$('departure').addEventListener('change',e=>{state.departure=e.target.value;save();});
+$('transport').value=state.transport;$('transport').addEventListener('change',e=>{state.transport=e.target.value;save();});
+$('reset').addEventListener('click',()=>{if(confirm('Alle Häkchen für heute löschen? Die Namen und der Plan bleiben erhalten.')){state.checked=[Array(steps.length).fill(false),Array(steps.length).fill(false)];save();render();}});
+$('print').addEventListener('click',()=>window.print());
+render();save();document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncDay();});setInterval(syncDay,60*1000);
+// PWA: offline verfügbar machen, sobald die Seite über http(s) ausgeliefert wird. Als lokale Datei geöffnet passiert hier nichts.
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+// Bittet den Browser, Namen und Häkchen nicht bei Speicherknappheit zu löschen.
+if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
+</script>
+</body>
+</html>
