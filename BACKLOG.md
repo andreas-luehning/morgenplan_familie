@@ -1,6 +1,8 @@
 # Backlog
 
-## 1. Display bis zur Abfahrt anlassen, Wecker zur Abfahrtszeit
+## Aktuell wichtig
+
+### 1. Display bis zur Abfahrt anlassen, Wecker zur Abfahrtszeit
 
 **Ziel:** Morgens geht das Display nicht aus und zur Abfahrt hört und sieht man, dass es losgeht.
 
@@ -16,7 +18,7 @@
 - Wenn sich die Abfahrtszeit ändert, die Timer neu setzen.
 - Nach jeder Änderung `VERSION` in `sw.js` hochzählen.
 
-## 2. Versionskennung in der Fußzeile
+### 2. Versionskennung in der Fußzeile
 
 **Ziel:** Man sieht auf einen Blick, welche Version gerade geladen ist.
 
@@ -24,16 +26,7 @@
 - Die Version soll nur an einer Stelle gepflegt werden. Aktuell steht sie als `VERSION` in `sw.js`. Damit sie dort nicht doppelt gepflegt wird, entweder per `postMessage` vom Service Worker abfragen oder aus dem Cache-Namen (`caches.keys()`) ableiten.
 - Optional: Wenn eine neue Version bereitliegt, einen Hinweis „Update verfügbar – tippen zum Neuladen“ anzeigen.
 
-## 3. Liste editierbar machen (später)
-
-**Ziel:** Kinder und Checklisten-Punkte ohne Codeänderung anpassen.
-
-- Kinder hinzufügen, umbenennen und entfernen.
-- Checklisten-Punkte hinzufügen, ändern, löschen und umsortieren, pro Kind oder für alle.
-- Speicherung in `localStorage`, getrennt vom täglichen Abhak-Status. Ein Reset am Morgen darf die Konfiguration nicht löschen.
-- Bearbeiten-Modus hinter einem Schalter oder einer einfachen Eltern-Sperre, damit die Kinder nicht versehentlich etwas ändern.
-
-## 4. Tagesabhängige Punkte mit Wiederholungsmustern (wichtig)
+### 3. Tagesabhängige Punkte mit Wiederholungsmustern
 
 **Ziel:** Punkte erscheinen nur an den Tagen in der Checkliste, an denen sie gebraucht werden, z. B. „🧸 Spielzeugtag“ oder „⚽ Sportbeutel“.
 
@@ -47,15 +40,26 @@
 - Optional sind Ausnahmen wie Ferien oder Feiertage, an denen ein Punkt entfällt.
 - Die Checkliste des Tages ergibt sich aus den festen Punkten und den Punkten, deren Regel heute zutrifft.
 - Hilfreich wäre eine Vorschau: „Was steht morgen an?“. Das passt gut zum Abend-Modus (Punkt 5).
-- Abhängigkeit: Baut auf Punkt 3 (editierbare Liste) auf, oder die Regeln stehen zunächst fest im Code.
+- Da die editierbare Liste (Punkt 4) später kommt, stehen die Regeln zunächst fest im Code. Das Datenformat so wählen, dass Punkt 4 es später bearbeiten kann.
 
-## 5. Abend-Modus
+## Wenn Zeit und Lust ist
+
+### 4. Liste editierbar machen
+
+**Ziel:** Kinder und Checklisten-Punkte ohne Codeänderung anpassen.
+
+- Kinder hinzufügen, umbenennen und entfernen.
+- Checklisten-Punkte hinzufügen, ändern, löschen und umsortieren, pro Kind oder für alle.
+- Speicherung in `localStorage`, getrennt vom täglichen Abhak-Status. Ein Reset am Morgen darf die Konfiguration nicht löschen.
+- Bearbeiten-Modus hinter einem Schalter oder einer einfachen Eltern-Sperre, damit die Kinder nicht versehentlich etwas ändern.
+
+### 5. Abend-Modus
 
 **Ziel:** Ein eigener Modus fürs Abendprogramm, mit eigener Checkliste, z. B. Kleidung rauslegen, Ranzen packen, Zähne putzen, Schlafanzug.
 
 - Umschalten zwischen Morgen und Abend, entweder per Schalter oder automatisch nach Uhrzeit.
 - Eigene Punkte und eigener Abhak-Status, unabhängig vom Morgen.
-- Er kann die Punkte von morgen aus Punkt 4 anzeigen, z. B. „Morgen ist Sport, Sportbeutel packen“.
+- Er kann die Punkte von morgen aus Punkt 3 anzeigen, z. B. „Morgen ist Sport, Sportbeutel packen“.
 
 ---
 
