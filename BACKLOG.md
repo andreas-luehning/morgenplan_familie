@@ -74,6 +74,17 @@
 - **Vorlagen** zum Antippen, in beiden Formularen: 🏊 Schwimmsachen, 🖍️ Bastelsachen, 🎁 Geschenk, ☂️ Regensachen. Brotdose und Trinkflasche sind selbstverständlich, Sportbeutel und Spielzeug laufen über regelmäßige Regeln.
 - Kontrolle über „Liste testen für Tag“.
 
+### 10. ✅ Zweite Seite „Heute noch“ (tägliches To-do)
+
+**Ziel:** Nachmittags-Aufgaben abhaken, ohne die App kompliziert zu machen.
+
+- Zwei Seiten, „🌞 Morgen“ und „📋 Heute noch“, umschaltbar über das Pillen-Menü aus dem Styleguide (`pf-pill-nav`) oder per Wischen über die Karten.
+- Keine neue Logik: To-do-Punkte sind besondere Tage mit „Seite: Heute noch“. Damit regelt sich auch das Wochenende über die cron-Regel.
+- Voreingestellt für beide Kinder: 📚 Hausaufgaben, 📖 Leseübung, ➗ Mathe üben (Mo–Fr), 🎧 Hörspiel hören (jeden Tag). Geräte mit gespeicherten Regeln bekommen diese einmalig dazu.
+- Auf „Heute noch“ sind die Einstellungen (Abfahrt, Weg) und der Spiel-Tipp ausgeblendet. Ist die Liste leer, steht dort „Heute steht hier nichts an. 🎉“.
+- Schnell-Hinzufügen: Die Seite ist wählbar, vorgewählt ist die aktuelle. Ab 17 Uhr ist „morgen“ vorgewählt (z. B. Geschenk oder Regensachen am Vorabend).
+- Idee für später: Der Abend-Modus (Punkt 5) könnte eine dritte Seite werden.
+
 ## Wenn Zeit und Lust ist
 
 ### 4. Liste editierbar machen
@@ -121,6 +132,7 @@ Neueste Version oben. Die Version steht in `sw.js` und unten in der App.
 
 | Version | Branch | Änderung |
 |---|---|---|
+| v12 | `feature/6-heute-noch` | Backlog 10: Zweite Seite „📋 Heute noch“ mit Pillen-Menü und Wischen. To-do-Punkte sind besondere Tage mit „Seite: Heute noch“; voreingestellt Hausaufgaben, Leseübung, Mathe üben (Mo–Fr) und Hörspiel (täglich). Schnell-Hinzufügen ab 17 Uhr wieder mit „morgen“ vorgewählt. |
 | v11 | `feature/5-zusatzpunkte` | Vorlagen gekürzt auf Schwimmsachen, Bastelsachen, Geschenk, Regensachen (statt Regenjacke). Knopf heißt „➕ Zusätzlicher Punkt“, „heute“ ist immer vorgewählt. |
 | v10 | `feature/5-zusatzpunkte` | Backlog 9: Einmalige Punkte (nur morgen oder an einem Datum), die danach automatisch verschwinden. Schnell-Hinzufügen „➕ Punkt für morgen“ unter den Karten (langes Drücken, Fenster mit heute/morgen). Vorlagen zum Antippen. Außerdem behoben: Ausgeblendete Felder wurden teils trotzdem angezeigt, z. B. „Heute geht's …“ am Wochenende. |
 | v9 | `feature/4-wochenende` | Am Wochenende kein Wecker und kein Dauer-Display. Stattdessen eine Erinnerung zu einer eigenen Uhrzeit (Standard 10:00) mit kurzem Ton und Liste der offenen Punkte, nur wenn noch etwas offen ist. „Heute geht's …“ ist am Wochenende ausgeblendet. |

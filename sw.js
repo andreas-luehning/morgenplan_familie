@@ -1,7 +1,7 @@
 // Service Worker: hält die App offline verfügbar.
 // Bei jeder Änderung an einer der Dateien unten VERSION hochzählen,
 // damit installierte Geräte die neue Fassung übernehmen.
-const VERSION = 'v11';
+const VERSION = 'v12';
 const CACHE = 'morgenplan-' + VERSION;
 const FILES = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 
