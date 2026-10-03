@@ -241,8 +241,9 @@
     input,select{width:100%;min-width:0;border:2px solid var(--pf-hair);border-radius:var(--pf-radius-sm);padding:12px 13px;background:var(--pf-bg);color:var(--pf-ink);font:inherit;min-height:48px}
     input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid var(--pf-ink);outline-offset:4px}
     .hint{margin:16px 0 0;font-size:.89rem;line-height:1.5;color:var(--pf-muted)}
-    .plan{margin-top:18px}
-    .plan summary{cursor:pointer;font-weight:800;min-height:44px;display:flex;align-items:center}
+    .plan{margin-top:28px;padding-top:12px;border-top:2px dashed var(--pf-hair)}
+    .plan summary{cursor:pointer;font-weight:800;font-size:.9rem;color:var(--pf-muted);min-height:44px;display:flex;align-items:center}
+    .plan[open] summary{color:var(--pf-ink)}
     .rules{list-style:none;padding:0;margin:8px 0 16px;display:grid;gap:8px}
     .rules li{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:10px 12px;border:2px solid var(--pf-hair);border-radius:var(--pf-radius-sm);background:var(--pf-bg)}
     .rules .what{flex:1;min-width:0;font-weight:800;overflow-wrap:anywhere}
@@ -324,20 +325,6 @@
     </div>
     <p class="hint">💚 Erwachsene legen Abfahrtszeit und Weg fest – am besten schon am Vorabend.</p>
     <p class="hint" id="awake" hidden></p>
-    <details class="plan">
-      <summary>📅 Extra-Punkte an bestimmten Tagen</summary>
-      <ul class="rules" id="rules"></ul>
-      <form class="rule-form" id="ruleForm">
-        <div class="field small"><label for="ruleEmoji">Bild</label><input id="ruleEmoji" maxlength="8" value="⭐" required autocomplete="off"></div>
-        <div class="field"><label for="ruleText">Was?</label><input id="ruleText" maxlength="40" placeholder="z. B. Sportbeutel" required autocomplete="off"></div>
-        <div class="field"><label for="ruleKid">Für</label><select id="ruleKid"><option value="0">Kind 1</option><option value="1">Kind 2</option><option value="2">beide</option></select></div>
-        <div class="field"><label for="ruleCron">Wann?</label><input id="ruleCron" placeholder="* * 2" required autocomplete="off" spellcheck="false"></div>
-        <button class="pf-btn pf-btn--primary" type="submit">➕ Hinzufügen</button>
-      </form>
-      <p class="hint" id="ruleInfo" aria-live="polite"></p>
-      <p class="hint">„Wann?“ wie bei cron: <code>Tag Monat Wochentag</code>. Wochentag 1 = Mo … 6 = Sa, 0 oder 7 = So, oder <code>mo</code> … <code>so</code>.
-        Beispiele: <code>* * 2</code> jeden Dienstag · <code>* * 1,4</code> Mo und Do · <code>* * 1#1</code> jeden 1. Montag im Monat · <code>* * 4L</code> jeden letzten Donnerstag · <code>15 * *</code> jeden 15. · <code>L * *</code> am Monatsletzten · <code>14 11 *</code> am 14. November.</p>
-    </details>
   </section>
   <div class="cards" id="cards">
     <section class="card a pf-board" aria-label="Checkliste Kind 1">
@@ -360,6 +347,21 @@
     <p class="privacy">🔒 Diese Seite funktioniert ohne Internet. Namen und Häkchen bleiben nur in diesem Browser gespeichert. An einem neuen Tag werden die Häkchen automatisch zurückgesetzt. Solange die Seite offen ist, bleibt das Display bis 5 Minuten nach der Abfahrt an; zur Abfahrt klingelt ein Wecker.</p>
     <div class="actions"><button class="pf-btn pf-btn--primary" type="button" id="print">🖨️ Drucken</button> <button class="pf-btn pf-btn--secondary" type="button" id="reset">↺ Häkchen für heute löschen</button></div>
   </div>
+  <details class="plan">
+    <summary>📅 Besondere Tage einstellen</summary>
+    <p class="hint">Diese Punkte kommen nur an bestimmten Tagen zur Liste dazu, z. B. der Sportbeutel.</p>
+    <ul class="rules" id="rules"></ul>
+    <form class="rule-form" id="ruleForm">
+      <div class="field small"><label for="ruleEmoji">Bild</label><input id="ruleEmoji" maxlength="8" value="⭐" required autocomplete="off"></div>
+      <div class="field"><label for="ruleText">Was?</label><input id="ruleText" maxlength="40" placeholder="z. B. Sportbeutel" required autocomplete="off"></div>
+      <div class="field"><label for="ruleKid">Für</label><select id="ruleKid"><option value="0">Kind 1</option><option value="1">Kind 2</option><option value="2">beide</option></select></div>
+      <div class="field"><label for="ruleCron">Wann?</label><input id="ruleCron" placeholder="* * 2" required autocomplete="off" spellcheck="false"></div>
+      <button class="pf-btn pf-btn--primary" type="submit">➕ Hinzufügen</button>
+    </form>
+    <p class="hint" id="ruleInfo" aria-live="polite"></p>
+    <p class="hint">„Wann?“ wie bei cron: <code>Tag Monat Wochentag</code>. Wochentag 1 = Mo … 6 = Sa, 0 oder 7 = So, oder <code>mo</code> … <code>so</code>.
+      Beispiele: <code>* * 2</code> jeden Dienstag · <code>* * 1,4</code> Mo und Do · <code>* * 1#1</code> jeden 1. Montag im Monat · <code>* * 4L</code> jeden letzten Donnerstag · <code>15 * *</code> jeden 15. · <code>L * *</code> am Monatsletzten · <code>14 11 *</code> am 14. November.</p>
+  </details>
   <p class="version" id="version"></p>
 </main>
 <div class="leave" id="leave" role="alertdialog" aria-modal="true" aria-labelledby="leaveTitle" aria-describedby="leaveText" hidden>
@@ -370,7 +372,7 @@
 const KEY='morgenplan-zwei-kinder-v1';
 const steps=[['🌤️','Aufgestanden'],['👕','Angezogen'],['🥣','Gefrühstückt'],['🪥','Zähne geputzt'],['🎒','Tasche ist bereit'],['👟','Schuhe & Jacke an']];
 const $=id=>document.getElementById(id);
-// Extra-Punkte an bestimmten Tagen. „cron“ hat drei Felder: Tag Monat Wochentag
+// Besondere Tage: Punkte, die nur an bestimmten Tagen dazukommen. „cron“ hat drei Felder: Tag Monat Wochentag
 // (bei fünf Feldern werden Minute und Stunde ignoriert). kid: 0 = Kind 1, 1 = Kind 2, 2 = beide.
 const defaultRules=()=>[
   {id:'sport-1',emoji:'⚽',text:'Sportbeutel',kid:0,cron:'* * 2'},
@@ -437,7 +439,7 @@ let state=load();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){/* private mode: usable without saving */}}
 function clearChecks(){state.checked=[Array(steps.length).fill(false),Array(steps.length).fill(false)];state.extraChecked=[{},{}];}
 function syncDay(){if(state.date!==localDate()){state.date=localDate();clearChecks();save();render();}}
-// Heutige Liste eines Kindes: feste Schritte, die passenden Extra-Punkte vor dem letzten Schritt.
+// Heutige Liste eines Kindes: feste Schritte, die Punkte besonderer Tage vor dem letzten Schritt.
 function itemsFor(i){
   const today=new Date();
   const items=steps.map(([emoji,text],j)=>({emoji,text,get:()=>state.checked[i][j],set:v=>{state.checked[i][j]=v;}}));
