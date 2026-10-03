@@ -241,9 +241,13 @@
     input,select{width:100%;min-width:0;border:2px solid var(--pf-hair);border-radius:var(--pf-radius-sm);padding:12px 13px;background:var(--pf-bg);color:var(--pf-ink);font:inherit;min-height:48px}
     input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid var(--pf-ink);outline-offset:4px}
     .hint{margin:16px 0 0;font-size:.89rem;line-height:1.5;color:var(--pf-muted)}
-    .plan{margin-top:28px;padding-top:12px;border-top:2px dashed var(--pf-hair)}
-    .plan summary{cursor:pointer;font-weight:800;font-size:.9rem;color:var(--pf-muted);min-height:44px;display:flex;align-items:center}
-    .plan[open] summary{color:var(--pf-ink)}
+    .plan{margin-top:28px;padding:6px 18px}
+    .plan[open]{padding-bottom:18px}
+    .plan summary{cursor:pointer;font-weight:800;font-size:.95rem;min-height:44px;display:flex;align-items:center}
+    .preview{display:flex;flex-wrap:wrap;align-items:end;gap:12px;margin-top:20px;padding-top:16px;border-top:2px dashed var(--pf-hair)}
+    .preview-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;margin-bottom:24px;padding:14px 18px;border-radius:var(--pf-radius);background:var(--pf-eyebrow);color:var(--pf-ink);font-weight:800;box-shadow:0 5px 0 rgba(0,0,0,.15)}
+    .preview-bar[hidden]{display:none}
+    .preview-bar .pf-btn{min-height:44px;font-size:.9rem}
     .rules{list-style:none;padding:0;margin:8px 0 16px;display:grid;gap:8px}
     .rules li{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:10px 12px;border:2px solid var(--pf-hair);border-radius:var(--pf-radius-sm);background:var(--pf-bg)}
     .rules .what{flex:1;min-width:0;font-weight:800;overflow-wrap:anywhere}
@@ -305,7 +309,7 @@
       .bar{margin:10px 0}.tasks{grid-template-columns:1fr;gap:7px}.task{flex-direction:row;justify-content:flex-start;text-align:left;min-height:48px;padding:7px;gap:7px}
       .task input{width:21px;height:21px;min-height:21px}.emoji{font-size:19pt;width:29px}.task-text{font-size:11pt}
       .ready{font-size:10pt;padding:8px;margin-top:10px}.tip{margin-top:14px;padding:12px;break-inside:avoid}
-      .hint,.footer,.leave,.version,.plan{display:none}.status{margin-top:14px;padding:12px}
+      .hint,.footer,.leave,.version,.plan,.preview-bar{display:none}.status{margin-top:14px;padding:12px}
     }
   </style>
 </head>
@@ -326,6 +330,7 @@
     <p class="hint">💚 Erwachsene legen Abfahrtszeit und Weg fest – am besten schon am Vorabend.</p>
     <p class="hint" id="awake" hidden></p>
   </section>
+  <div class="preview-bar" id="previewBar" role="status" hidden><span id="previewText"></span><button class="pf-btn pf-btn--secondary" type="button" id="previewEnd">↩ Zurück zu heute</button></div>
   <div class="cards" id="cards">
     <section class="card a pf-board" aria-label="Checkliste Kind 1">
       <div class="kid-title"><h2 id="heading0">🐇 Kind 1</h2><span class="count" id="count0" aria-live="polite">0 von 6</span></div>
@@ -347,7 +352,7 @@
     <p class="privacy">🔒 Diese Seite funktioniert ohne Internet. Namen und Häkchen bleiben nur in diesem Browser gespeichert. An einem neuen Tag werden die Häkchen automatisch zurückgesetzt. Solange die Seite offen ist, bleibt das Display bis 5 Minuten nach der Abfahrt an; zur Abfahrt klingelt ein Wecker.</p>
     <div class="actions"><button class="pf-btn pf-btn--primary" type="button" id="print">🖨️ Drucken</button> <button class="pf-btn pf-btn--secondary" type="button" id="reset">↺ Häkchen für heute löschen</button></div>
   </div>
-  <details class="plan">
+  <details class="plan pf-card">
     <summary>📅 Besondere Tage einstellen</summary>
     <p class="hint">Diese Punkte kommen nur an bestimmten Tagen zur Liste dazu, z. B. der Sportbeutel.</p>
     <ul class="rules" id="rules"></ul>
@@ -361,6 +366,10 @@
     <p class="hint" id="ruleInfo" aria-live="polite"></p>
     <p class="hint">„Wann?“ wie bei cron: <code>Tag Monat Wochentag</code>. Wochentag 1 = Mo … 6 = Sa, 0 oder 7 = So, oder <code>mo</code> … <code>so</code>.
       Beispiele: <code>* * 2</code> jeden Dienstag · <code>* * 1,4</code> Mo und Do · <code>* * 1#1</code> jeden 1. Montag im Monat · <code>* * 4L</code> jeden letzten Donnerstag · <code>15 * *</code> jeden 15. · <code>L * *</code> am Monatsletzten · <code>14 11 *</code> am 14. November.</p>
+    <div class="preview">
+      <div class="field"><label for="previewDate">Liste testen für Tag</label><input type="date" id="previewDate"></div>
+    </div>
+    <p class="hint">Zeigt die Checklisten so, wie sie an diesem Tag aussehen. Häkchen in der Vorschau werden nicht gespeichert.</p>
   </details>
   <p class="version" id="version"></p>
 </main>
@@ -440,11 +449,14 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){/* 
 function clearChecks(){state.checked=[Array(steps.length).fill(false),Array(steps.length).fill(false)];state.extraChecked=[{},{}];}
 function syncDay(){if(state.date!==localDate()){state.date=localDate();clearChecks();save();render();}}
 // Heutige Liste eines Kindes: feste Schritte, die Punkte besonderer Tage vor dem letzten Schritt.
+// In der Vorschau (preview gesetzt) gilt ein anderer Tag, und Häkchen landen nur in previewChecked.
+let preview=null,previewChecked=[{},{}];
 function itemsFor(i){
-  const today=new Date();
-  const items=steps.map(([emoji,text],j)=>({emoji,text,get:()=>state.checked[i][j],set:v=>{state.checked[i][j]=v;}}));
-  const extras=state.rules.filter(r=>(r.kid===i||r.kid===2)&&cronMatches(r.cron,today))
-    .map(r=>({emoji:r.emoji,text:r.text,get:()=>state.extraChecked[i][r.id]===true,set:v=>{state.extraChecked[i][r.id]=v;}}));
+  const day=preview||new Date();
+  const own=(key,saved)=>preview?{get:()=>previewChecked[i][key]===true,set:v=>{previewChecked[i][key]=v;}}:saved;
+  const items=steps.map(([emoji,text],j)=>({emoji,text,...own('s'+j,{get:()=>state.checked[i][j],set:v=>{state.checked[i][j]=v;}})}));
+  const extras=state.rules.filter(r=>(r.kid===i||r.kid===2)&&cronMatches(r.cron,day))
+    .map(r=>({emoji:r.emoji,text:r.text,...own(r.id,{get:()=>state.extraChecked[i][r.id]===true,set:v=>{state.extraChecked[i][r.id]=v;}})}));
   items.splice(items.length-1,0,...extras);return items;
 }
 const kidName=i=>state.names[i].trim()||`Kind ${i+1}`;
@@ -461,7 +473,7 @@ function renderRules(){
   }));
 }
 function render(){
-  const now=new Date();$('date').textContent=new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);
+  const now=preview||new Date();$('date').textContent=new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);
   for(let i=0;i<2;i++){
     const name=kidName(i),items=itemsFor(i);
     $('heading'+i).textContent=(i===0?'🐇 ':'🐻 ')+name;
@@ -496,6 +508,16 @@ function showCronPreview(){const expr=$('ruleCron').value.trim();
   if(!parseCron(expr)){$('ruleInfo').textContent='⚠️ „'+expr+'“ verstehe ich nicht. Beispiele stehen unten.';return false;}
   const next=nextDates(expr,3);$('ruleInfo').textContent=next.length?'Nächste Termine: '+next.map(shortDate).join(', '):'⚠️ Dieser Termin kommt in den nächsten zwei Jahren nicht vor.';return next.length>0;}
 $('ruleCron').addEventListener('input',showCronPreview);
+function setPreview(value){
+  const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(value||'');
+  preview=m&&value!==localDate()?new Date(Number(m[1]),Number(m[2])-1,Number(m[3]),12):null;previewChecked=[{},{}];
+  $('previewDate').value=preview?value:'';
+  $('previewBar').hidden=!preview;
+  if(preview)$('previewText').textContent='👀 Vorschau für '+new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long'}).format(preview)+' – nicht echt';
+  render();
+}
+$('previewDate').addEventListener('change',e=>{setPreview(e.target.value);if(preview)$('previewBar').scrollIntoView({behavior:'smooth',block:'start'});});
+$('previewEnd').addEventListener('click',()=>setPreview(''));
 $('ruleForm').addEventListener('submit',e=>{e.preventDefault();if(!$('ruleText').value.trim()){$('ruleText').focus();return;}if(!showCronPreview())return;
   state.rules.push({id:'r'+Date.now().toString(36),emoji:$('ruleEmoji').value.trim()||'⭐',text:$('ruleText').value.trim(),kid:Number($('ruleKid').value),cron:$('ruleCron').value.trim()});
   $('ruleText').value='';$('ruleCron').value='';$('ruleInfo').textContent='✅ Hinzugefügt.';save();render();});

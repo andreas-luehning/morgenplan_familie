@@ -72,3 +72,19 @@
 - **Belohnung:** Animation oder Stern, wenn ein Kind vor der Abfahrt fertig ist, dazu eine Wochenübersicht.
 - **Vorlesen der Punkte:** Eher unwichtig, weil die Kinder die Punkte an den Icons erkennen.
 - **Sync zwischen Geräten:** Nice to have. Aktuell wird nur ein Gerät genutzt.
+
+---
+
+## Änderungsprotokoll
+
+Neueste Version oben. Die Version steht in `sw.js` und unten in der App.
+
+| Version | Branch | Änderung |
+|---|---|---|
+| v7 | `feature/3-tagesplan` | „Besondere Tage“ als Karte mit Hintergrund, damit sie lesbar ist. Neu: „Liste testen für Tag“ zeigt die Checkliste für ein beliebiges Datum als Vorschau, ohne Häkchen zu speichern. Darüber steht eine Hinweisleiste mit „Zurück zu heute“. |
+| v6 | `feature/3-tagesplan` | Einstellung umbenannt in „📅 Besondere Tage einstellen“ (statt „Extra-Punkte“) und zugeklappt ans Seitenende verschoben, weil sie selten gebraucht wird. |
+| v5 | `feature/3-tagesplan` | Spielzeugtag (🧸 „Spielzeug mitnehmen“) am 1. Montag im Monat für Kind 2 voreingestellt. Greift nur auf Geräten ohne gespeicherte Regeln. |
+| v4 | `feature/3-tagesplan` | Backlog 3: Punkte an bestimmten Tagen per cron-Regel (`Tag Monat Wochentag`, mit `1#1`, `4L`, `L`), in der App anlegen und löschen, mit Vorschau der nächsten Termine. Voreingestellt: Sportbeutel Di für Kind 1, Fr für Kind 2. |
+| v3 | `feature/2-version` | Backlog 2: Versionsanzeige unten, gelesen aus `sw.js`; Hinweis zum Neuladen bei neuer Version. |
+| v2 | `feature/1-wecker` | Backlog 1: Display bleibt bis 5 Min. nach der Abfahrt an; zur Abfahrt Wecker-Ton (1 Min.) und bildschirmfüllender Hinweis. |
+| v1 | `main` | Als PWA aufgesetzt (Manifest, Service Worker, Icons). |
