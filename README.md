@@ -17,7 +17,7 @@ Checkliste für zwei Kinder als installierbare Web-App (PWA). Sie funktioniert o
 
 1. Die Seite über https öffnen (GitHub Pages, siehe unten).
 2. Zum Homescreen hinzufügen. Auf iPhone/iPad danach nur noch die Homescreen-App nutzen, denn Safari und Homescreen-App speichern getrennt.
-3. Namen, Abfahrtszeit und Weg eintragen. Einmal auf den Bildschirm tippen, damit der Wecker-Ton freigeschaltet ist.
+3. Namen unten unter „👧 Namen der Kinder“ eintragen, Abfahrtszeit und Weg oben im Kopf. Einmal auf den Bildschirm tippen, damit der Wecker-Ton freigeschaltet ist.
 
 Die Daten (Namen, Zeiten, Regeln, Häkchen) liegen in `localStorage` und bleiben bei Updates erhalten. Wer die Website-Daten im Browser löscht, verliert sie.
 

@@ -236,9 +236,15 @@
     h1.pf-title{font-size:clamp(2rem,5vw,3.2rem);margin:4px 0 8px}
     .sub{max-width:70ch;line-height:1.6;margin:8px 0 24px}
     /* Kopf: Titel links, Tageskarte rechts (auf dem Handy darunter). */
-    .head{display:grid;grid-template-columns:minmax(0,1fr) 380px;grid-template-areas:"title day" "sub day";column-gap:28px;align-items:start;margin-bottom:28px;padding:20px 22px}
+    .head{display:grid;grid-template-columns:minmax(0,1fr) 380px;grid-template-areas:"title day" "sub day" "trip day";column-gap:28px;align-items:start;margin-bottom:28px;padding:20px 22px}
     .head h1{grid-area:title;align-self:end;margin:0 0 4px}.head .sub{grid-area:sub;margin:4px 0 0}
     .head h1,.head .sub{transition:opacity .16s}
+    .trip{grid-area:trip;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px}
+    .trip-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 6px 4px 16px;border-radius:var(--pf-radius-pill);background:var(--pf-bg);border:2px solid var(--pf-hair);font-weight:800;font-size:.95rem;cursor:pointer}
+    #transportField{padding:4px 6px}
+    .trip-chip input,.trip-chip select{width:auto;min-height:40px;padding:4px 10px;border:0;border-radius:var(--pf-radius-pill);background:var(--pf-card);font-weight:800;font-size:1.05rem;cursor:pointer}
+    .trip .hint{margin:0;flex-basis:100%}
+    .plan+.plan{margin-top:16px}
     .head.fading h1,.head.fading .sub{opacity:0}
     .day-card{grid-area:day;width:100%;padding:12px 12px 8px;border-radius:var(--pf-radius-sm);background:var(--pf-bg);transition:box-shadow .2s}
     .day-card.is-plan{box-shadow:inset 0 0 0 3px var(--pf-eyebrow)}
@@ -263,13 +269,12 @@
     .day-btn.is-active{background:var(--pf-accent);color:#fff}
     .day-btn.is-active .wd{color:#fff}
     .cards{touch-action:pan-y pinch-zoom}
-    .top{padding:22px;margin-bottom:28px}
     body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
     .pager{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:5;display:flex;gap:2px;padding:4px 8px;border-radius:var(--pf-radius-pill);background:color-mix(in srgb,var(--pf-card) 88%,transparent);box-shadow:var(--pf-shadow-card)}
     .dot{width:40px;height:32px;border:0;padding:0;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
     .dot::after{content:"";width:12px;height:12px;border-radius:var(--pf-radius-pill);background:var(--pf-hair);transition:width .2s,background .2s}
     .dot.is-active::after{width:28px;background:var(--pf-accent)}
-    body.page-heute .top,body.page-heute .tip{display:none}
+    body.page-heute .trip,body.page-heute .tip{display:none}
     .empty{padding:14px;border-radius:var(--pf-radius-sm);background:rgba(255,255,255,.7);color:var(--pf-ink);font-weight:700}
     .settings{display:flex;flex-wrap:wrap;align-items:end;gap:14px}
     .field{display:grid;gap:7px;flex:1;min-width:160px}
@@ -343,19 +348,19 @@
     .leave p{font-size:1.35rem;font-weight:700;line-height:1.5;margin:0 0 24px}
     .leave .pf-btn{font-size:1.2rem;min-height:56px}
     @keyframes leave-wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-10deg) scale(1.08)}75%{transform:rotate(10deg) scale(1.08)}}
-    @media(max-width:660px){main{padding:18px 12px 30px}.cards{grid-template-columns:1fr}.card,.top{padding:16px}.field{min-width:140px}
-      .head{grid-template-columns:minmax(0,1fr);grid-template-areas:"title" "day" "sub";padding:16px}.day-card{margin:6px 0 8px}}
+    @media(max-width:660px){main{padding:18px 12px 30px}.cards{grid-template-columns:1fr}.card{padding:16px}.field{min-width:140px}
+      .head{grid-template-columns:minmax(0,1fr);grid-template-areas:"title" "day" "sub" "trip";padding:16px}.day-card{margin:6px 0 8px}}
     @media(prefers-reduced-motion:reduce){.dot::after,.head h1,.head .sub,.day-btn{transition:none}.leave-emoji{animation:none}.fill,.task{transition:none}.task:hover,.task:active{transform:none}}
     @page{size:A4 portrait;margin:10mm}
     @media print{
       body.pf-app{background:var(--pf-card);font-size:10pt;padding-bottom:0}
       main{max-width:none;padding:0}h1.pf-title{font-size:23pt}
       .pf-title .a,.pf-title .b{color:var(--pf-ink)}
-      .sub{margin-bottom:12px}.top{padding:12px;margin-bottom:14px}
+      .sub{margin-bottom:12px}
       .settings{gap:8px}.field{min-width:0}input,select{padding:6px;min-height:34px;font-size:9pt}
       .cards{grid-template-columns:1fr 1fr;gap:12px}
       .card{break-inside:avoid;padding:12px}
-      .top,.card,.tip,.task,.task.done,.ready,.status{box-shadow:none;background:var(--pf-card);color:var(--pf-ink);border:1px solid var(--pf-ink)}
+      .card,.tip,.task,.task.done,.ready,.status{box-shadow:none;background:var(--pf-card);color:var(--pf-ink);border:1px solid var(--pf-ink)}
       .kid-title h2{font-size:15pt;padding:0}.kid-title h2,.count{background:none;color:var(--pf-ink);box-shadow:none}.count{padding:3px;font-size:9pt}
       .bar{margin:10px 0}.tasks{grid-template-columns:1fr;gap:7px}.task{flex-direction:row;justify-content:flex-start;text-align:left;min-height:48px;padding:7px;gap:7px}
       .task input{width:21px;height:21px;min-height:21px}.emoji{font-size:19pt;width:29px}.task-text{font-size:11pt}
@@ -377,18 +382,13 @@
       </div>
       <div class="day-strip" id="dayStrip"></div>
     </section>
+    <div class="trip" id="trip">
+      <label class="trip-chip" for="departure"><span id="timeLabel">🚪 Wir gehen los um</span><input type="time" id="departure" value="07:45"></label>
+      <span class="trip-chip" id="transportField"><select id="transport" aria-label="Heute geht's"><option value="🚶 zu Fuß">🚶 zu Fuß</option><option value="🚲 mit dem Fahrrad">🚲 mit dem Fahrrad</option><option value="🛴 mit dem Roller">🛴 mit dem Roller</option><option value="🚗 mit dem Auto">🚗 mit dem Auto</option><option value="🚌 mit Bus oder Bahn">🚌 mit Bus oder Bahn</option></select></span>
+      <p class="hint" id="awake" hidden></p>
+    </div>
     <p class="sub" id="sub">Wir werden Schritt für Schritt fertig. Jedes Kind hat seine eigene Liste. <strong>Wir machen kein Wettrennen.</strong> Bei Bedarf helfen die Erwachsenen.</p>
   </header>
-  <section class="top pf-card" aria-label="Unser Morgenplan">
-    <div class="settings">
-      <div class="field"><label for="name0">Name Kind 1</label><input id="name0" type="text" maxlength="28" autocomplete="off" placeholder="Kind 1"></div>
-      <div class="field"><label for="name1">Name Kind 2</label><input id="name1" type="text" maxlength="28" autocomplete="off" placeholder="Kind 2"></div>
-      <div class="field"><label for="departure" id="timeLabel">Wir gehen los um</label><input type="time" id="departure" value="07:45"></div>
-      <div class="field" id="transportField"><label for="transport">Heute geht's …</label><select id="transport"><option value="🚶 zu Fuß">🚶 zu Fuß</option><option value="🚲 mit dem Fahrrad">🚲 mit dem Fahrrad</option><option value="🛴 mit dem Roller">🛴 mit dem Roller</option><option value="🚗 mit dem Auto">🚗 mit dem Auto</option><option value="🚌 mit Bus oder Bahn">🚌 mit Bus oder Bahn</option></select></div>
-    </div>
-    <p class="hint" id="dayHint">💚 Erwachsene legen Abfahrtszeit und Weg fest – am besten schon am Vorabend.</p>
-    <p class="hint" id="awake" hidden></p>
-  </section>
   <div class="preview-bar" id="previewBar" role="status" hidden><span id="previewText"></span><button class="pf-btn pf-btn--secondary" type="button" id="previewEnd">↩ Zurück zu heute</button></div>
   <div class="cards" id="cards">
     <section class="card a pf-board" aria-label="Checkliste Kind 1">
@@ -425,6 +425,13 @@
     <p class="privacy">🔒 Diese Seite funktioniert ohne Internet. Namen und Häkchen bleiben nur in diesem Browser gespeichert. An einem neuen Tag werden die Häkchen automatisch zurückgesetzt. Solange die Seite offen ist, bleibt das Display unter der Woche bis 5 Minuten nach der Abfahrt an; zur Abfahrt klingelt ein Wecker. Am Wochenende gibt es stattdessen eine Erinnerung.</p>
     <div class="actions"><button class="pf-btn pf-btn--primary" type="button" id="print">🖨️ Drucken</button> <button class="pf-btn pf-btn--secondary" type="button" id="reset">↺ Häkchen für heute löschen</button></div>
   </div>
+  <details class="plan pf-card" id="namesCard">
+    <summary>👧 Namen der Kinder</summary>
+    <div class="settings">
+      <div class="field"><label for="name0">Name Kind 1</label><input id="name0" type="text" maxlength="28" autocomplete="off" placeholder="Kind 1"></div>
+      <div class="field"><label for="name1">Name Kind 2</label><input id="name1" type="text" maxlength="28" autocomplete="off" placeholder="Kind 2"></div>
+    </div>
+  </details>
   <details class="plan pf-card">
     <summary>📅 Besondere Tage einstellen</summary>
     <p class="hint">Diese Punkte kommen nur an bestimmten Tagen zur Liste dazu, z. B. der Sportbeutel am Morgen oder Hausaufgaben unter „Heute noch“. Zum Hinzufügen und Löschen den Knopf lange drücken.</p>
@@ -649,16 +656,16 @@ function renderDays(){
 }
 $('dayPrev').addEventListener('click',()=>showDay(dayOffset(preview||new Date())-1));
 $('dayNext').addEventListener('click',()=>showDay(dayOffset(preview||new Date())+1));
+// Die Namen trägt man nur einmal ein. Solange keiner eingetragen ist, ist der Kasten aufgeklappt.
+$('namesCard').open=!state.names.some(n=>n.trim());
 for(let i=0;i<2;i++){$('name'+i).value=state.names[i];$('name'+i).addEventListener('input',e=>{state.names[i]=e.target.value.slice(0,28);save();render();});}
 // Unter der Woche ist das Zeitfeld die Abfahrt, am Wochenende die Erinnerungszeit.
 const isSchoolDay=()=>cronMatches(SCHOOL_DAYS,new Date());
 const timeKey=()=>isSchoolDay()?'departure':'weekendTime';
 function renderDayMode(){
   const school=isSchoolDay();
-  $('timeLabel').textContent=school?'Wir gehen los um':'Am Wochenende erinnern um';
+  $('timeLabel').textContent=school?'🚪 Wir gehen los um':'🔔 Erinnern um';
   $('transportField').hidden=!school;
-  $('dayHint').textContent=school?'💚 Erwachsene legen Abfahrtszeit und Weg fest – am besten schon am Vorabend.'
-    :'💚 Am Wochenende gibt es keinen Wecker. Ist zur Erinnerungszeit noch etwas offen, kommt ein freundlicher Hinweis.';
   if(document.activeElement!==$('departure'))$('departure').value=state[timeKey()];
 }
 $('departure').addEventListener('change',e=>{if(/^\d{2}:\d{2}$/.test(e.target.value)){state[timeKey()]=e.target.value;save();}});
