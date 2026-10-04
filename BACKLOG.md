@@ -85,6 +85,16 @@
 - Schnell-Hinzufügen: Die Seite ist wählbar, vorgewählt ist die aktuelle. Ab 17 Uhr ist „morgen“ vorgewählt (z. B. Geschenk oder Regensachen am Vorabend).
 - Idee für später: Der Abend-Modus (Punkt 5) könnte eine dritte Seite werden.
 
+### 11. ✅ Neuer Kopf mit Tagesauswahl, Wischen mit Animation
+
+**Ziel:** Das Datum ist gut zu sehen, man blättert in die nächsten Tage und plant sie fest ein. Der Seitenwechsel fühlt sich weich an.
+
+- Rechts neben dem Titel (auf dem Handy darunter) steht eine Tageskarte: „Heute“/„Morgen“/„In 3 Tagen“, groß der Wochentag, darunter das Datum. Mit ‹ und › blättert man tageweise.
+- Darunter ein Streifen mit den nächsten 7 Tagen. Heute hat einen Ring, der gewählte Tag ist ausgefüllt, Samstag und Sonntag sind farbig. Kleine Bilder zeigen besondere Punkte, z. B. ⚽ für Sportbeutel oder einmalige Punkte.
+- Ein anderer Tag nutzt die bestehende Vorschau („Plan für …“, Häkchen zählen noch nicht, „↩ Zurück zu heute“). Die Tageskarte hat dann einen farbigen Rand.
+- Fest planen: Das Schnell-Hinzufügen hat bei „Wann?“ jetzt die nächsten 14 Tage. Vorgewählt ist der angezeigte Tag.
+- Wischen: Die Karten folgen dem Finger, gleiten hinaus, und die neue Seite gleitet herein. Am Rand federn sie zurück. Auch das Tippen auf die Seitenpunkte ist animiert. Bei „Bewegung reduzieren“ gibt es keine Animation.
+
 ## Wenn Zeit und Lust ist
 
 ### 4. Liste editierbar machen
@@ -132,6 +142,7 @@ Neueste Version oben. Die Version steht in `sw.js` und unten in der App.
 
 | Version | Branch | Änderung |
 |---|---|---|
+| v15 | `feature/7-kopf-tage` | Backlog 11: Neuer Kopf mit Tageskarte (großes Datum, ‹ ›, Streifen mit 7 Tagen und Bildern für besondere Punkte). Schnell-Hinzufügen für die nächsten 14 Tage, vorgewählt ist der angezeigte Tag. Seitenwechsel per Wischen mit Animation. |
 | v14 | `feature/6-heute-noch` | Hinzufügen braucht nur noch 0,6 s langes Drücken, Löschen bleibt bei 1,5 s. |
 | v13 | `feature/6-heute-noch` | Pillen-Menü oben entfernt (wirkte überladen). Stattdessen kleine Seitenpunkte unten am Bildschirmrand, Wischen bleibt. Überschrift und Untertitel wechseln: „🌞 Unser Morgen“ und „📋 Heute noch“. Auswahl „Seite“ heißt jetzt „Unser Morgen“ statt „Morgen“ (klang nach dem nächsten Tag). |
 | v12 | `feature/6-heute-noch` | Backlog 10: Zweite Seite „📋 Heute noch“ mit Pillen-Menü und Wischen. To-do-Punkte sind besondere Tage mit „Seite: Heute noch“; voreingestellt Hausaufgaben, Leseübung, Mathe üben (Mo–Fr) und Hörspiel (täglich). Schnell-Hinzufügen ab 17 Uhr wieder mit „morgen“ vorgewählt. |

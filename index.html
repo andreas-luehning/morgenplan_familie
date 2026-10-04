@@ -232,9 +232,35 @@
     *{box-sizing:border-box}
     [hidden]{display:none!important}
     body{margin:0;min-height:100vh;font-synthesis:none}
-    main{max-width:1100px;margin:auto;padding:28px 20px 42px}
+    main{max-width:1100px;margin:auto;padding:28px 20px 42px;overflow-x:clip}
     h1.pf-title{font-size:clamp(2rem,5vw,3.2rem);margin:4px 0 8px}
     .sub{max-width:70ch;line-height:1.6;margin:8px 0 24px}
+    /* Kopf: Titel links, Tageskarte rechts (auf dem Handy darunter). */
+    .head{display:grid;grid-template-columns:minmax(0,1fr) 390px;grid-template-areas:"title day" "sub day";column-gap:32px;align-items:start;margin-bottom:24px}
+    .head h1{grid-area:title;align-self:end}.head .sub{grid-area:sub;margin:4px 0 0}
+    .head h1,.head .sub{transition:opacity .16s}
+    .head.fading h1,.head.fading .sub{opacity:0}
+    .day-card{grid-area:day;width:100%;padding:14px 14px 10px;transition:box-shadow .2s}
+    .day-card.is-plan{box-shadow:var(--pf-shadow-card),inset 0 0 0 3px var(--pf-eyebrow)}
+    .day-now{display:flex;align-items:center;gap:8px}
+    .day-nav{flex:none;width:48px;height:48px;border-radius:50%;border:2px solid var(--pf-hair);background:var(--pf-bg);color:var(--pf-ink);font:inherit;font-size:1.6rem;font-weight:800;line-height:1;cursor:pointer}
+    .day-nav:active{transform:translateY(2px)}
+    .day-nav:disabled{opacity:.3;cursor:default;transform:none}
+    .day-big{flex:1;min-width:0;margin:0;text-align:center}
+    .day-big span{display:block}
+    .day-rel{margin:0}
+    .day-wd{font-size:clamp(1.6rem,5vw,2rem);font-weight:800;line-height:1.15}
+    .day-dm{font-weight:700;color:var(--pf-muted)}
+    .day-strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:12px;padding-top:10px;border-top:2px dashed var(--pf-hair)}
+    .day-btn{display:grid;justify-items:center;gap:1px;min-height:66px;padding:6px 0 4px;border:0;border-radius:var(--pf-radius-sm);background:none;color:var(--pf-ink);font:inherit;cursor:pointer;transition:background .15s}
+    .day-btn .wd{font-size:.72rem;font-weight:800;color:var(--pf-muted)}
+    .day-btn .num{font-size:1.2rem;font-weight:800;line-height:1.2}
+    .day-btn .marks{font-size:.8rem;line-height:1.2;min-height:1.2em;white-space:nowrap}
+    .day-btn.weekend .wd{color:var(--pf-accent)}
+    .day-btn.is-today{box-shadow:inset 0 0 0 2px var(--pf-accent)}
+    .day-btn.is-active{background:var(--pf-accent);color:#fff}
+    .day-btn.is-active .wd{color:#fff}
+    .cards{touch-action:pan-y pinch-zoom}
     .top{padding:22px;margin-bottom:28px}
     body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
     .pager{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:5;display:flex;gap:2px;padding:4px 8px;border-radius:var(--pf-radius-pill);background:color-mix(in srgb,var(--pf-card) 88%,transparent);box-shadow:var(--pf-shadow-card)}
@@ -315,8 +341,9 @@
     .leave p{font-size:1.35rem;font-weight:700;line-height:1.5;margin:0 0 24px}
     .leave .pf-btn{font-size:1.2rem;min-height:56px}
     @keyframes leave-wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-10deg) scale(1.08)}75%{transform:rotate(10deg) scale(1.08)}}
-    @media(max-width:660px){main{padding:18px 12px 30px}.cards{grid-template-columns:1fr}.card,.top{padding:16px}.field{min-width:140px}}
-    @media(prefers-reduced-motion:reduce){.dot::after{transition:none}.leave-emoji{animation:none}.fill,.task{transition:none}.task:hover,.task:active{transform:none}}
+    @media(max-width:660px){main{padding:18px 12px 30px}.cards{grid-template-columns:1fr}.card,.top{padding:16px}.field{min-width:140px}
+      .head{grid-template-columns:minmax(0,1fr);grid-template-areas:"title" "day" "sub"}.head h1{margin-top:0}.day-card{width:100%;margin:2px 0 6px}}
+    @media(prefers-reduced-motion:reduce){.dot::after,.head h1,.head .sub,.day-btn{transition:none}.leave-emoji{animation:none}.fill,.task{transition:none}.task:hover,.task:active{transform:none}}
     @page{size:A4 portrait;margin:10mm}
     @media print{
       body.pf-app{background:var(--pf-card);font-size:10pt;padding-bottom:0}
@@ -331,15 +358,23 @@
       .bar{margin:10px 0}.tasks{grid-template-columns:1fr;gap:7px}.task{flex-direction:row;justify-content:flex-start;text-align:left;min-height:48px;padding:7px;gap:7px}
       .task input{width:21px;height:21px;min-height:21px}.emoji{font-size:19pt;width:29px}.task-text{font-size:11pt}
       .ready{font-size:10pt;padding:8px;margin-top:10px}.tip{margin-top:14px;padding:12px;break-inside:avoid}
+      .day-card{box-shadow:none;padding:0;width:auto}.day-nav,.day-strip,.day-rel{display:none}
       .hint,.footer,.leave,.version,.plan,.preview-bar,.quick,.quick-dialog,.pager{display:none}.status{margin-top:14px;padding:12px}
     }
   </style>
 </head>
 <body class="pf-app">
 <main>
-  <header>
-    <p class="date pf-eyebrow" id="date"></p>
+  <header class="head" id="head">
     <h1 class="pf-title" id="title">🌞 <span class="a">Unser</span> <span class="b">Morgen</span></h1>
+    <section class="day-card pf-card" id="dayCard" aria-label="Tag wählen">
+      <div class="day-now">
+        <button class="day-nav" type="button" id="dayPrev" aria-label="Einen Tag zurück">‹</button>
+        <p class="day-big" id="date" aria-live="polite"><span class="day-rel pf-eyebrow" id="dayRel"></span><span class="day-wd" id="dayWd"></span><span class="day-dm" id="dayDm"></span></p>
+        <button class="day-nav" type="button" id="dayNext" aria-label="Einen Tag weiter">›</button>
+      </div>
+      <div class="day-strip" id="dayStrip"></div>
+    </section>
     <p class="sub" id="sub">Wir werden Schritt für Schritt fertig. Jedes Kind hat seine eigene Liste. <strong>Wir machen kein Wettrennen.</strong> Bei Bedarf helfen die Erwachsenen.</p>
   </header>
   <section class="top pf-card" aria-label="Unser Morgenplan">
@@ -365,7 +400,7 @@
       <div class="tasks" id="tasks1"></div><div class="ready" id="ready1" role="status">Schritt für Schritt – du schaffst das!</div>
     </section>
   </div>
-  <div class="quick"><p class="hint" id="quickInfo" aria-live="polite"></p><button class="pf-btn pf-btn--secondary hold" type="button" id="quickOpen" aria-label="Punkt für heute oder morgen hinzufügen (lange drücken)">➕ Zusätzlicher Punkt</button></div>
+  <div class="quick"><p class="hint" id="quickInfo" aria-live="polite"></p><button class="pf-btn pf-btn--secondary hold" type="button" id="quickOpen" aria-label="Punkt für einen Tag hinzufügen (lange drücken)">➕ Zusätzlicher Punkt</button></div>
   <dialog class="quick-dialog" id="quickDialog" aria-labelledby="quickTitle">
     <h2 id="quickTitle">➕ Zusätzlicher Punkt</h2>
     <p class="hint">Gilt nur für einen Tag und verschwindet danach von selbst.</p>
@@ -375,7 +410,7 @@
       <div class="field"><label for="quickText">Was?</label><input id="quickText" maxlength="40" placeholder="z. B. Schwimmsachen" autocomplete="off"></div>
       <div class="field"><label for="quickList">Seite</label><select id="quickList"><option value="morgen">🌞 Unser Morgen</option><option value="heute">📋 Heute noch</option></select></div>
       <div class="field"><label for="quickKid">Für</label><select id="quickKid"><option value="0">Kind 1</option><option value="1">Kind 2</option><option value="2">beide</option></select></div>
-      <div class="field"><label for="quickDay">Wann?</label><select id="quickDay"><option value="0">heute</option><option value="1">morgen</option></select></div>
+      <div class="field"><label for="quickDay">Wann?</label><select id="quickDay"></select></div>
     </form>
     <div class="dialog-actions"><button class="pf-btn pf-btn--secondary" type="button" id="quickCancel">Abbrechen</button><button class="pf-btn pf-btn--primary" type="button" id="quickAdd">➕ Hinzufügen</button></div>
   </dialog>
@@ -514,7 +549,8 @@ function load(){let saved;try{saved=JSON.parse(localStorage.getItem(KEY)||'null'
 let state=load();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){/* private mode: usable without saving */}}
 function clearChecks(){state.checked=[Array(steps.length).fill(false),Array(steps.length).fill(false)];state.extraChecked=[{},{}];}
-function syncDay(){if(state.date!==localDate()){state.date=localDate();clearChecks();state.rules=pruneRules(state.rules);save();render();}}
+// Um Mitternacht: Ist der geplante Tag jetzt heute, endet die Planung von selbst (setPreview).
+function syncDay(){if(state.date!==localDate()){state.date=localDate();clearChecks();state.rules=pruneRules(state.rules);save();if(preview)setPreview(localDate(preview));else render();}}
 // Heutige Liste eines Kindes: die heute gültigen festen Schritte, die Punkte besonderer Tage vor dem letzten Schritt.
 // In der Vorschau (preview gesetzt) gilt ein anderer Tag, und Häkchen landen nur in previewChecked.
 let preview=null,previewChecked=[{},{}],page='morgen';
@@ -556,7 +592,6 @@ function renderRules(){
   }));
 }
 function render(){
-  const now=preview||new Date();$('date').textContent=new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);
   for(let i=0;i<2;i++){
     const name=kidName(i),items=itemsFor(i);
     $('heading'+i).textContent=(i===0?'🐇 ':'🐻 ')+name;
@@ -581,8 +616,37 @@ function render(){
   }
   $('allReady').textContent=page==='heute'?'🎉 Alles erledigt für heute! Jetzt ist Freizeit.':'🎉 Beide sind startklar! Jetzt können wir gemeinsam los.';
   $('allReady').classList.toggle('visible',[0,1].every(i=>itemsFor(i).every(it=>it.get())));
-  renderRules();renderDayMode();
+  renderRules();renderDayMode();renderDays();
 }
+// Kopf: großes Datum mit Pfeilen und ein Streifen mit den nächsten Tagen. Ein anderer Tag als heute ist die Planung (preview).
+const STRIP_DAYS=7;
+const dayOffset=d=>Math.round((parseDay(localDate(d))-dayFromToday(0))/864e5);
+const relDay=n=>n===0?'Heute':n===1?'Morgen':n===-1?'Gestern':n>0?'In '+n+' Tagen':'Vor '+(-n)+' Tagen';
+const showDay=n=>setPreview(localDate(dayFromToday(n)));
+// Kleine Bilder im Streifen: besondere Punkte am Morgen und einmalige Punkte, nicht das tägliche To-do.
+const dayMarks=day=>[...new Set(state.rules.filter(r=>(!r.list||r.date)&&ruleMatches(r,day)).map(r=>r.emoji))].slice(0,2).join('');
+const stripDays=[...Array(STRIP_DAYS)].map((_,k)=>{
+  const b=document.createElement('button');b.type='button';b.className='day-btn';
+  b.innerHTML='<span class="wd"></span><span class="num"></span><span class="marks" aria-hidden="true"></span>';
+  b.addEventListener('click',()=>showDay(k));$('dayStrip').append(b);return b;});
+function renderDays(){
+  const day=preview||dayFromToday(0),n=dayOffset(day);
+  $('dayRel').textContent=relDay(n);
+  $('dayWd').textContent=new Intl.DateTimeFormat('de-DE',{weekday:'long'}).format(day);
+  $('dayDm').textContent=new Intl.DateTimeFormat('de-DE',{day:'numeric',month:'long',year:'numeric'}).format(day);
+  $('dayPrev').disabled=n<=0;
+  $('dayCard').classList.toggle('is-plan',n!==0);
+  stripDays.forEach((b,k)=>{const d=dayFromToday(k),wd=d.getDay();
+    b.querySelector('.wd').textContent=new Intl.DateTimeFormat('de-DE',{weekday:'short'}).format(d).replace('.','');
+    b.classList.toggle('is-today',k===0);
+    b.querySelector('.num').textContent=d.getDate();
+    b.querySelector('.marks').textContent=dayMarks(d);
+    b.classList.toggle('weekend',wd===0||wd===6);b.classList.toggle('is-active',k===n);
+    b.setAttribute('aria-pressed',String(k===n));
+    b.setAttribute('aria-label',relDay(k)+', '+new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long'}).format(d));});
+}
+$('dayPrev').addEventListener('click',()=>showDay(dayOffset(preview||new Date())-1));
+$('dayNext').addEventListener('click',()=>showDay(dayOffset(preview||new Date())+1));
 for(let i=0;i<2;i++){$('name'+i).value=state.names[i];$('name'+i).addEventListener('input',e=>{state.names[i]=e.target.value.slice(0,28);save();render();});}
 // Unter der Woche ist das Zeitfeld die Abfahrt, am Wochenende die Erinnerungszeit.
 const isSchoolDay=()=>cronMatches(SCHOOL_DAYS,new Date());
@@ -623,23 +687,26 @@ function renderTemplates(id,emojiField,textField){
     b.addEventListener('click',()=>{$(emojiField).value=emoji;$(textField).value=text;});return b;}));
 }
 renderTemplates('ruleTemplates','ruleEmoji','ruleText');renderTemplates('quickTemplates','quickEmoji','quickText');
-// Schnell-Hinzufügen: lange drücken öffnet das Fenster; ab 17 Uhr ist „morgen“ vorgewählt (für den Vorabend), sonst „heute“.
+// Schnell-Hinzufügen: lange drücken öffnet das Fenster. Vorgewählt ist der geplante Tag, sonst ab 17 Uhr „morgen“ (für den Vorabend), sonst „heute“.
+const dayLabel=k=>k===0?'heute':k===1?'morgen, '+shortDate(dayFromToday(1)):shortDate(dayFromToday(k));
 const newId=()=>'r'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 onHold($('quickOpen'),'Zum Hinzufügen lange drücken.','Zusätzlichen Punkt hinzufügen?',()=>{
-  $('quickDay').value=new Date().getHours()>=17?'1':'0';$('quickList').value=page;$('quickText').value='';$('quickEmoji').value='⭐';$('quickDialog').showModal();$('quickText').focus();},'quickInfo',HOLD_ADD_MS);
+  const pick=preview?Math.max(0,dayOffset(preview)):new Date().getHours()>=17?1:0;
+  $('quickDay').replaceChildren(...[...Array(Math.max(14,pick+1))].map((_,k)=>new Option(dayLabel(k),String(k))));
+  $('quickDay').value=String(pick);$('quickList').value=page;$('quickText').value='';$('quickEmoji').value='⭐';$('quickDialog').showModal();$('quickText').focus();},'quickInfo',HOLD_ADD_MS);
 $('quickCancel').addEventListener('click',()=>$('quickDialog').close());
 $('quickForm').addEventListener('submit',e=>{e.preventDefault();$('quickAdd').click();});
 $('quickAdd').addEventListener('click',()=>{const text=$('quickText').value.trim();if(!text){$('quickText').focus();return;}
   const day=dayFromToday(Number($('quickDay').value));
   state.rules.push({id:newId(),emoji:$('quickEmoji').value.trim()||'⭐',text,kid:Number($('quickKid').value),date:localDate(day),...($('quickList').value==='heute'?{list:'heute'}:{})});
   save();render();$('quickDialog').close();
-  $('quickInfo').textContent='✅ „'+text+'“ für '+($('quickDay').value==='0'?'heute':'morgen, '+shortDate(day))+' eingetragen.';});
+  $('quickInfo').textContent='✅ „'+text+'“ für '+dayLabel(Number($('quickDay').value))+' eingetragen.';});
 function setPreview(value){
   const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(value||'');
   preview=m&&value!==localDate()?new Date(Number(m[1]),Number(m[2])-1,Number(m[3]),12):null;previewChecked=[{},{}];
   $('previewDate').value=preview?value:'';
   $('previewBar').hidden=!preview;
-  if(preview)$('previewText').textContent='👀 Vorschau für '+new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long'}).format(preview)+' – nicht echt';
+  if(preview)$('previewText').textContent='📅 Plan für '+new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long'}).format(preview)+' · Häkchen zählen hier noch nicht';
   render();
 }
 $('previewDate').addEventListener('change',e=>{setPreview(e.target.value);if(preview)$('previewBar').scrollIntoView({behavior:'smooth',block:'start'});});
@@ -657,12 +724,38 @@ function setPage(next){
   $('pages').querySelectorAll('.dot').forEach(d=>{const on=d.dataset.page===page;d.classList.toggle('is-active',on);d.setAttribute('aria-pressed',String(on));});
   render();
 }
-$('pages').querySelectorAll('.dot').forEach(b=>b.addEventListener('click',()=>setPage(b.dataset.page)));
-let swipeStart=null;
-$('cards').addEventListener('touchstart',e=>{const t=e.touches[0];swipeStart=e.touches.length===1?{x:t.clientX,y:t.clientY}:null;},{passive:true});
-$('cards').addEventListener('touchend',e=>{if(!swipeStart)return;const t=e.changedTouches[0],dx=t.clientX-swipeStart.x,dy=t.clientY-swipeStart.y;swipeStart=null;
-  if(Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*1.5)return;
-  const idx=PAGES.indexOf(page)+(dx<0?1:-1);if(idx>=0&&idx<PAGES.length)setPage(PAGES[idx]);},{passive:true});
+// Seitenwechsel mit Animation: Karten gleiten hinaus, die neue Seite kommt von der anderen Seite herein.
+// dir 1 = nach links zur nächsten Seite, -1 = zurück.
+const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)');
+const SLIDE_OUT_MS=160;
+let sliding=false;
+function slidePage(next,dir){
+  const el=$('cards');
+  if(next===page||sliding)return;
+  if(reduceMotion.matches){el.style.transform='';setPage(next);return;}
+  sliding=true;const w=el.offsetWidth*.6;
+  el.style.transition=`transform ${SLIDE_OUT_MS}ms ease-in,opacity ${SLIDE_OUT_MS}ms ease-in`;el.style.transform=`translateX(${-dir*w}px)`;el.style.opacity='0';
+  $('head').classList.add('fading');
+  setTimeout(()=>{
+    setPage(next);$('head').classList.remove('fading');
+    el.style.transition='none';el.style.transform=`translateX(${dir*w}px)`;void el.offsetWidth;
+    el.style.transition='transform .3s cubic-bezier(.2,.9,.3,1.08),opacity .2s ease-out';el.style.transform='';el.style.opacity='';
+    sliding=false;},SLIDE_OUT_MS);
+}
+$('pages').querySelectorAll('.dot').forEach(b=>b.addEventListener('click',()=>{const to=b.dataset.page;slidePage(to,PAGES.indexOf(to)>PAGES.indexOf(page)?1:-1);}));
+// Beim Wischen folgen die Karten dem Finger. Gibt es in die Richtung keine Seite, federn sie nur leicht.
+let swipe=null;
+const snapBack=()=>{const el=$('cards');el.style.transition='transform .25s cubic-bezier(.2,.9,.3,1.2)';el.style.transform='';};
+$('cards').addEventListener('touchstart',e=>{const t=e.touches[0];swipe=e.touches.length===1&&!sliding?{x:t.clientX,y:t.clientY,dx:0,axis:null}:null;},{passive:true});
+$('cards').addEventListener('touchmove',e=>{if(!swipe)return;const t=e.touches[0],dx=t.clientX-swipe.x,dy=t.clientY-swipe.y;
+  if(!swipe.axis&&Math.hypot(dx,dy)>10)swipe.axis=Math.abs(dx)>Math.abs(dy)*1.2?'x':'y';
+  if(swipe.axis!=='x')return;
+  swipe.dx=dx;const target=PAGES[PAGES.indexOf(page)+(dx<0?1:-1)];
+  const el=$('cards');el.style.transition='none';el.style.transform=`translateX(${target?dx:dx*.25}px)`;},{passive:true});
+$('cards').addEventListener('touchend',()=>{if(!swipe)return;const {dx,axis}=swipe;swipe=null;if(axis!=='x')return;
+  const target=PAGES[PAGES.indexOf(page)+(dx<0?1:-1)];
+  if(target&&Math.abs(dx)>Math.min(90,$('cards').offsetWidth*.2))slidePage(target,dx<0?1:-1);else snapBack();},{passive:true});
+$('cards').addEventListener('touchcancel',()=>{if(swipe&&swipe.axis==='x')snapBack();swipe=null;},{passive:true});
 $('ruleForm').addEventListener('submit',e=>e.preventDefault());
 onHold($('ruleAdd'),'Zum Hinzufügen lange drücken.','Diesen Punkt hinzufügen?',()=>{if(!$('ruleText').value.trim()){$('ruleText').focus();return;}const timing=ruleTiming();if(!timing)return;
   state.rules.push({id:newId(),emoji:$('ruleEmoji').value.trim()||'⭐',text:$('ruleText').value.trim(),kid:Number($('ruleKid').value),...timing,...($('ruleList').value==='heute'?{list:'heute'}:{})});
