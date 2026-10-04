@@ -348,8 +348,10 @@
     .leave p{font-size:1.35rem;font-weight:700;line-height:1.5;margin:0 0 24px}
     .leave .pf-btn{font-size:1.2rem;min-height:56px}
     @keyframes leave-wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-10deg) scale(1.08)}75%{transform:rotate(10deg) scale(1.08)}}
+    /* Tablet hochkant und Handy: Kopf untereinander, sonst wird die Titelspalte neben der Tageskarte zu schmal. */
+    @media(max-width:960px){.head{grid-template-columns:minmax(0,1fr);grid-template-areas:"title" "day" "sub" "trip"}.day-card{margin:6px 0 8px}}
     @media(max-width:660px){main{padding:18px 12px 30px}.cards{grid-template-columns:1fr}.card{padding:16px}.field{min-width:140px}
-      .head{grid-template-columns:minmax(0,1fr);grid-template-areas:"title" "day" "sub" "trip";padding:16px}.day-card{margin:6px 0 8px}}
+      .head{padding:16px}}
     @media(prefers-reduced-motion:reduce){.dot::after,.head h1,.head .sub,.day-btn{transition:none}.leave-emoji{animation:none}.fill,.task{transition:none}.task:hover,.task:active{transform:none}}
     @page{size:A4 portrait;margin:10mm}
     @media print{

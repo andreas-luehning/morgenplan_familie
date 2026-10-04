@@ -143,6 +143,7 @@ Neueste Version oben. Die Version steht in `sw.js` und unten in der App.
 
 | Version | Branch | Änderung |
 |---|---|---|
+| v18 | `feature/7-kopf-tage` | Tablet hochkant (z. B. Galaxy Tab S6 Lite, 800 px): Kopf schon unter 960 px Breite untereinander, vorher war die Titelspalte neben der Tageskarte zu schmal. |
 | v17 | `feature/7-kopf-tage` | Eigener Einstellungs-Kasten oben entfällt: Abfahrt und Weg als Chips im Kopf, Namen zugeklappt unten in „👧 Namen der Kinder“. |
 | v16 | `feature/7-kopf-tage` | Titel und Tageskarte in einem gemeinsamen Kasten. An anderen Tagen als heute ist Abhaken gesperrt (auch bei „Liste testen für Tag“). |
 | v15 | `feature/7-kopf-tage` | Backlog 11: Neuer Kopf mit Tageskarte (großes Datum, ‹ ›, Streifen mit 7 Tagen und Bildern für besondere Punkte). Schnell-Hinzufügen für die nächsten 14 Tage, vorgewählt ist der angezeigte Tag. Seitenwechsel per Wischen mit Animation. |
