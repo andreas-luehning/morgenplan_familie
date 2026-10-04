@@ -91,7 +91,8 @@
 
 - Rechts neben dem Titel (auf dem Handy darunter) steht eine Tageskarte: „Heute“/„Morgen“/„In 3 Tagen“, groß der Wochentag, darunter das Datum. Mit ‹ und › blättert man tageweise.
 - Darunter ein Streifen mit den nächsten 7 Tagen. Heute hat einen Ring, der gewählte Tag ist ausgefüllt, Samstag und Sonntag sind farbig. Kleine Bilder zeigen besondere Punkte, z. B. ⚽ für Sportbeutel oder einmalige Punkte.
-- Ein anderer Tag nutzt die bestehende Vorschau („Plan für …“, Häkchen zählen noch nicht, „↩ Zurück zu heute“). Die Tageskarte hat dann einen farbigen Rand.
+- Titel, Text und Tageskarte stehen zusammen in einem Kasten.
+- Ein anderer Tag nutzt die bestehende Vorschau („Plan für …“, „↩ Zurück zu heute“). Die Tageskarte hat dann einen farbigen Rand. Abhaken ist an anderen Tagen gesperrt, die Kästchen sind blass.
 - Fest planen: Das Schnell-Hinzufügen hat bei „Wann?“ jetzt die nächsten 14 Tage. Vorgewählt ist der angezeigte Tag.
 - Wischen: Die Karten folgen dem Finger, gleiten hinaus, und die neue Seite gleitet herein. Am Rand federn sie zurück. Auch das Tippen auf die Seitenpunkte ist animiert. Bei „Bewegung reduzieren“ gibt es keine Animation.
 
@@ -142,6 +143,7 @@ Neueste Version oben. Die Version steht in `sw.js` und unten in der App.
 
 | Version | Branch | Änderung |
 |---|---|---|
+| v16 | `feature/7-kopf-tage` | Titel und Tageskarte in einem gemeinsamen Kasten. An anderen Tagen als heute ist Abhaken gesperrt (auch bei „Liste testen für Tag“). |
 | v15 | `feature/7-kopf-tage` | Backlog 11: Neuer Kopf mit Tageskarte (großes Datum, ‹ ›, Streifen mit 7 Tagen und Bildern für besondere Punkte). Schnell-Hinzufügen für die nächsten 14 Tage, vorgewählt ist der angezeigte Tag. Seitenwechsel per Wischen mit Animation. |
 | v14 | `feature/6-heute-noch` | Hinzufügen braucht nur noch 0,6 s langes Drücken, Löschen bleibt bei 1,5 s. |
 | v13 | `feature/6-heute-noch` | Pillen-Menü oben entfernt (wirkte überladen). Stattdessen kleine Seitenpunkte unten am Bildschirmrand, Wischen bleibt. Überschrift und Untertitel wechseln: „🌞 Unser Morgen“ und „📋 Heute noch“. Auswahl „Seite“ heißt jetzt „Unser Morgen“ statt „Morgen“ (klang nach dem nächsten Tag). |

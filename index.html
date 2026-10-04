@@ -236,14 +236,16 @@
     h1.pf-title{font-size:clamp(2rem,5vw,3.2rem);margin:4px 0 8px}
     .sub{max-width:70ch;line-height:1.6;margin:8px 0 24px}
     /* Kopf: Titel links, Tageskarte rechts (auf dem Handy darunter). */
-    .head{display:grid;grid-template-columns:minmax(0,1fr) 390px;grid-template-areas:"title day" "sub day";column-gap:32px;align-items:start;margin-bottom:24px}
-    .head h1{grid-area:title;align-self:end}.head .sub{grid-area:sub;margin:4px 0 0}
+    .head{display:grid;grid-template-columns:minmax(0,1fr) 380px;grid-template-areas:"title day" "sub day";column-gap:28px;align-items:start;margin-bottom:28px;padding:20px 22px}
+    .head h1{grid-area:title;align-self:end;margin:0 0 4px}.head .sub{grid-area:sub;margin:4px 0 0}
     .head h1,.head .sub{transition:opacity .16s}
     .head.fading h1,.head.fading .sub{opacity:0}
-    .day-card{grid-area:day;width:100%;padding:14px 14px 10px;transition:box-shadow .2s}
-    .day-card.is-plan{box-shadow:var(--pf-shadow-card),inset 0 0 0 3px var(--pf-eyebrow)}
+    .day-card{grid-area:day;width:100%;padding:12px 12px 8px;border-radius:var(--pf-radius-sm);background:var(--pf-bg);transition:box-shadow .2s}
+    .day-card.is-plan{box-shadow:inset 0 0 0 3px var(--pf-eyebrow)}
+    .task.locked{pointer-events:none}
+    .task.locked input{opacity:.35}
     .day-now{display:flex;align-items:center;gap:8px}
-    .day-nav{flex:none;width:48px;height:48px;border-radius:50%;border:2px solid var(--pf-hair);background:var(--pf-bg);color:var(--pf-ink);font:inherit;font-size:1.6rem;font-weight:800;line-height:1;cursor:pointer}
+    .day-nav{flex:none;width:48px;height:48px;border-radius:50%;border:2px solid var(--pf-hair);background:var(--pf-card);color:var(--pf-ink);font:inherit;font-size:1.6rem;font-weight:800;line-height:1;cursor:pointer}
     .day-nav:active{transform:translateY(2px)}
     .day-nav:disabled{opacity:.3;cursor:default;transform:none}
     .day-big{flex:1;min-width:0;margin:0;text-align:center}
@@ -342,7 +344,7 @@
     .leave .pf-btn{font-size:1.2rem;min-height:56px}
     @keyframes leave-wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-10deg) scale(1.08)}75%{transform:rotate(10deg) scale(1.08)}}
     @media(max-width:660px){main{padding:18px 12px 30px}.cards{grid-template-columns:1fr}.card,.top{padding:16px}.field{min-width:140px}
-      .head{grid-template-columns:minmax(0,1fr);grid-template-areas:"title" "day" "sub"}.head h1{margin-top:0}.day-card{width:100%;margin:2px 0 6px}}
+      .head{grid-template-columns:minmax(0,1fr);grid-template-areas:"title" "day" "sub";padding:16px}.day-card{margin:6px 0 8px}}
     @media(prefers-reduced-motion:reduce){.dot::after,.head h1,.head .sub,.day-btn{transition:none}.leave-emoji{animation:none}.fill,.task{transition:none}.task:hover,.task:active{transform:none}}
     @page{size:A4 portrait;margin:10mm}
     @media print{
@@ -358,14 +360,14 @@
       .bar{margin:10px 0}.tasks{grid-template-columns:1fr;gap:7px}.task{flex-direction:row;justify-content:flex-start;text-align:left;min-height:48px;padding:7px;gap:7px}
       .task input{width:21px;height:21px;min-height:21px}.emoji{font-size:19pt;width:29px}.task-text{font-size:11pt}
       .ready{font-size:10pt;padding:8px;margin-top:10px}.tip{margin-top:14px;padding:12px;break-inside:avoid}
-      .day-card{box-shadow:none;padding:0;width:auto}.day-nav,.day-strip,.day-rel{display:none}
+      .head{box-shadow:none;padding:0}.day-card{box-shadow:none;padding:0;width:auto;background:none}.day-nav,.day-strip,.day-rel{display:none}
       .hint,.footer,.leave,.version,.plan,.preview-bar,.quick,.quick-dialog,.pager{display:none}.status{margin-top:14px;padding:12px}
     }
   </style>
 </head>
 <body class="pf-app">
 <main>
-  <header class="head" id="head">
+  <header class="head pf-card" id="head">
     <h1 class="pf-title" id="title">🌞 <span class="a">Unser</span> <span class="b">Morgen</span></h1>
     <section class="day-card pf-card" id="dayCard" aria-label="Tag wählen">
       <div class="day-now">
@@ -552,11 +554,11 @@ function clearChecks(){state.checked=[Array(steps.length).fill(false),Array(step
 // Um Mitternacht: Ist der geplante Tag jetzt heute, endet die Planung von selbst (setPreview).
 function syncDay(){if(state.date!==localDate()){state.date=localDate();clearChecks();state.rules=pruneRules(state.rules);save();if(preview)setPreview(localDate(preview));else render();}}
 // Heutige Liste eines Kindes: die heute gültigen festen Schritte, die Punkte besonderer Tage vor dem letzten Schritt.
-// In der Vorschau (preview gesetzt) gilt ein anderer Tag, und Häkchen landen nur in previewChecked.
-let preview=null,previewChecked=[{},{}],page='morgen';
+// In der Vorschau (preview gesetzt) gilt ein anderer Tag. Abhaken geht dort nicht, Häkchen zählen erst am Tag selbst.
+let preview=null,page='morgen';
 function itemsFor(i,list=page){
   const day=preview||new Date();
-  const own=(key,saved)=>preview?{get:()=>previewChecked[i][key]===true,set:v=>{previewChecked[i][key]=v;}}:saved;
+  const own=(key,saved)=>preview?{get:()=>false,set:()=>{}}:saved;
   if(list==='heute')return state.rules.filter(r=>r.list==='heute'&&(r.kid===i||r.kid===2)&&ruleMatches(r,day))
     .map(r=>({emoji:r.emoji,text:r.text,...own(r.id,{get:()=>state.extraChecked[i][r.id]===true,set:v=>{state.extraChecked[i][r.id]=v;}})}));
   const items=steps.map(([emoji,text,cron],j)=>cron&&!cronMatches(cron,day)?null:{emoji,text,...own('s'+j,{get:()=>state.checked[i][j],set:v=>{state.checked[i][j]=v;}})}).filter(Boolean);
@@ -603,19 +605,19 @@ function render(){
     $('progress'+i).setAttribute('aria-label','Fortschritt '+name);
     const container=$('tasks'+i);container.replaceChildren();
     items.forEach(({emoji,text:description,get,set},j)=>{
-      const label=document.createElement('label');label.className='task pf-tile'+(get()?' done':'');
-      const input=document.createElement('input');input.type='checkbox';input.checked=get();input.setAttribute('aria-label',name+': '+description);
+      const label=document.createElement('label');label.className='task pf-tile'+(get()?' done':'')+(preview?' locked':'');
+      const input=document.createElement('input');input.type='checkbox';input.checked=get();input.disabled=!!preview;input.setAttribute('aria-label',name+': '+description);
       input.addEventListener('change',()=>{set(input.checked);save();render();$('tasks'+i).querySelectorAll('input')[j].focus({preventScroll:true});});
       const pic=document.createElement('span');pic.className='emoji';pic.textContent=emoji;pic.setAttribute('aria-hidden','true');
       const words=document.createElement('span');words.className='task-text';words.textContent=description;
       label.append(input,pic,words);container.append(label);
     });
-    if(!total){const empty=document.createElement('p');empty.className='empty';empty.textContent='Heute steht hier nichts an. 🎉';container.append(empty);}
-    $('ready'+i).textContent=checked===total?(page==='heute'?'🌟 '+name+' hat alles geschafft!':'🌟 '+name+' ist startklar!'):'Schritt für Schritt – bei Bedarf helfen wir.';
-    $('ready'+i).classList.toggle('yes',checked===total);
+    if(!total){const empty=document.createElement('p');empty.className='empty';empty.textContent=(preview?'An diesem Tag':'Heute')+' steht hier nichts an. 🎉';container.append(empty);}
+    $('ready'+i).textContent=preview?'📅 Abhaken geht erst an diesem Tag.':checked===total?(page==='heute'?'🌟 '+name+' hat alles geschafft!':'🌟 '+name+' ist startklar!'):'Schritt für Schritt – bei Bedarf helfen wir.';
+    $('ready'+i).classList.toggle('yes',!preview&&checked===total);
   }
   $('allReady').textContent=page==='heute'?'🎉 Alles erledigt für heute! Jetzt ist Freizeit.':'🎉 Beide sind startklar! Jetzt können wir gemeinsam los.';
-  $('allReady').classList.toggle('visible',[0,1].every(i=>itemsFor(i).every(it=>it.get())));
+  $('allReady').classList.toggle('visible',!preview&&[0,1].every(i=>itemsFor(i).every(it=>it.get())));
   renderRules();renderDayMode();renderDays();
 }
 // Kopf: großes Datum mit Pfeilen und ein Streifen mit den nächsten Tagen. Ein anderer Tag als heute ist die Planung (preview).
@@ -703,10 +705,10 @@ $('quickAdd').addEventListener('click',()=>{const text=$('quickText').value.trim
   $('quickInfo').textContent='✅ „'+text+'“ für '+dayLabel(Number($('quickDay').value))+' eingetragen.';});
 function setPreview(value){
   const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(value||'');
-  preview=m&&value!==localDate()?new Date(Number(m[1]),Number(m[2])-1,Number(m[3]),12):null;previewChecked=[{},{}];
+  preview=m&&value!==localDate()?new Date(Number(m[1]),Number(m[2])-1,Number(m[3]),12):null;
   $('previewDate').value=preview?value:'';
   $('previewBar').hidden=!preview;
-  if(preview)$('previewText').textContent='📅 Plan für '+new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long'}).format(preview)+' · Häkchen zählen hier noch nicht';
+  if(preview)$('previewText').textContent='📅 Plan für '+new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long'}).format(preview)+' · Abhaken geht erst an diesem Tag';
   render();
 }
 $('previewDate').addEventListener('change',e=>{setPreview(e.target.value);if(preview)$('previewBar').scrollIntoView({behavior:'smooth',block:'start'});});
